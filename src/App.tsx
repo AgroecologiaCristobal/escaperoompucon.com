@@ -142,8 +142,8 @@ const HeroSection: React.FC = () => {
 
       {/* Logo en esquina superior derecha */}
       <div className="absolute top-6 right-6 z-20">
-        <img 
-          src="/logo escape room.jpg" 
+        <img
+          src="/logoescaperoom.jpg"
           alt="Logo Los Misterios de la Casona - Escape Room Pucón"
           className="h-32 w-auto rounded-lg shadow-lg hover:scale-105 transition-transform duration-300"
         />
@@ -465,45 +465,45 @@ const TestimonialsSection: React.FC = () => {
   const [isPaused, setIsPaused] = useState(false);
 
   const testimonials = [
-    { 
+    {
       text: "¡Una experiencia increíble! Logramos completar la aventura en 50:46. Los puzzles son desafiantes y la ambientación es de 10.",
       author: "Los Jabalíes",
-      image: "/jabalies y tablas.jpeg"
+      image: "/jabaliesytablas.jpeg"
     },
-    { 
+    {
       text: "¡Qué experiencia tan divertida! Somos un equipo pequeño pero poderoso. Definitivamente volveremos con más amigos.",
       author: "Pichitos",
       image: "/pichitos.jpeg"
     },
-    { 
+    {
       text: "La atención fue fantástica y la sala del pirata es genial. Nuestro tiempo fue 51:50. ¡Volveremos!",
       author: "16 Ojos",
-      image: "/16 ojos copy.jpeg"
+      image: "/16ojos.jpeg"
     },
-    { 
+    {
       text: "Fuimos con amigos y nos reímos muchísimo. ¡Totalmente recomendado para cualquier grupo!",
       author: "Los Pifiados",
-      image: "/los pifiados.jpeg"
+      image: "/lospifiados.jpeg"
     },
-    { 
+    {
       text: "El mejor escape room que hemos hecho. ¡Ya queremos probar otra sala! Una experiencia única.",
       author: "Ganya Team",
-      image: "/ganya team.jpeg"
+      image: "/ganyateam.jpeg"
     },
-    { 
+    {
       text: "¡Las Indomitas conquistamos el escape room en 58:33! Una experiencia llena de adrenalina y diversión. ¡Totalmente recomendado!",
       author: "Las Indomitas",
-      image: "/las indomitas.jpeg"
+      image: "/lasindomitas.jpeg"
     },
-    { 
+    {
       text: "Las Rafitas vivimos una aventura increíble. El trabajo en equipo fue clave para resolver todos los misterios. ¡Volveremos!",
       author: "Las Rafitas",
-      image: "/las rafitas.jpeg"
+      image: "/lasrafitas.jpeg"
     },
-    { 
+    {
       text: "El Club de Checho logró escapar en 54:47! Una experiencia que combina diversión, desafío y mucha emoción. ¡Imperdible!",
       author: "Club de Checho",
-      image: "/club de checho.jpeg"
+      image: "/clubdechecho.jpeg"
     }
   ];
 
@@ -702,35 +702,35 @@ const GallerySection: React.FC = () => {
 
   const galleryImages = [
     {
-      src: "/jabalies y tablas.jpeg",
+      src: "/jabaliesytablas.jpeg",
       alt: "Equipo Los Jabalíes celebrando su escape exitoso"
     },
     {
-      src: "/pichitos.jpeg", 
+      src: "/pichitos.jpeg",
       alt: "Equipo Pichitos después de completar la aventura"
     },
     {
-      src: "/16 ojos copy.jpeg",
+      src: "/16ojos.jpeg",
       alt: "Grupo 16 Ojos después de completar la aventura"
     },
     {
-      src: "/los pifiados.jpeg",
+      src: "/lospifiados.jpeg",
       alt: "Los Pifiados disfrutando su experiencia en el escape room"
     },
     {
-      src: "/ganya team.jpeg",
+      src: "/ganyateam.jpeg",
       alt: "Ganya Team celebrando su victoria en Los Misterios de la Casona"
     },
     {
-      src: "/las indomitas.jpeg",
+      src: "/lasindomitas.jpeg",
       alt: "Las Indomitas después de completar su aventura en 58:33"
     },
     {
-      src: "/las rafitas.jpeg",
+      src: "/lasrafitas.jpeg",
       alt: "Las Rafitas celebrando su experiencia en el escape room"
     },
     {
-      src: "/club de checho.jpeg",
+      src: "/clubdechecho.jpeg",
       alt: "Club de Checho después de escapar en 54:47"
     }
   ];
