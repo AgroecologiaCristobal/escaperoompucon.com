@@ -1,0 +1,144 @@
+═══════════════════════════════════════════════════════════════
+  INSTRUCCIONES PARA SUBIR TU SITIO WEB AL SERVIDOR
+  Escape Room Pucón - Los Misterios de la Casona
+═══════════════════════════════════════════════════════════════
+
+📁 ARCHIVOS QUE DEBES SUBIR
+──────────────────────────────────────────────────────────────
+
+Debes subir TODO el contenido de la carpeta "dist/" a tu servidor.
+La carpeta "dist" contiene:
+
+✅ index.html (archivo principal)
+✅ .htaccess (configuración del servidor)
+✅ Carpeta "assets/" (JavaScript y CSS compilados)
+✅ Todas las imágenes (.jpeg, .png, .jpg)
+
+
+📤 PASOS PARA SUBIR AL SERVIDOR
+──────────────────────────────────────────────────────────────
+
+OPCIÓN 1: Usando cPanel File Manager
+────────────────────────────────────
+
+1. Accede a tu cPanel
+   → URL: https://tu-hosting.com/cpanel
+   → Usuario y contraseña de tu hosting
+
+2. Abre "File Manager" (Administrador de archivos)
+
+3. Navega a la carpeta de tu dominio:
+   → /home2/rwocfkmy/public_html/escaperoompucon.com
+
+4. ELIMINA todos los archivos anteriores en esa carpeta
+   (Esto evita conflictos con versiones antiguas)
+
+5. Sube TODO el contenido de la carpeta "dist/":
+   → Opción A: Selecciona todos los archivos y arrástralos
+   → Opción B: Usa el botón "Upload" y selecciona todos los archivos
+
+6. IMPORTANTE: Asegúrate de subir:
+   ✓ index.html
+   ✓ .htaccess (puede estar oculto)
+   ✓ La carpeta "assets" completa
+   ✓ Todas las imágenes
+
+
+OPCIÓN 2: Usando FileZilla (FTP)
+────────────────────────────────
+
+1. Descarga FileZilla: https://filezilla-project.org/
+
+2. Conecta a tu servidor:
+   → Host: ftp.tu-dominio.com
+   → Usuario: tu usuario FTP
+   → Contraseña: tu contraseña FTP
+   → Puerto: 21
+
+3. En el panel derecho, navega a:
+   → /home2/rwocfkmy/public_html/escaperoompucon.com
+
+4. ELIMINA todos los archivos anteriores
+
+5. En el panel izquierdo, abre la carpeta "dist/"
+
+6. Selecciona TODOS los archivos y arrástralos al panel derecho
+
+7. Espera a que termine la transferencia
+
+
+✓ VERIFICACIÓN DESPUÉS DE SUBIR
+──────────────────────────────────────────────────────────────
+
+1. Abre tu navegador en modo incógnito
+
+2. Visita: https://escaperoompucon.com
+
+3. Verifica que:
+   ✓ El sitio carga correctamente
+   ✓ Se ven todas las imágenes
+   ✓ Los colores y estilos están correctos
+   ✓ El video de YouTube funciona
+   ✓ Los enlaces de WhatsApp funcionan
+   ✓ El mapa de Google Maps carga
+   ✓ Las animaciones funcionan suavemente
+
+4. Prueba en diferentes dispositivos:
+   ✓ Computadora
+   ✓ Tablet
+   ✓ Celular
+
+
+🔧 SOLUCIÓN DE PROBLEMAS
+──────────────────────────────────────────────────────────────
+
+PROBLEMA: No se ven las imágenes
+SOLUCIÓN:
+  → Verifica que todas las imágenes estén en la raíz junto al index.html
+  → Verifica que los nombres sean exactos (mayúsculas/minúsculas)
+
+PROBLEMA: Los estilos no se aplican
+SOLUCIÓN:
+  → Verifica que la carpeta "assets" se haya subido completa
+  → Borra el caché del navegador (Ctrl + Shift + R)
+
+PROBLEMA: Página en blanco
+SOLUCIÓN:
+  → Verifica que el archivo .htaccess se haya subido
+  → Revisa los permisos de los archivos (deben ser 644)
+
+PROBLEMA: Error 404
+SOLUCIÓN:
+  → Verifica la ruta correcta en cPanel
+  → Asegúrate de que index.html esté en la raíz
+
+
+📋 CHECKLIST FINAL
+──────────────────────────────────────────────────────────────
+
+Antes de dar por finalizado, verifica:
+
+□ Todos los archivos de "dist/" están en el servidor
+□ El archivo .htaccess está presente
+□ La carpeta "assets" está completa
+□ Todas las imágenes están presentes
+□ El sitio carga correctamente en navegador
+□ Todas las secciones son visibles
+□ Los enlaces de WhatsApp funcionan
+□ El mapa de Google Maps funciona
+□ El video de YouTube se reproduce
+□ El sitio es responsive (se ve bien en móvil)
+□ No hay errores en la consola del navegador (F12)
+
+
+📞 INFORMACIÓN DE CONTACTO
+──────────────────────────────────────────────────────────────
+
+Si necesitas ayuda adicional o algo no funciona:
+→ WhatsApp: +56 9 9654 3715
+→ Email: escaperoompucon@gmail.com
+
+
+═══════════════════════════════════════════════════════════════
+  ¡TU SITIO WEB ESTÁ LISTO PARA EL MUNDO! 🎉
+═══════════════════════════════════════════════════════════════

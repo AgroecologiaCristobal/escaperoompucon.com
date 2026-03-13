@@ -1,5 +1,4 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home2/rwocfkmy/public_html/escaperoompucon.com
-    - /bin/cp index.html $DEPLOYPATH
-    - /bin/cp -r public $DEPLOYPATH
+    - /bin/cp -r dist/* $DEPLOYPATH
