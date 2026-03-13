@@ -1095,7 +1095,7 @@ const Footer: React.FC = () => {
 };
 
 // Main App Component
-const App: React.FC = () => {
+function App() {
   return (
     <div className="min-h-screen bg-black text-white">
       <HeroSection />
@@ -1111,6 +1111,6 @@ const App: React.FC = () => {
       <Footer />
     </div>
   );
-};
+}
 
 export default App;
