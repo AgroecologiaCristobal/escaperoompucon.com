@@ -1,185 +1,255 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MapPin, Phone, Mail, Facebook, Instagram, Twitter, Users, Clock, Star, ChevronDown, ChevronUp, Play, Pause, Volume2, VolumeX, MessageCircle, Calendar, Navigation, TowerControl as GameController, Trophy, Sparkles, MapPinned } from 'lucide-react';
+import { MapPin, Phone, Mail, Instagram, Users, Star, ChevronDown, ChevronUp, MessageCircle, Navigation, TowerControl as GameController, Trophy, Sparkles, MapPinned, ArrowRight, CheckCircle } from 'lucide-react';
 
-// Custom hook for intersection observer
+// ─── Intersection Observer ────────────────────────────────────────────────────
 const useIntersectionObserver = (threshold = 0.1) => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
+      ([entry]) => { if (entry.isIntersecting) setIsVisible(true); },
       { threshold }
     );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
-      }
-    };
+    if (ref.current) observer.observe(ref.current);
+    return () => { if (ref.current) observer.unobserve(ref.current); };
   }, [threshold]);
-
   return [ref, isVisible] as const;
 };
 
-// Temuco Banner Component
+// ─── City Selector Landing ────────────────────────────────────────────────────
+const CitySelector: React.FC<{ onSelect: (city: 'pucon' | 'temuco') => void }> = ({ onSelect }) => {
+  const [hovered, setHovered] = useState<'pucon' | 'temuco' | null>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setVisible(true), 150);
+    return () => clearTimeout(t);
+  }, []);
+
+  return (
+    <div className="fixed inset-0 bg-black overflow-hidden z-50 flex flex-col">
+      {/* Header */}
+      <div className={`relative z-20 text-center px-4 pt-10 pb-6 transition-all duration-1000 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-6'}`}>
+        <p className="text-[#D4AF37] text-xs font-bold tracking-[0.4em] uppercase mb-3">Escape Room Araucanía</p>
+        <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3">
+          ¿Quieres vivir tu aventura en{' '}
+          <span className="text-[#D4AF37]">Temuco</span> o en{' '}
+          <span className="text-[#D4AF37]">Pucón</span>?
+        </h1>
+        <p className="text-white/45 text-sm max-w-xl mx-auto leading-relaxed">
+          En Escape Room Araucanía avanzamos para que el entretenimiento potencie tu pensamiento y cerebro.{' '}
+          <span className="text-white/65">¡Tú eliges dónde reservar!</span>
+        </p>
+        <div className="flex items-center justify-center gap-3 mt-4">
+          <div className="h-px w-12 bg-[#D4AF37]/40" />
+          <span className="text-[#D4AF37]/60 text-xs tracking-widest uppercase">Elige tu destino</span>
+          <div className="h-px w-12 bg-[#D4AF37]/40" />
+        </div>
+      </div>
+
+      {/* Panels */}
+      <div className="flex flex-1 min-h-0">
+        {/* Temuco panel */}
+        <div
+          className="relative overflow-hidden cursor-pointer transition-all duration-600 ease-in-out"
+          style={{ flex: hovered === 'temuco' ? '1.6' : hovered === 'pucon' ? '0.4' : '1' }}
+          onMouseEnter={() => setHovered('temuco')}
+          onMouseLeave={() => setHovered(null)}
+          onClick={() => onSelect('temuco')}
+        >
+          <img src="/CAFETERIA1.jpeg" alt="Temuco"
+            className="absolute inset-0 w-full h-full object-cover transition-all duration-700"
+            style={{ filter: `brightness(${hovered === 'temuco' ? '0.45' : '0.25'})`, transform: hovered === 'temuco' ? 'scale(1.04)' : 'scale(1.1)' }} />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(139,0,0,0.25), transparent 60%)' }} />
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-8 gap-4">
+            <div className={`transition-all duration-500 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '400ms' }}>
+              <MapPin className="text-[#D4AF37] mx-auto mb-3" size={28} />
+              <h2 className="text-4xl md:text-6xl font-black text-white tracking-tight mb-1">Temuco</h2>
+              <p className="text-[#D4AF37] text-sm font-semibold tracking-widest uppercase mb-2">La Araucanía</p>
+              <p className="text-white/50 text-xs max-w-xs mx-auto mb-6 leading-relaxed">
+                Nueva sede — Vivir la experiencia de escape room en el corazón de Temuco
+              </p>
+              <div
+                className="inline-flex items-center gap-2 bg-[#D4AF37] text-black px-7 py-3 rounded-xl font-bold text-sm transition-all duration-400"
+                style={{ opacity: hovered === 'temuco' ? 1 : 0, transform: hovered === 'temuco' ? 'translateY(0) scale(1)' : 'translateY(8px) scale(0.95)' }}
+              >
+                Reservar en Temuco <ArrowRight size={14} />
+              </div>
+            </div>
+          </div>
+          {/* Border glow on hover */}
+          <div className="absolute inset-0 border-2 border-transparent transition-all duration-500"
+            style={{ borderColor: hovered === 'temuco' ? 'rgba(212,175,55,0.3)' : 'transparent' }} />
+        </div>
+
+        {/* Divider */}
+        <div className="relative w-px flex-shrink-0 z-10" style={{ background: 'rgba(212,175,55,0.2)' }}>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full border border-[#D4AF37]/40 flex items-center justify-center bg-black">
+            <div className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-pulse" />
+          </div>
+        </div>
+
+        {/* Pucón panel */}
+        <div
+          className="relative overflow-hidden cursor-pointer transition-all duration-600 ease-in-out"
+          style={{ flex: hovered === 'pucon' ? '1.6' : hovered === 'temuco' ? '0.4' : '1' }}
+          onMouseEnter={() => setHovered('pucon')}
+          onMouseLeave={() => setHovered(null)}
+          onClick={() => onSelect('pucon')}
+        >
+          <img src="/familiazoologico.jpeg" alt="Pucón"
+            className="absolute inset-0 w-full h-full object-cover transition-all duration-700"
+            style={{ filter: `brightness(${hovered === 'pucon' ? '0.45' : '0.25'})`, transform: hovered === 'pucon' ? 'scale(1.04)' : 'scale(1.1)' }} />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(225deg, rgba(212,175,55,0.1), transparent 60%)' }} />
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-8 gap-4">
+            <div className={`transition-all duration-500 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '600ms' }}>
+              <MapPin className="text-[#D4AF37] mx-auto mb-3" size={28} />
+              {/* Mysterious title */}
+              <div className="mb-3">
+                <span className="misterios-text block text-3xl md:text-5xl font-bold">Los Misterios</span>
+                <span className="casona-text block text-2xl md:text-4xl font-semibold">de la Casona</span>
+              </div>
+              <p className="text-[#D4AF37] text-sm font-semibold tracking-widest uppercase mb-2">Pucón — Origen</p>
+              <p className="text-white/50 text-xs max-w-xs mx-auto mb-6 leading-relaxed">
+                El primer escape room de Pucón — Misterio, adrenalina y aventura junto al lago Villarrica
+              </p>
+              <div
+                className="inline-flex items-center gap-2 bg-[#D4AF37] text-black px-7 py-3 rounded-xl font-bold text-sm transition-all duration-400"
+                style={{ opacity: hovered === 'pucon' ? 1 : 0, transform: hovered === 'pucon' ? 'translateY(0) scale(1)' : 'translateY(8px) scale(0.95)' }}
+              >
+                Reservar en Pucón <ArrowRight size={14} />
+              </div>
+            </div>
+          </div>
+          <div className="absolute inset-0 border-2 border-transparent transition-all duration-500"
+            style={{ borderColor: hovered === 'pucon' ? 'rgba(212,175,55,0.3)' : 'transparent' }} />
+        </div>
+      </div>
+
+      {/* Mobile tap hint */}
+      <div className="md:hidden text-center py-3 text-white/30 text-xs tracking-widest">
+        TOCA PARA ELEGIR TU DESTINO
+      </div>
+    </div>
+  );
+};
+
+// ─── Temuco Banner ────────────────────────────────────────────────────────────
 const TemucoBanner: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
-
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsVisible(true);
-    }, 1000);
-    return () => clearTimeout(timer);
+    const t = setTimeout(() => setIsVisible(true), 800);
+    return () => clearTimeout(t);
   }, []);
 
   return (
-    <div className="relative bg-gradient-to-r from-[#8B0000] via-[#A00000] to-[#8B0000] py-4 overflow-hidden border-t-2 border-b-2 border-[#D4AF37]">
-      {/* Animated background pattern */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute inset-0 bg-black bg-opacity-20"></div>
-        <div className="absolute top-0 left-0 w-full h-full">
-          <div className="animate-pulse absolute top-2 left-10 w-2 h-2 bg-[#D4AF37] rounded-full"></div>
-          <div className="animate-pulse absolute top-6 right-20 w-1 h-1 bg-[#D4AF37] rounded-full" style={{ animationDelay: '0.5s' }}></div>
-          <div className="animate-pulse absolute bottom-3 left-1/3 w-1.5 h-1.5 bg-[#D4AF37] rounded-full" style={{ animationDelay: '1s' }}></div>
-          <div className="animate-pulse absolute bottom-5 right-10 w-2 h-2 bg-[#D4AF37] rounded-full" style={{ animationDelay: '1.5s' }}></div>
-        </div>
-      </div>
-      
-      <div className="relative z-10 max-w-6xl mx-auto px-4">
-        <div 
-          className={`flex items-center justify-center gap-4 transition-all duration-1000 ease-out ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-          }`}
-        >
-          <MapPinned className="text-[#D4AF37] animate-bounce" size={28} />
-          <div className="text-center">
-            <h3 className="text-2xl md:text-3xl font-bold text-white mb-1 tracking-wide">
-              ¡PRÓXIMAMENTE ESTAREMOS EN TEMUCO!
-            </h3>
-            <p className="text-[#D4AF37] font-semibold text-lg">
-              Una nueva aventura de misterio llegará pronto...
-            </p>
+    <div className="relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #0a0a0a 0%, #1a0000 40%, #8B0000 60%, #1a0000 80%, #0a0a0a 100%)' }}>
+      <div className="absolute top-0 left-0 w-full h-px" style={{ background: 'linear-gradient(90deg, transparent, #D4AF37, transparent)' }} />
+      <div className="absolute bottom-0 left-0 w-full h-px" style={{ background: 'linear-gradient(90deg, transparent, #D4AF37, transparent)' }} />
+      <div className="relative z-10 max-w-6xl mx-auto px-4 py-6">
+        <div className={`transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}>
+          <div className="flex flex-col md:flex-row items-center justify-center gap-4 text-center md:text-left">
+            <div className="flex items-center gap-3">
+              <MapPinned className="text-[#D4AF37] flex-shrink-0" size={32} />
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="inline-block bg-[#D4AF37] text-black text-xs font-bold px-2 py-0.5 rounded uppercase tracking-widest">Nuevo</span>
+                  <span className="text-[#D4AF37] text-sm font-semibold tracking-wide uppercase">Temuco</span>
+                </div>
+                <h3 className="text-xl md:text-2xl lg:text-3xl font-bold text-white leading-tight">
+                  ¡Ya estamos en Temuco atendiendo!
+                </h3>
+                <p className="text-[#D4AF37] font-medium text-base mt-1">
+                  Reserva tu nueva aventura — Nuevas experiencias para la Araucanía
+                </p>
+                <p className="text-white/70 text-sm mt-1">
+                  Elige y visítanos en <span className="text-[#D4AF37] font-semibold">Temuco</span> y <span className="text-[#D4AF37] font-semibold">Pucón</span>
+                </p>
+              </div>
+            </div>
+            <a href="https://wa.me/56996543715?text=Hola%2C%20me%20interesa%20reservar%20en%20Temuco."
+              className="flex-shrink-0 flex items-center gap-2 bg-[#D4AF37] text-black px-6 py-3 rounded-lg font-bold text-sm hover:bg-white transition-all duration-300 hover:scale-105 shadow-lg"
+              style={{ boxShadow: '0 0 20px rgba(212,175,55,0.3)' }}>
+              Reservar ahora <ArrowRight size={16} />
+            </a>
           </div>
-          <MapPinned className="text-[#D4AF37] animate-bounce" size={28} style={{ animationDelay: '0.5s' }} />
         </div>
       </div>
-      
-      {/* Subtle glow effect */}
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent opacity-5 animate-pulse"></div>
     </div>
   );
 };
 
-// Section Divider Component
-const SectionDivider: React.FC = () => {
-  return (
-    <div className="flex justify-center py-8">
-      <div className="w-32 h-0.5 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent"></div>
-    </div>
-  );
-};
-
-// Hero Section Component
-const HeroSection: React.FC = () => {
-  const [isVideoPlaying, setIsVideoPlaying] = useState(true);
-  const [isVideoMuted, setIsVideoMuted] = useState(true);
+// ─── Hero ─────────────────────────────────────────────────────────────────────
+const HeroSection: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
   const [isTextVisible, setIsTextVisible] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsTextVisible(true);
-    }, 500);
-    return () => clearTimeout(timer);
+    const t = setTimeout(() => setIsTextVisible(true), 300);
+    return () => clearTimeout(t);
   }, []);
 
-  const toggleVideo = () => {
-    if (videoRef.current) {
-      if (isVideoPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play();
-      }
-      setIsVideoPlaying(!isVideoPlaying);
-    }
-  };
-
-  const toggleMute = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = !isVideoMuted;
-      setIsVideoMuted(!isVideoMuted);
-    }
-  };
-
   return (
-    <section className="relative min-h-screen h-[120vh] overflow-hidden">
-      {/* YouTube Video Background */}
+    <section className="relative min-h-screen overflow-hidden bg-black">
       <div className="absolute inset-0">
         <iframe
           src="https://www.youtube.com/embed/AIo9RV-m1wA?autoplay=1&mute=1&loop=1&playlist=AIo9RV-m1wA&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1"
-          className="w-full h-full object-cover"
-          style={{ 
-            filter: 'brightness(0.7)',
-            transform: 'scale(1.1)',
-            pointerEvents: 'none'
-          }}
+          className="w-full h-full"
+          style={{ filter: 'brightness(0.4)', transform: 'scale(1.08)', pointerEvents: 'none' }}
           allow="autoplay; encrypted-media"
           allowFullScreen
         />
       </div>
+      <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.05) 40%, rgba(0,0,0,0.7) 80%, rgba(0,0,0,0.97) 100%)' }} />
+      <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.5) 100%)' }} />
 
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black bg-opacity-20" />
-
-      {/* Logo en esquina superior derecha */}
+      {/* Logo */}
       <div className="absolute top-6 right-6 z-20">
-        <img
-          src="/logoescaperoom.jpg"
-          alt="Logo Los Misterios de la Casona - Escape Room Pucón"
-          className="h-32 w-auto rounded-lg shadow-lg hover:scale-105 transition-transform duration-300"
-        />
+        <img src="/logoescaperoom.jpg" alt="Logo Los Misterios de la Casona"
+          className="h-24 w-auto rounded-xl shadow-2xl hover:scale-105 transition-transform duration-300"
+          style={{ boxShadow: '0 0 30px rgba(212,175,55,0.2)' }} />
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 h-full flex flex-col justify-end text-center px-4">
-        <div className="pb-16 pt-8">
-          <div className="max-w-5xl mx-auto">
-          <h1 
-            className={`text-xl md:text-2xl lg:text-3xl font-bold text-white mb-3 transition-all duration-1000 ease-out ${
-              isTextVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}
-            style={{ transitionDelay: '300ms' }}
-          >
-            Escape Room Pucón – Los Misterios de la Casona
-          </h1>
-          
-          <p 
-            className={`text-base md:text-lg text-white max-w-4xl mx-auto leading-tight mb-6 transition-all duration-1000 ease-out ${
-              isTextVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}
-            style={{ transitionDelay: '600ms' }}
-          >
-            ¿Buscas una experiencia distinta en Pucón? ¡Bienvenido al primer Escape Room de la zona! Sumérgete en una aventura única donde tendrás que resolver acertijos, descubrir pistas ocultas y trabajar en equipo para escapar antes de que el tiempo se agote!
+      {/* Change city */}
+      <button onClick={onChangeCity}
+        className="absolute top-8 left-8 z-20 flex items-center gap-2 text-white/40 hover:text-[#D4AF37] transition-all duration-300 text-xs font-medium tracking-widest uppercase">
+        <MapPin size={14} />
+        Cambiar ciudad
+      </button>
+
+      <div className="relative z-10 min-h-screen flex flex-col justify-end px-4 pb-20">
+        <div className="max-w-4xl mx-auto w-full">
+          <div className={`transition-all duration-1000 ease-out ${isTextVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`} style={{ transitionDelay: '200ms' }}>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="h-px flex-1 max-w-16" style={{ background: 'linear-gradient(90deg, transparent, #D4AF37)' }} />
+              <span className="text-[#D4AF37] text-xs font-bold tracking-[0.3em] uppercase">El Primer Escape Room en Pucón</span>
+            </div>
+            <h1 className="text-5xl md:text-7xl font-bold text-white mb-2 leading-none tracking-tight">
+              <span className="misterios-text text-5xl md:text-7xl">Los Misterios</span>
+            </h1>
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-none">
+              <span className="casona-text text-4xl md:text-6xl">de la Casona</span>
+            </h1>
+          </div>
+          <p className={`text-white/70 text-lg md:text-xl max-w-2xl mb-8 leading-relaxed transition-all duration-1000 ease-out ${isTextVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`} style={{ transitionDelay: '500ms' }}>
+            Sumérgete en una aventura única de misterio y adrenalina. Resuelve acertijos, descubre pistas ocultas y escapa antes de que el tiempo se agote.
           </p>
-          
-          <a
-            href="https://wa.me/56996543715?text=Hola%2C%20me%20interesa%20reservar%20un%20escape%20room%20en%20Los%20Misterios%20de%20la%20Casona."
-            className={`inline-block bg-[#D4AF37] text-black px-8 py-4 rounded-lg text-lg font-semibold hover:shadow-[0_0_20px_rgba(212,175,55,0.6)] hover:scale-105 transition-all duration-300 ease-out ${
-              isTextVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}
-            style={{ transitionDelay: '900ms' }}
-          >
-            Reserva Ahora
-          </a>
+          <div className={`flex flex-wrap gap-4 transition-all duration-1000 ease-out ${isTextVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`} style={{ transitionDelay: '800ms' }}>
+            <a href="https://wa.me/56996543715?text=Hola%2C%20me%20interesa%20reservar%20un%20escape%20room%20en%20Los%20Misterios%20de%20la%20Casona."
+              className="group flex items-center gap-3 bg-[#D4AF37] text-black px-8 py-4 rounded-xl text-base font-bold hover:bg-white transition-all duration-300 hover:scale-105"
+              style={{ boxShadow: '0 0 30px rgba(212,175,55,0.4)' }}>
+              Reservar Ahora
+              <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform duration-300" />
+            </a>
+            <a href="#rooms" className="flex items-center gap-3 border border-white/25 text-white px-8 py-4 rounded-xl text-base font-semibold hover:border-[#D4AF37] hover:text-[#D4AF37] transition-all duration-300 backdrop-blur-sm">
+              Ver Salas
+            </a>
+          </div>
+          <div className={`flex gap-8 mt-12 pt-8 border-t border-white/10 transition-all duration-1000 ease-out ${isTextVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`} style={{ transitionDelay: '1100ms' }}>
+            {[['60', 'minutos de aventura'], ['2-8', 'jugadores'], ['2', 'salas temáticas']].map(([num, label]) => (
+              <div key={label} className="text-center">
+                <div className="text-2xl font-bold text-[#D4AF37]">{num}</div>
+                <div className="text-white/45 text-xs uppercase tracking-wide">{label}</div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -187,930 +257,663 @@ const HeroSection: React.FC = () => {
   );
 };
 
-// About Section Component
+// ─── About ────────────────────────────────────────────────────────────────────
 const AboutSection: React.FC = () => {
   const [ref, isVisible] = useIntersectionObserver();
-
   return (
-    <>
-      <SectionDivider />
-      <section ref={ref} className="py-20 bg-[#363636]">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center">
-            <h2 
-              className={`text-4xl md:text-5xl font-bold text-[#D4AF37] mb-8 transition-all duration-1000 ease-out ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-              }`}
-            >
-              Tu próxima aventura comienza en Los Misterios de la Casona
-            </h2>
-            
-            <div 
-              className={`text-xl text-white max-w-4xl mx-auto leading-relaxed space-y-6 transition-all duration-1000 ease-out delay-300 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-              }`}
-            >
-              <p>
-                Ubicados en una antigua casona en el corazón de Pucón, nuestras salas temáticas están diseñadas para hacerte vivir una historia emocionante, llena de misterio y adrenalina. Ideal para grupos de amigos, parejas, familias o actividades corporativas. Modalidad indoor perfecta para cualquier temporada.
-              </p>
-              <p>
-                En Los Misterios de la Casona, transformamos el entretenimiento en una experiencia inmersiva. Diseñamos desafíos únicos que ponen a prueba tu lógica, creatividad y trabajo en equipo. ¿Estás listo para el reto?
-              </p>
+    <section ref={ref} className="py-28 bg-[#0a0a0a]">
+      <div className="max-w-6xl mx-auto px-4">
+        <div className="grid md:grid-cols-2 gap-16 items-center">
+          <div className={`transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'}`}>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-8 h-px bg-[#D4AF37]" />
+              <span className="text-[#D4AF37] text-xs font-bold tracking-[0.3em] uppercase">Nuestra Historia</span>
             </div>
-
-            <div className={`mt-8 transition-all duration-1000 ease-out delay-600 ${
-              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}>
-              <a
-                href="https://wa.me/56996543715?text=Hola%2C%20quiero%20contactarlos%20y%20reservar%20mi%20próxima%20aventura."
-                className="inline-block bg-[#8B0000] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#D4AF37] hover:scale-105 transition-all duration-300"
-              >
-                Contáctanos ya y reserva tu próxima aventura
-              </a>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
+              Tu próxima aventura comienza <span className="text-[#D4AF37]">aquí</span>
+            </h2>
+            <p className="text-white/60 text-lg leading-relaxed mb-6">
+              Ubicados en una antigua casona en el corazón de Pucón, nuestras salas temáticas están diseñadas para hacerte vivir una historia emocionante, llena de misterio y adrenalina. Ideal para grupos de amigos, parejas, familias o actividades corporativas.
+            </p>
+            <p className="text-white/60 text-lg leading-relaxed mb-8">
+              Transformamos el entretenimiento en una experiencia inmersiva. Diseñamos desafíos únicos que ponen a prueba tu lógica, creatividad y trabajo en equipo.
+            </p>
+            {['Modalidad indoor, disponible todo el año', 'Disponible en español e inglés', 'Game Master presente en cada sesión'].map(item => (
+              <div key={item} className="flex items-center gap-3 mb-3">
+                <CheckCircle className="text-[#D4AF37] flex-shrink-0" size={18} />
+                <span className="text-white/65 text-sm">{item}</span>
+              </div>
+            ))}
+            <a href="https://wa.me/56996543715?text=Hola%2C%20quiero%20reservar%20mi%20pr%C3%B3xima%20aventura."
+              className="inline-flex items-center gap-2 mt-8 bg-[#8B0000] text-white px-8 py-4 rounded-xl font-bold hover:bg-[#D4AF37] hover:text-black transition-all duration-300 hover:scale-105">
+              Contáctanos y reserva <ArrowRight size={16} />
+            </a>
+          </div>
+          <div className={`transition-all duration-1000 ease-out delay-300 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'}`}>
+            <div className="relative">
+              <div className="absolute -inset-4 rounded-2xl opacity-20" style={{ background: 'radial-gradient(circle, #D4AF37, transparent)' }} />
+              <img src="/familiazoologico.jpeg" alt="Grupo disfrutando el escape room"
+                className="w-full h-96 object-cover rounded-2xl relative z-10"
+                style={{ boxShadow: '0 25px 50px rgba(0,0,0,0.5)' }} />
+              <div className="absolute -bottom-4 -right-4 bg-[#D4AF37] text-black p-4 rounded-xl z-20 font-bold text-center"
+                style={{ boxShadow: '0 10px 30px rgba(212,175,55,0.4)' }}>
+                <div className="text-2xl font-black">#1</div>
+                <div className="text-xs uppercase tracking-wide">en Pucón</div>
+              </div>
             </div>
           </div>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 };
 
-// Room Card Component
+// ─── Room Card ────────────────────────────────────────────────────────────────
 const RoomCard: React.FC<{
-  title: string;
-  description: string;
-  difficulty: string;
-  players: string;
-  image: string;
-  alt: string;
-  delay: number;
+  title: string; description: string; difficulty: string;
+  players: string; image: string; alt: string; delay: number;
   cardType: 'pirate' | 'zombie';
 }> = ({ title, description, difficulty, players, image, alt, delay, cardType }) => {
   const [ref, isVisible] = useIntersectionObserver();
-
-  const getCardColors = () => {
-    if (cardType === 'pirate') {
-      return {
-        initial: '#D4AF37',
-        hover: '#F4CF47',
-        shadow: 'rgba(212,175,55,0.6)'
-      };
-    } else {
-      return {
-        initial: '#8B0000',
-        hover: '#2D5016',
-        shadow: 'rgba(45,80,22,0.6)'
-      };
-    }
-  };
-
-  const colors = getCardColors();
+  const accent = cardType === 'pirate' ? '#D4AF37' : '#8B0000';
 
   return (
-    <div 
-      ref={ref}
-      className={`bg-black bg-opacity-50 rounded-lg overflow-hidden transform hover:scale-102 transition-all duration-300 ease-out ${
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-      }`}
-      style={{ 
-        transitionDelay: `${delay}ms`,
-        borderTop: `4px solid ${colors.initial}`
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.boxShadow = `0 0 20px ${colors.shadow}`;
-        e.currentTarget.style.borderTopColor = colors.hover;
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.boxShadow = 'none';
-        e.currentTarget.style.borderTopColor = colors.initial;
-      }}
-    >
-      <img 
-        src={image} 
-        alt={alt}
-        className="w-full h-64 object-cover"
-      />
-      <div className="p-6">
-        <h3 className="text-2xl font-bold text-[#D4AF37] mb-3">{title}</h3>
-        <p className="text-white mb-4 leading-relaxed">{description}</p>
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <Users className="text-[#D4AF37]" size={18} />
-            <span className="text-[#A9A9A9]">{players}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Star className="text-[#D4AF37]" size={18} />
-            <span className="text-[#A9A9A9]">{difficulty}</span>
-          </div>
+    <div ref={ref}
+      className={`group relative overflow-hidden rounded-2xl transition-all duration-700 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+      style={{ transitionDelay: `${delay}ms`, background: '#111', border: '1px solid rgba(255,255,255,0.06)' }}>
+      <div className="relative overflow-hidden h-72">
+        <img src={image} alt={alt} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(0deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.2) 60%, transparent 100%)' }} />
+        <div className="absolute top-4 left-4">
+          <span className="text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest"
+            style={{ background: accent, color: cardType === 'pirate' ? '#000' : '#fff' }}>
+            {difficulty === 'Media' ? 'Dificultad Media' : 'Dificultad Alta'}
+          </span>
+        </div>
+        <div className="absolute top-4 right-4 flex items-center gap-1 bg-black/60 backdrop-blur-sm px-3 py-1 rounded-full">
+          <Users size={12} className="text-white/70" />
+          <span className="text-white/70 text-xs font-medium">{players} personas</span>
         </div>
       </div>
+      <div className="p-8">
+        <div className="w-8 h-0.5 mb-4" style={{ background: accent }} />
+        <h3 className="text-2xl font-bold text-white mb-3">{title}</h3>
+        <p className="text-white/50 leading-relaxed text-sm mb-6">{description}</p>
+        <a href="https://wa.me/56996543715?text=Hola%2C%20me%20interesa%20reservar%20una%20sala."
+          className="group/btn inline-flex items-center gap-2 font-semibold text-sm transition-all duration-300 hover:gap-3"
+          style={{ color: accent }}>
+          Reservar esta sala
+          <ArrowRight size={14} className="transition-transform duration-300 group-hover/btn:translate-x-1" />
+        </a>
+      </div>
+      <div className="absolute bottom-0 left-0 w-full h-0.5 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"
+        style={{ background: `linear-gradient(90deg, ${accent}, transparent)` }} />
     </div>
   );
 };
 
-// Rooms Section Component
+// ─── Rooms ────────────────────────────────────────────────────────────────────
 const RoomsSection: React.FC = () => {
   const [ref, isVisible] = useIntersectionObserver();
-
   return (
-    <>
-      <SectionDivider />
-      <section ref={ref} id="rooms" className="py-20 bg-black">
-        <div className="max-w-6xl mx-auto px-4">
-          <h2 
-            className={`text-4xl md:text-5xl font-bold text-[#D4AF37] text-center mb-12 transition-all duration-1000 ease-out ${
-              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}
-          >
-            Explora Nuestros Mundos de Misterio
-          </h2>
-          
-          <div className="grid md:grid-cols-2 gap-8">
-            <RoomCard
-              title="Sala El Pirata Pinwine"
-              description="¿De qué trata la Sala del pirata Pinwine? Es una aventura de misterio pirata llena de puzzles de lógica. Deberán desentrañar los secretos del Capitán Pinwine para cumplir su misión. Es ideal para grupos de amigos, parejas y familias. Tiene una dificultad media. Disponible en español y en inglés."
-              difficulty="Media"
-              players="2-8"
-              image="/pirata.png"
-              alt="Imagen de la Sala del Pirata Pinwine, un escape room temático de piratas."
-              delay={300}
-              cardType="pirate"
-            />
-            
-            <RoomCard
-              title="Sala El Elixir Zombie"
-              description="¿De qué trata la Sala El Elixir Zombie? Es una aventura post-apocalíptica donde deben encontrar la cura para un virus zombie. Deberán investigar un laboratorio y colaborar bajo presión antes de que los zombies regresen. Es ideal para grupos de amigos y equipos valientes. Tiene una dificultad difícil. Disponible en inglés y español."
-              difficulty="Alta"
-              players="2-8"
-              image="/zombie.png"
-              alt="Imagen de la Sala El Elixir Zombi, un escape room de terror y ciencia ficción."
-              delay={600}
-              cardType="zombie"
-            />
+    <section ref={ref} id="rooms" className="py-28" style={{ background: '#0d0d0d' }}>
+      <div className="max-w-6xl mx-auto px-4">
+        <div className={`text-center mb-16 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="h-px w-12 bg-[#D4AF37]" />
+            <span className="text-[#D4AF37] text-xs font-bold tracking-[0.3em] uppercase">Nuestras Salas</span>
+            <div className="h-px w-12 bg-[#D4AF37]" />
           </div>
+          <h2 className="text-4xl md:text-5xl font-bold text-white">Elige tu <span className="text-[#D4AF37]">Mundo</span></h2>
         </div>
-      </section>
-    </>
-  );
-};
-
-// How It Works Step Component
-const StepCard: React.FC<{
-  step: number;
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  delay: number;
-  linkTo?: string;
-}> = ({ step, title, description, icon, delay, linkTo }) => {
-  const [ref, isVisible] = useIntersectionObserver();
-
-  const content = (
-    <div 
-      ref={ref}
-      className={`text-center transform transition-all duration-600 ease-out bg-[#363636] p-6 rounded-lg hover:bg-[#404040] ${
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-      }`}
-      style={{ transitionDelay: `${delay}ms` }}
-    >
-      <div className="bg-[#D4AF37] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4 hover:scale-110 transition-transform duration-300">
-        {icon}
+        <div className="grid md:grid-cols-2 gap-8">
+          <RoomCard title="Sala El Pirata Pinwine"
+            description="Una aventura de misterio pirata llena de puzzles de lógica. Desentraña los secretos del Capitán Pinwine para cumplir tu misión. Ideal para grupos de amigos, parejas y familias. Disponible en español e inglés."
+            difficulty="Media" players="2-8" image="/pirata.png" alt="Sala del Pirata Pinwine" delay={200} cardType="pirate" />
+          <RoomCard title="Sala El Elixir Zombie"
+            description="Una aventura post-apocalíptica donde deben encontrar la cura para un virus zombie. Investiga el laboratorio y colabora bajo presión antes de que los zombies regresen. Disponible en inglés y español."
+            difficulty="Alta" players="2-8" image="/zombie.png" alt="Sala El Elixir Zombie" delay={400} cardType="zombie" />
+        </div>
       </div>
-      <h3 className="text-xl font-bold text-[#D4AF37] mb-3">{title}</h3>
-      <p className="text-white leading-relaxed mb-4">{description}</p>
-      {step === 1 && (
-        <a
-          href="https://wa.me/56996543715?text=Hola%2C%20me%20interesa%20reservar%20un%20escape%20room."
-          className="inline-block text-[#D4AF37] hover:text-white transition-colors duration-300 text-sm font-semibold"
-        >
-          +56 9 9654 3715
-        </a>
-      )}
-    </div>
+    </section>
   );
-
-  if (linkTo) {
-    return (
-      <a href={linkTo} className="block">
-        {content}
-      </a>
-    );
-  }
-
-  return content;
 };
 
-// How It Works Section Component
+// ─── How It Works ─────────────────────────────────────────────────────────────
 const HowItWorksSection: React.FC = () => {
   const [ref, isVisible] = useIntersectionObserver();
 
+  const steps = [
+    { label: '1er Paso', title: 'Reserva', desc: 'Contáctanos por WhatsApp para asegurar tu aventura en la fecha y sala que prefieras.', icon: <MessageCircle size={22} />, link: 'https://wa.me/56996543715', phone: true },
+    { label: '2do Paso', title: 'Llega', desc: 'Arriba 15 minutos antes de tu horario para la introducción y briefing con tu Game Master.', icon: <Navigation size={22} />, link: '#contact', phone: false },
+    { label: '3er Paso', title: 'Juega', desc: 'Sumérgete en la historia. Tienes 60 minutos para resolver todos los enigmas y escapar.', icon: <GameController size={22} />, link: '#rooms', phone: false },
+    { label: '4to Paso', title: 'Escapa', desc: '¡Celebra tu victoria o aprende de los puzzles restantes! Foto grupal de recuerdo incluida.', icon: <Trophy size={22} />, link: '#testimonials', phone: false },
+  ];
+
   return (
-    <>
-      <SectionDivider />
-      <section ref={ref} className="py-20 bg-[#363636]">
-        <div className="max-w-6xl mx-auto px-4">
-          <h2 
-            className={`text-4xl md:text-5xl font-bold text-[#D4AF37] text-center mb-12 transition-all duration-1000 ease-out ${
-              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}
-          >
-            4 Pasos Para Que Estés Disfrutando Nuestro Escape Room
-          </h2>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <StepCard
-              step={1}
-              title="Reserva"
-              description="Contáctanos directamente por WhatsApp para asegurar tu aventura."
-              icon={<MessageCircle className="text-[#363636]" size={24} />}
-              delay={200}
-            />
-            
-            <StepCard
-              step={2}
-              title="Dirígete a Nuestra Ubicación"
-              description="Llega con 15 minutos de anticipación a tu horario de inicio para la respectiva introducción."
-              icon={<Navigation className="text-[#363636]" size={24} />}
-              delay={400}
-              linkTo="#contact"
-            />
-            
-            <StepCard
-              step={3}
-              title="Juega"
-              description="Sumérgete completamente en la historia y resuelve los enigmas para escapar."
-              icon={<GameController className="text-[#363636]" size={24} />}
-              delay={600}
-              linkTo="#rooms"
-            />
-            
-            <StepCard
-              step={4}
-             title="Escapa"
-             description="¿Lograste escapar? ¡Tu historia merece ser contada!"
-              icon={<Trophy className="text-[#363636]" size={24} />}
-              delay={800}
-              linkTo="#testimonials"
-            />
+    <section ref={ref} className="py-28 bg-[#0a0a0a]">
+      <div className="max-w-6xl mx-auto px-4">
+        <div className={`text-center mb-16 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="h-px w-12 bg-[#D4AF37]" />
+            <span className="text-[#D4AF37] text-xs font-bold tracking-[0.3em] uppercase">El Proceso</span>
+            <div className="h-px w-12 bg-[#D4AF37]" />
           </div>
+          <h2 className="text-4xl md:text-5xl font-bold text-white">4 pasos para <span className="text-[#D4AF37]">la aventura</span></h2>
         </div>
-      </section>
-    </>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {steps.map(({ label, title, desc, icon, link, phone }, i) => (
+            <a key={label} href={link}
+              className={`group relative p-8 rounded-2xl border transition-all duration-700 ease-out hover:border-[#D4AF37]/50 hover:-translate-y-2 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+              style={{ transitionDelay: `${i * 150}ms`, background: '#111', borderColor: 'rgba(255,255,255,0.06)' }}>
+              <div className="absolute top-4 right-4 text-xs font-black text-[#D4AF37]/20 group-hover:text-[#D4AF37]/40 transition-all duration-300 tracking-widest uppercase">
+                {label}
+              </div>
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-6 text-black transition-all duration-300 group-hover:scale-110"
+                style={{ background: '#D4AF37' }}>
+                {icon}
+              </div>
+              <h3 className="text-lg font-bold text-white mb-3">{title}</h3>
+              <p className="text-white/45 text-sm leading-relaxed">{desc}</p>
+              {phone && <p className="text-[#D4AF37] text-xs font-semibold mt-3">+56 9 9654 3715</p>}
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 };
 
-// Testimonials Section Component
+// ─── Testimonials ─────────────────────────────────────────────────────────────
 const TestimonialsSection: React.FC = () => {
   const [ref, isVisible] = useIntersectionObserver();
   const [isPaused, setIsPaused] = useState(false);
 
   const testimonials = [
-    {
-      text: "¡Una experiencia increíble! Logramos completar la aventura en 50:46. Los puzzles son desafiantes y la ambientación es de 10.",
-      author: "Los Jabalíes",
-      image: "/jabaliesytablas.jpeg"
-    },
-    {
-      text: "¡Qué experiencia tan divertida! Somos un equipo pequeño pero poderoso. Definitivamente volveremos con más amigos.",
-      author: "Pichitos",
-      image: "/pichitos.jpeg"
-    },
-    {
-      text: "La atención fue fantástica y la sala del pirata es genial. Nuestro tiempo fue 51:50. ¡Volveremos!",
-      author: "16 Ojos",
-      image: "/16ojos.jpeg"
-    },
-    {
-      text: "Fuimos con amigos y nos reímos muchísimo. ¡Totalmente recomendado para cualquier grupo!",
-      author: "Los Pifiados",
-      image: "/lospifiados.jpeg"
-    },
-    {
-      text: "El mejor escape room que hemos hecho. ¡Ya queremos probar otra sala! Una experiencia única.",
-      author: "Ganya Team",
-      image: "/ganyateam.jpeg"
-    },
-    {
-      text: "¡Las Indomitas conquistamos el escape room en 58:33! Una experiencia llena de adrenalina y diversión. ¡Totalmente recomendado!",
-      author: "Las Indomitas",
-      image: "/lasindomitas.jpeg"
-    },
-    {
-      text: "Las Rafitas vivimos una aventura increíble. El trabajo en equipo fue clave para resolver todos los misterios. ¡Volveremos!",
-      author: "Las Rafitas",
-      image: "/lasrafitas.jpeg"
-    },
-    {
-      text: "El Club de Checho logró escapar en 54:47! Una experiencia que combina diversión, desafío y mucha emoción. ¡Imperdible!",
-      author: "Club de Checho",
-      image: "/clubdechecho.jpeg"
-    }
+    { text: '¡Una experiencia increíble! Logramos completar la aventura en 50:46. Los puzzles son desafiantes y la ambientación es de 10.', author: 'Los Jabalíes', image: '/jabaliesytablas.jpeg' },
+    { text: '¡Qué experiencia tan divertida! Somos un equipo pequeño pero poderoso. Definitivamente volveremos con más amigos.', author: 'Pichitos', image: '/pichitos.jpeg' },
+    { text: 'La atención fue fantástica y la sala del pirata es genial. Nuestro tiempo fue 51:50. ¡Volveremos!', author: '16 Ojos', image: '/16ojos.jpeg' },
+    { text: 'Fuimos con amigos y nos reímos muchísimo. ¡Totalmente recomendado para cualquier grupo!', author: 'Los Pifiados', image: '/lospifiados.jpeg' },
+    { text: 'El mejor escape room que hemos hecho. ¡Ya queremos probar otra sala! Una experiencia única.', author: 'Ganya Team', image: '/ganyateam.jpeg' },
+    { text: '¡Las Indomitas conquistamos el escape room en 58:33! Una experiencia llena de adrenalina y diversión. ¡Totalmente recomendado!', author: 'Las Indomitas', image: '/lasindomitas.jpeg' },
+    { text: 'Las Rafitas vivimos una aventura increíble. El trabajo en equipo fue clave para resolver todos los misterios. ¡Volveremos!', author: 'Las Rafitas', image: '/lasrafitas.jpeg' },
+    { text: '¡El Club de Checho logró escapar en 54:47! Una experiencia que combina diversión, desafío y mucha emoción. ¡Imperdible!', author: 'Club de Checho', image: '/clubdechecho.jpeg' },
   ];
 
-  const doubledTestimonials = [...testimonials, ...testimonials];
+  const doubled = [...testimonials, ...testimonials];
 
   return (
+    <section ref={ref} id="testimonials" className="py-28 overflow-hidden" style={{ background: '#080808' }}>
+      <div className="max-w-6xl mx-auto px-4 mb-12">
+        <div className={`text-center transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="h-px w-12 bg-[#D4AF37]" />
+            <span className="text-[#D4AF37] text-xs font-bold tracking-[0.3em] uppercase">Opiniones</span>
+            <div className="h-px w-12 bg-[#D4AF37]" />
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold text-white">
+            Lo que dicen nuestros <span className="text-[#D4AF37]">aventureros</span>
+          </h2>
+        </div>
+      </div>
+      <div className="relative" onMouseEnter={() => setIsPaused(true)} onMouseLeave={() => setIsPaused(false)}>
+        <div className="absolute left-0 top-0 w-20 h-full z-10 pointer-events-none" style={{ background: 'linear-gradient(90deg, #080808, transparent)' }} />
+        <div className="absolute right-0 top-0 w-20 h-full z-10 pointer-events-none" style={{ background: 'linear-gradient(-90deg, #080808, transparent)' }} />
+        <div className="flex gap-5" style={{ width: `${doubled.length * 340}px`, animation: isPaused ? 'none' : 'scroll 35s linear infinite' }}>
+          {doubled.map((t, i) => (
+            <div key={i} className="min-w-[320px] p-6 rounded-2xl border border-white/6 flex flex-col gap-4" style={{ background: '#111' }}>
+              <div className="flex gap-1">
+                {[...Array(5)].map((_, s) => <Star key={s} size={12} fill="#D4AF37" className="text-[#D4AF37]" />)}
+              </div>
+              <p className="text-white/60 text-sm leading-relaxed flex-1">"{t.text}"</p>
+              <div className="flex items-center gap-3 pt-3 border-t border-white/8">
+                <img src={t.image} alt={t.author} className="w-10 h-10 rounded-full object-cover object-top border-2 border-[#D4AF37]/40" />
+                <span className="text-[#D4AF37] font-semibold text-sm">{t.author}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ─── FAQ ──────────────────────────────────────────────────────────────────────
+const FAQSection: React.FC = () => {
+  const [ref, isVisible] = useIntersectionObserver();
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+  const faqs = [
+    { question: '¿Qué es un Escape Room?', answer: 'Es una experiencia de juego en vivo donde tú y tu equipo son "encerrados" temáticamente en una sala y tienen 60 minutos para resolver acertijos, encontrar pistas y completar una misión para "escapar" antes de que se acabe el tiempo.' },
+    { question: '¿Estamos realmente encerrados?', answer: '¡No! Por seguridad, nunca estás realmente encerrado. Siempre habrá una salida de emergencia accesible. Nuestro Game Master te explicará cómo funciona antes de empezar.' },
+    { question: '¿Necesitamos alguna habilidad especial?', answer: '¡Absolutamente no! Nuestros juegos están diseñados para poner a prueba tu lógica, observación, creatividad y trabajo en equipo. No necesitas fuerza física ni conocimientos previos.' },
+    { question: '¿Qué pasa si no logramos escapar a tiempo?', answer: 'No te preocupes. El Game Master entrará para explicarte las soluciones de los puzzles restantes y celebrar tu esfuerzo. Lo importante es la diversión y la experiencia.' },
+    { question: '¿Se puede jugar con movilidad reducida?', answer: 'Sí, nuestras salas están diseñadas para ser accesibles en general. Te recomendamos contactarnos por WhatsApp antes de reservar para confirmar la adaptabilidad según tus necesidades.' },
+    { question: '¿Cuántas personas pueden jugar?', answer: 'Nuestras salas están diseñadas para grupos de 2 hasta 8 personas. Para grupos más grandes recomendamos reservar sesiones consecutivas.' },
+    { question: '¿Hay edad mínima para participar?', answer: 'Sala del Capitán Pinwine: recomendada para mayores de 8 años. Los menores de 14 deben ir con un adulto. Sala Zombie: edad mínima recomendada 12-14 años, menores deben ir acompañados.' },
+    { question: '¿Cuál es el precio por persona?', answer: 'El precio es de $10.000 CLP por persona.' },
+    { question: '¿Cómo puedo reservar?', answer: 'Las reservas se realizan vía WhatsApp al +56 9 9654 3715. Envíanos un mensaje con la fecha, hora y sala que te interesa y te confirmamos disponibilidad.' },
+    { question: '¿Con cuánta anticipación debo llegar?', answer: 'Te pedimos llegar 10-15 minutos antes de la hora reservada para la introducción y para asegurar que tu juego comience a tiempo.' },
+    { question: '¿Cuánto dura la experiencia total?', answer: 'El juego dura 60 minutos. Considera 10-15 minutos antes para introducción y 5-10 minutos después para foto y comentarios. En total, unas 80-90 minutos.' },
+    { question: '¿Cómo funciona la cancelación?', answer: 'Para reservar se necesita el 50% del valor total al momento de reservar. En caso de cancelación, ese 50% no se reembolsa. Puedes modificar tu reserva avisando con 24-48 horas de anticipación.' },
+    { question: '¿Puedo usar mi celular dentro de la sala?', answer: 'No se permite el uso de celulares dentro de la sala para una inmersión completa y por confidencialidad de los puzzles. Habrá un lugar seguro para guardarlos.' },
+    { question: '¿Tienen estacionamiento?', answer: 'Estamos en Ramón Quezada 0470, La Casona Pucón. Contamos con estacionamiento en el lugar o en las cercanías.' },
+    // SEO - Temuco
+    { question: '¿Qué hacer en Temuco con amigos?', answer: 'Si buscas una actividad diferente y emocionante en Temuco, el escape room es una de las mejores opciones. En Escape Room Araucanía – Los Misterios de la Casona, ya estamos atendiendo en Temuco para que tú y tus amigos vivan una aventura de misterio, puzzles y adrenalina. Ideal para grupos de 2 a 8 personas. ¡Reserva directamente por WhatsApp!' },
+    { question: '¿Qué planes de entretenimiento hay en Temuco?', answer: 'Temuco ofrece cada vez más opciones de entretenimiento indoor. Una de las más innovadoras es visitar nuestro escape room en Temuco — Escape Room Araucanía. Una experiencia única que combina lógica, trabajo en equipo y narrativa inmersiva. Perfecta para cualquier época del año.' },
+    { question: '¿Qué hacer en la Araucanía?', answer: 'Además del turismo natural, la Araucanía ya cuenta con experiencias de entretenimiento únicas como Escape Room Araucanía, disponible en Temuco y Pucón. Vive la emoción de resolver acertijos en equipo dentro de salas temáticas ambientadas. Una actividad perfecta para complementar tu visita a la región.' },
+    { question: '¿Actividades para grupos corporativos o team building en Temuco?', answer: 'El escape room es una de las actividades de team building más efectivas y divertidas. En Escape Room Araucanía — Temuco, ofrecemos experiencias diseñadas para fortalecer la comunicación, la confianza y el trabajo en equipo de tu empresa. Contáctanos para coordinar tu evento corporativo al +56 9 9654 3715.' },
+    { question: '¿Qué hacer en Pucón más allá del turismo tradicional?', answer: 'Pucón no es solo volcán y lago. Los Misterios de la Casona, el primer escape room de Pucón, te ofrece una experiencia indoor única de misterio y aventura que puedes disfrutar en cualquier temporada. Está ubicado en La Casona Pucón junto a cafetería con vista al lago y tiendas concept store.' },
+    { question: '¿Hay escape rooms en Temuco o en la Araucanía?', answer: 'Sí, Escape Room Araucanía – Los Misterios de la Casona es el escape room de referencia en la región, con presencia en Pucón (el primero y único por años) y ahora también con sede en Temuco. Tenemos dos salas temáticas: El Pirata Pinwine (dificultad media) y El Elixir Zombie (dificultad alta).' },
+    { question: '¿Dónde llevar a mi familia de visita en Temuco?', answer: 'Si tienes visitas o simplemente quieres un plan diferente con tu familia en Temuco, el escape room es una excelente opción para todas las edades (desde 8 años con adulto). Escape Room Araucanía en Temuco ofrece una experiencia inmersiva, educativa y divertida. ¡Reserva ahora por WhatsApp!' },
+    { question: '¿Qué actividades hay para hacer en Pucón cuando llueve?', answer: 'Pucón tiene clima variable y los días de lluvia pueden sorprenderte. Para esos momentos, Los Misterios de la Casona — Escape Room Pucón es la actividad indoor perfecta. Disfruta 60 minutos de adrenalina, misterio y puzzles en equipo sin importar el clima. Luego relájate en la cafetería Calma con vista al lago.' },
+  ];
+
+  return (
+    <section ref={ref} className="py-28" style={{ background: '#0a0a0a' }}>
+      <div className="max-w-3xl mx-auto px-4">
+        <div className={`text-center mb-16 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="h-px w-12 bg-[#D4AF37]" />
+            <span className="text-[#D4AF37] text-xs font-bold tracking-[0.3em] uppercase">FAQ</span>
+            <div className="h-px w-12 bg-[#D4AF37]" />
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold text-white">
+            ¿Tienes <span className="text-[#D4AF37]">preguntas?</span>
+          </h2>
+        </div>
+        <div className="space-y-2">
+          {faqs.map((faq, index) => (
+            <div key={index} className="rounded-xl overflow-hidden border border-white/6 transition-all duration-300 hover:border-[#D4AF37]/20"
+              style={{ background: activeIndex === index ? '#161616' : '#111' }}>
+              <button onClick={() => setActiveIndex(activeIndex === index ? null : index)}
+                className="w-full py-5 px-6 text-left flex justify-between items-center gap-4">
+                <span className="text-white font-medium text-sm">{faq.question}</span>
+                <div className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center transition-all duration-300"
+                  style={{ background: activeIndex === index ? '#D4AF37' : 'rgba(212,175,55,0.15)' }}>
+                  {activeIndex === index
+                    ? <ChevronUp className="text-black" size={12} />
+                    : <ChevronDown className="text-[#D4AF37]" size={12} />}
+                </div>
+              </button>
+              <div className={`overflow-hidden transition-all duration-400 ease-in-out ${activeIndex === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+                <div className="px-6 pb-5">
+                  <p className="text-white/50 text-sm leading-relaxed">{faq.answer}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ─── Gallery ──────────────────────────────────────────────────────────────────
+const GallerySection: React.FC = () => {
+  const [ref, isVisible] = useIntersectionObserver();
+  const images = [
+    { src: '/jabaliesytablas.jpeg', alt: 'Los Jabalíes' },
+    { src: '/pichitos.jpeg', alt: 'Pichitos' },
+    { src: '/16ojos.jpeg', alt: '16 Ojos' },
+    { src: '/lospifiados.jpeg', alt: 'Los Pifiados' },
+    { src: '/ganyateam.jpeg', alt: 'Ganya Team' },
+    { src: '/lasindomitas.jpeg', alt: 'Las Indomitas' },
+    { src: '/lasrafitas.jpeg', alt: 'Las Rafitas' },
+    { src: '/clubdechecho.jpeg', alt: 'Club de Checho' },
+  ];
+
+  return (
+    <section ref={ref} className="py-28" style={{ background: '#0d0d0d' }}>
+      <div className="max-w-6xl mx-auto px-4">
+        <div className={`text-center mb-16 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="h-px w-12 bg-[#D4AF37]" />
+            <span className="text-[#D4AF37] text-xs font-bold tracking-[0.3em] uppercase">Galería</span>
+            <div className="h-px w-12 bg-[#D4AF37]" />
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold text-white">Galería de <span className="text-[#D4AF37]">aventureros</span></h2>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {images.map((img, i) => (
+            <div key={i}
+              className={`group relative aspect-square overflow-hidden rounded-2xl cursor-pointer transition-all duration-700 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+              style={{ transitionDelay: `${i * 80}ms` }}>
+              <img src={img.src} alt={img.alt} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+              <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-300 flex items-end p-4">
+                <span className="text-white font-semibold text-sm opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300">{img.alt}</span>
+              </div>
+              <div className="absolute inset-0 border-2 border-transparent group-hover:border-[#D4AF37]/40 rounded-2xl transition-all duration-300" />
+            </div>
+          ))}
+        </div>
+        <div className={`text-center mt-12 transition-all duration-1000 ease-out delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <a href="https://wa.me/56996543715?text=Hola%2C%20quiero%20reservar%20y%20ser%20parte%20de%20la%20galería."
+            className="inline-flex items-center gap-2 bg-[#8B0000] text-white px-8 py-4 rounded-xl font-bold hover:bg-[#D4AF37] hover:text-black transition-all duration-300 hover:scale-105">
+            ¡Reserva y sé parte de nuestra galería! <ArrowRight size={16} />
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ─── La Casona ────────────────────────────────────────────────────────────────
+const LaCasonaSection: React.FC = () => {
+  const [ref, isVisible] = useIntersectionObserver();
+  const [conceptIdx, setConceptIdx] = useState(0);
+  const [cafeteriaIdx, setCafeteriaIdx] = useState(0);
+
+  const conceptImgs = ['/TIENDACONCEPT1.jpeg', '/TIENDACONCEPT.jpeg'];
+  const cafeteriaImgs = ['/CAFETERIA1.jpeg', '/CAFETERIA.jpeg', '/CAFETERIA2.jpeg'];
+
+  useEffect(() => {
+    const t1 = setInterval(() => setConceptIdx(p => (p + 1) % conceptImgs.length), 4000);
+    const t2 = setInterval(() => setCafeteriaIdx(p => (p + 1) % cafeteriaImgs.length), 4000);
+    return () => { clearInterval(t1); clearInterval(t2); };
+  }, []);
+
+  const modules = [
+    { title: 'Tienda Concept Store', subtitle: 'Un mundo de descubrimientos', description: 'Descubre una variada selección de productos y marcas, ideales para encontrar ese detalle especial, un regalo único o algo que te encante. Desde artículos de diseño y decoración hasta moda y artesanía local.', images: conceptImgs, currentIdx: conceptIdx, setIdx: setConceptIdx, isCarousel: true, alt: 'Tienda concept store La Casona Pucón' },
+    { title: 'Cafetería Calma', subtitle: 'Vistas inolvidables al lago', description: 'Situada a la orilla del lago Villarrica, Calma ofrece el mejor café y una deliciosa selección de pastelería y snacks, con una vista espectacular. El spot ideal para recargar energías y contemplar la belleza de Pucón.', images: cafeteriaImgs, currentIdx: cafeteriaIdx, setIdx: setCafeteriaIdx, isCarousel: true, alt: 'Cafetería Calma con vista al lago' },
+    { title: 'Actividades y Talleres', subtitle: 'Un espacio siempre vivo', description: 'Regularmente somos anfitriones de exposiciones de arte, charlas culturales, workshops creativos y eventos comunitarios. ¡Mantente atento a nuestras redes sociales para conocer la programación!', image: '/ACTIVIDADES1.jpeg', isCarousel: false, alt: 'Actividades y talleres en La Casona' },
+    { title: 'Paseo a Orilla del Lago', subtitle: 'Un agradable recorrido peatonal', description: 'Disfruta de un relajante paseo por la hermosa orilla del lago Villarrica, justo al salir de La Casona. El complemento perfecto para tu día de aventura en Pucón.', image: '/CAFETERIA.jpeg', isCarousel: false, alt: 'Orilla del lago Villarrica' },
+  ];
+
+  return (
+    <section ref={ref} className="py-28" style={{ background: '#080808' }}>
+      <div className="max-w-6xl mx-auto px-4">
+        <div className={`text-center mb-20 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <div className="h-px w-12 bg-[#D4AF37]" />
+            <span className="text-[#D4AF37] text-xs font-bold tracking-[0.3em] uppercase">El Lugar</span>
+            <div className="h-px w-12 bg-[#D4AF37]" />
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">Más allá del <span className="text-[#D4AF37]">Escape Room</span></h2>
+          <p className="text-white/50 text-lg max-w-3xl mx-auto leading-relaxed">
+            Ubicados en la histórica La Casona Pucón, un espacio vibrante con opciones únicas para relajarte, comprar y disfrutar.
+          </p>
+        </div>
+        <div className="space-y-20">
+          {modules.map((m, i) => (
+            <div key={i}
+              className={`grid md:grid-cols-2 gap-12 items-center transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'} ${i % 2 === 1 ? 'md:[&>*:first-child]:order-last' : ''}`}
+              style={{ transitionDelay: `${i * 200}ms` }}>
+              <div className="relative">
+                {m.isCarousel ? (
+                  <div className="relative h-80 rounded-2xl overflow-hidden" style={{ boxShadow: '0 25px 50px rgba(0,0,0,0.5)' }}>
+                    {m.images?.map((img, idx) => (
+                      <img key={idx} src={img} alt={`${m.alt} ${idx + 1}`}
+                        className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ${idx === m.currentIdx ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`} />
+                    ))}
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                      {m.images?.map((_, idx) => (
+                        <button key={idx} onClick={() => m.setIdx?.(idx)}
+                          className={`rounded-full transition-all duration-300 ${idx === m.currentIdx ? 'w-6 h-2 bg-[#D4AF37]' : 'w-2 h-2 bg-white/40 hover:bg-white/60'}`} />
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <img src={m.image} alt={m.alt} className="w-full h-80 object-cover rounded-2xl" style={{ boxShadow: '0 25px 50px rgba(0,0,0,0.5)' }} />
+                )}
+              </div>
+              <div>
+                <div className="w-8 h-0.5 bg-[#D4AF37] mb-4" />
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">{m.title}</h3>
+                <p className="text-[#D4AF37] font-medium mb-4 text-sm">{m.subtitle}</p>
+                <p className="text-white/50 leading-relaxed">{m.description}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className={`text-center mt-16 transition-all duration-1000 ease-out delay-800 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <a href="https://wa.me/56996543715?text=Hola%2C%20me%20interesa%20conocer%20La%20Casona%20Puc%C3%B3n."
+            className="inline-flex items-center gap-2 bg-[#8B0000] text-white px-8 py-4 rounded-xl font-bold hover:bg-[#D4AF37] hover:text-black transition-all duration-300 hover:scale-105">
+            Descubre todo lo que tenemos <ArrowRight size={16} />
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ─── Contact ──────────────────────────────────────────────────────────────────
+const ContactSection: React.FC = () => {
+  const [ref, isVisible] = useIntersectionObserver();
+  return (
     <>
-      <SectionDivider />
-      <section ref={ref} id="testimonials" className="py-20 bg-white overflow-hidden border-t-4 border-b-4 border-[#D4AF37]">
+      <TemucoBanner />
+      <section ref={ref} id="contact" className="py-28 bg-[#0a0a0a]">
         <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <div className={`inline-flex items-center gap-3 transition-all duration-1000 ease-out ${
-              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}>
-              <Sparkles className="text-[#D4AF37] animate-pulse" size={32} />
-              <h2 className="text-4xl md:text-5xl font-bold text-[#363636]">
-                Lo que Dicen Nuestros Aventureros
-              </h2>
-              <Sparkles className="text-[#D4AF37] animate-pulse" size={32} />
+          <div className={`text-center mb-16 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="h-px w-12 bg-[#D4AF37]" />
+              <span className="text-[#D4AF37] text-xs font-bold tracking-[0.3em] uppercase">Contacto</span>
+              <div className="h-px w-12 bg-[#D4AF37]" />
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-white">Encuéntranos y <span className="text-[#D4AF37]">contáctanos</span></h2>
+          </div>
+          <div className="grid md:grid-cols-2 gap-12">
+            <div className={`transition-all duration-1000 ease-out delay-300 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-12'}`}>
+              <div className="space-y-4 mb-8">
+                {[
+                  { icon: <MapPin size={20} />, label: 'Dirección', value: 'Ramón Quezada 0470, Pucón', href: null },
+                  { icon: <Phone size={20} />, label: 'WhatsApp', value: '+56 9 9654 3715', href: 'https://wa.me/56996543715' },
+                  { icon: <Mail size={20} />, label: 'Email', value: 'escaperoompucon@gmail.com', href: 'mailto:escaperoompucon@gmail.com' },
+                ].map(({ icon, label, value, href }) => (
+                  <div key={label} className="flex items-start gap-4 p-5 rounded-xl border border-white/6 hover:border-[#D4AF37]/30 transition-all duration-300" style={{ background: '#111' }}>
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center text-black flex-shrink-0" style={{ background: '#D4AF37' }}>{icon}</div>
+                    <div>
+                      <p className="text-white/35 text-xs uppercase tracking-wide mb-1">{label}</p>
+                      {href ? <a href={href} className="text-white hover:text-[#D4AF37] transition-colors duration-300 font-medium">{value}</a>
+                        : <p className="text-white font-medium">{value}</p>}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="flex items-center gap-4 mb-8">
+                <p className="text-white/35 text-sm">Síguenos en</p>
+                <a href="https://www.instagram.com/escaperoom_pucon/?hl=es" className="flex items-center gap-2 text-white/50 hover:text-[#D4AF37] transition-colors duration-300">
+                  <Instagram size={20} />
+                  <span className="text-sm font-medium">@escaperoom_pucon</span>
+                </a>
+              </div>
+              <a href="https://wa.me/56996543715?text=Hola%2C%20me%20interesa%20reservar%20un%20escape%20room%20en%20Los%20Misterios%20de%20la%20Casona."
+                className="inline-flex items-center gap-2 bg-[#8B0000] text-white px-8 py-4 rounded-xl font-bold hover:bg-[#D4AF37] hover:text-black transition-all duration-300 hover:scale-105">
+                Reservar por WhatsApp <ArrowRight size={16} />
+              </a>
+            </div>
+            <div className={`transition-all duration-1000 ease-out delay-600 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-12'}`}>
+              <div className="rounded-2xl overflow-hidden border border-white/6" style={{ boxShadow: '0 25px 50px rgba(0,0,0,0.5)' }}>
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3131.234567890123!2d-71.9762225!3d-39.2666282!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x96147f4838ebcf1d:0x5f6543199a9b5c15!2sEscape+room+pucon!5e0!3m2!1ses!2scl!4v1678901234567!5m2!1ses!2scl"
+                  width="100%" height="400"
+                  style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg)' }}
+                  allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"
+                  title="Ubicación Escape Room Pucón"
+                />
+              </div>
             </div>
           </div>
-          
-          <div 
-            className="relative"
-            onMouseEnter={() => setIsPaused(true)}
-            onMouseLeave={() => setIsPaused(false)}
-          >
-            <div 
-              className={`flex gap-6 ${isPaused ? '' : 'animate-scroll'}`}
-              style={{
-                width: `${doubledTestimonials.length * 320}px`,
-                animation: isPaused ? 'none' : 'scroll 30s linear infinite'
-              }}
-            >
-              {doubledTestimonials.map((testimonial, index) => (
-                <div 
-                  key={index}
-                  className="bg-[#363636] p-6 rounded-lg min-w-[320px] border-l-4 border-[#D4AF37] shadow-lg"
-                >
-                  <div className="mb-4">
-                    <img 
-                      src={testimonial.image} 
-                      alt={`Foto del equipo ${testimonial.author}`}
-                      className="w-full h-32 object-cover rounded-lg"
-                      style={{ 
-                        objectPosition: testimonial.author === "Los Pifiados" ? 'center 40%' : 
-                                      testimonial.author === "Las Rafitas" ? 'center 35%' : 'center 20%'
-                      }}
-                    />
-                  </div>
-                  <p className="text-white mb-4 italic">"{testimonial.text}"</p>
-                  <p className="text-[#D4AF37] font-semibold">- {testimonial.author}</p>
+        </div>
+      </section>
+    </>
+  );
+};
+
+// ─── Temuco Site ──────────────────────────────────────────────────────────────
+const TemucoPuconSite: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
+  const [ref, isVisible] = useIntersectionObserver();
+  return (
+    <div className="min-h-screen bg-[#080808] text-white">
+      {/* Temuco Hero */}
+      <section className="relative min-h-screen overflow-hidden bg-black">
+        <div className="absolute inset-0">
+          <img src="/CAFETERIA1.jpeg" alt="Temuco"
+            className="w-full h-full object-cover"
+            style={{ filter: 'brightness(0.3)', transform: 'scale(1.05)' }} />
+        </div>
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.5) 70%, rgba(0,0,0,0.97) 100%)' }} />
+
+        <div className="absolute top-6 right-6 z-20">
+          <img src="/logoescaperoom.jpg" alt="Logo" className="h-20 w-auto rounded-xl" style={{ boxShadow: '0 0 30px rgba(212,175,55,0.2)' }} />
+        </div>
+        <button onClick={onChangeCity}
+          className="absolute top-8 left-8 z-20 flex items-center gap-2 text-white/40 hover:text-[#D4AF37] transition-all duration-300 text-xs font-medium tracking-widest uppercase">
+          <MapPin size={14} /> Cambiar ciudad
+        </button>
+
+        <div className="relative z-10 min-h-screen flex flex-col justify-end px-4 pb-20">
+          <div className="max-w-4xl mx-auto w-full">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="h-px flex-1 max-w-16" style={{ background: 'linear-gradient(90deg, transparent, #D4AF37)' }} />
+              <span className="text-[#D4AF37] text-xs font-bold tracking-[0.3em] uppercase">Escape Room Araucanía — Temuco</span>
+            </div>
+            <h1 className="text-5xl md:text-7xl font-bold text-white mb-3 leading-none">
+              <span className="misterios-text text-5xl md:text-7xl">Los Misterios</span>
+            </h1>
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-none">
+              <span className="casona-text text-4xl md:text-6xl">en Temuco</span>
+            </h1>
+            <p className="text-white/65 text-lg md:text-xl max-w-2xl mb-8 leading-relaxed">
+              Ya estamos atendiendo en Temuco. La misma experiencia de misterio, adrenalina y puzzles que conquista la Araucanía, ahora en el corazón de la capital regional.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <a href="https://wa.me/56996543715?text=Hola%2C%20me%20interesa%20reservar%20en%20Temuco."
+                className="group flex items-center gap-3 bg-[#D4AF37] text-black px-8 py-4 rounded-xl text-base font-bold hover:bg-white transition-all duration-300 hover:scale-105"
+                style={{ boxShadow: '0 0 30px rgba(212,175,55,0.4)' }}>
+                Reservar en Temuco <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform duration-300" />
+              </a>
+              <a href="#temuco-rooms" className="flex items-center gap-3 border border-white/25 text-white px-8 py-4 rounded-xl text-base font-semibold hover:border-[#D4AF37] hover:text-[#D4AF37] transition-all duration-300">
+                Ver Salas
+              </a>
+            </div>
+            <div className="flex gap-8 mt-12 pt-8 border-t border-white/10">
+              {[['60', 'minutos de aventura'], ['2-8', 'jugadores'], ['2', 'salas disponibles']].map(([num, label]) => (
+                <div key={label} className="text-center">
+                  <div className="text-2xl font-bold text-[#D4AF37]">{num}</div>
+                  <div className="text-white/40 text-xs uppercase tracking-wide">{label}</div>
                 </div>
               ))}
             </div>
           </div>
         </div>
       </section>
-    </>
-  );
-};
 
-// FAQ Section Component
-const FAQSection: React.FC = () => {
-  const [ref, isVisible] = useIntersectionObserver();
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
-
-  const faqs = [
-    {
-      question: "¿Qué es un Escape Room?",
-      answer: "Es una experiencia de juego en vivo donde tú y tu equipo son \"encerrados\" temáticamente en una sala y tienen 60 minutos para resolver acertijos, encontrar pistas y completar una misión para \"escapar\" o lograr el objetivo antes de que se acabe el tiempo. ¡Es una aventura de ingenio y trabajo en equipo!"
-    },
-    {
-      question: "¿Estamos realmente encerrados?",
-      answer: "¡No! Por seguridad, nunca estás realmente encerrado. Siempre habrá una salida de emergencia accesible en caso de necesidad. Nuestro Game Master te explicará cómo funciona antes de empezar."
-    },
-    {
-      question: "¿Necesitamos alguna habilidad o conocimiento especial?",
-      answer: "¡Absolutamente no! Nuestros juegos están diseñados para poner a prueba tu lógica, observación, creatividad y capacidad de trabajo en equipo. No necesitas fuerza física ni conocimientos previos. Solo ganas de divertirte y pensar."
-    },
-    {
-      question: "¿Qué pasa si no logramos escapar a tiempo?",
-      answer: "No te preocupes, el Game Master entrará a la sala para explicarte las soluciones de los puzzles restantes y celebrar tu esfuerzo. Lo importante es la diversión y la experiencia, no siempre el escape."
-    },
-    {
-      question: "¿Se puede jugar en silla de ruedas o con movilidad reducida?",
-      answer: "Sí, en general nuestras salas están diseñadas para ser accesibles. Sin embargo, te recomendamos contactarnos por WhatsApp antes de reservar para que podamos confirmarte la adaptabilidad de la sala específica (Capitán Pinwine o Zombie) a tus necesidades y asegurar la mejor experiencia."
-    },
-    {
-      question: "¿Pueden jugar mujeres embarazadas?",
-      answer: "Sí, nuestras salas son seguras para mujeres embarazadas. No requieren esfuerzo físico intenso. Si hay alguna parte que no deseen hacer, otro miembro del equipo puede realizarla."
-    },
-    {
-      question: "¿Cuántas personas pueden jugar?",
-      answer: "Nuestras salas están diseñadas para grupos de 2 hasta 8 personas por sesión. Para grupos más grandes, les recomendamos reservar sesiones consecutivas y dividir al equipo para competir entre ustedes."
-    },
-    {
-      question: "¿Hay una edad mínima para participar?",
-      answer: "Sala del Capitán Pinwine: Recomendada para mayores de 8 años. Los menores de 14 años deben ir acompañados por un adulto responsable que participe en el juego. Sala Zombie: Próximamente (Invierno 2025). Por su temática y nivel de tensión, la edad mínima recomendada será de 12-14 años, y los menores deberán estar acompañados por un adulto."
-    },
-    {
-      question: "¿Cómo puedo reservar una sesión?",
-      answer: "Actualmente, las reservas se realizan vía WhatsApp al +56 9 9654 3715. Simplemente envíanos un mensaje con la fecha, hora y sala que te interesa, ¡y te confirmaremos la disponibilidad!"
-    },
-    {
-      question: "¿Con cuánta anticipación debo llegar?",
-      answer: "Les pedimos llegar 10-15 minutos antes de la hora de su reserva. Esto nos permite hacer una breve introducción, explicar las reglas y asegurar que su juego comience a tiempo, ya que tenemos otras sesiones programadas."
-    },
-    {
-      question: "¿Qué sucede si llego tarde?",
-      answer: "La puntualidad es muy importante. Si llegan tarde, lamentablemente su tiempo de juego podría verse reducido para no afectar a los grupos siguientes. Si el retraso es excesivo, podríamos tener que cancelar la sesión sin reembolso. Por favor, avísenos lo antes posible si se presenta un imprevisto."
-    },
-    {
-      question: "¿Cuánto dura la experiencia total?",
-      answer: "El juego en sí dura 60 minutos. Además, deben considerar 10-15 minutos antes para la introducción y 5-10 minutos después para la foto de grupo y comentarios. En total, estarán con nosotros alrededor de 80-90 minutos."
-    },
-    {
-      question: "¿Cuál es el precio por persona?",
-      answer: "El precio es de $10.000 CLP por persona."
-    },
-    {
-      question: "¿Cómo funciona la reserva, modificación o cancelación?",
-      answer: "Para reservar y asegurar tu horario, es necesario cancelar el 50% del valor total de la sesión al momento de la reserva. Puedes modificar tu reserva con previo aviso (idealmente 24-48 horas de anticipación) o en casos excepcionales, contactándonos por WhatsApp al +56 9 9654 3715. En caso de cancelación de la reserva, el 50% abonado al momento de reservar no será reembolsado. Te animamos a comunicarte con nosotros ante cualquier imprevisto para explorar las mejores opciones."
-    },
-    {
-      question: "¿Qué debo llevar o cómo debo ir vestido?",
-      answer: "Recomendamos venir con ropa y calzado cómodos. No se requiere ropa especial, pero asegúrate de poder moverte con libertad."
-    },
-    {
-      question: "¿Puedo usar mi teléfono celular dentro de la sala?",
-      answer: "Para una inmersión completa y por la confidencialidad de los puzzles, no se permite el uso de teléfonos celulares ni otros dispositivos electrónicos dentro de la sala de juego. Habrá un lugar seguro donde podrán guardarlos."
-    },
-    {
-      question: "¿La Sala Zombie da miedo?",
-      answer: "La Sala Zombie está diseñada para generar tensión y adrenalina con su ambientación y narrativa. Habrá elementos de sorpresa y una atmósfera inmersiva. Si bien no es un \"juego de terror\" con sobresaltos constantes, sí tendrá momentos que elevarán la emoción."
-    },
-    {
-      question: "¿Tienen estacionamiento disponible?",
-      answer: "Estamos ubicados en Ramón Quezada 0470, La Casona Pucón. Contamos con estacionamiento en el lugar o en las cercanías. Te daremos indicaciones más precisas al momento de tu reserva."
-    },
-    {
-      question: "¿Qué otros servicios o planes tienen para el futuro?",
-      answer: "Somos el primero y único Escape Room en Pucón, estamos en la casona Pucón, lugar que alberga cafetería con vista al lago (café calma), tiendas de ropa estilo concept store y donde constantemente se ofrecen diferentes actividades."
-    }
-  ];
-
-  return (
-    <>
-      <SectionDivider />
-      <section ref={ref} className="py-20 bg-black">
-        <div className="max-w-4xl mx-auto px-4">
-          <h2 
-            className={`text-4xl md:text-5xl font-bold text-[#D4AF37] text-center mb-12 transition-all duration-1000 ease-out ${
-              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}
-          >
-            ¿Tienes Preguntas?<br />Tenemos Respuestas
-          </h2>
-          
-          <div className="space-y-4">
-            {faqs.map((faq, index) => (
-              <div key={index} className="border-b border-[#363636]">
-                <button
-                  onClick={() => setActiveIndex(activeIndex === index ? null : index)}
-                  className="w-full py-4 px-6 text-left flex justify-between items-center hover:bg-[#363636] transition-colors duration-300"
-                >
-                  <span className="text-white font-semibold">{faq.question}</span>
-                  {activeIndex === index ? (
-                    <ChevronUp className="text-[#D4AF37] transition-transform duration-300" />
-                  ) : (
-                    <ChevronDown className="text-[#D4AF37] transition-transform duration-300" />
-                  )}
-                </button>
-                
-                <div 
-                  className={`overflow-hidden transition-all duration-400 ease-in-out ${
-                    activeIndex === index ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-                  }`}
-                >
-                  <div className="px-6 pb-4">
-                    <p className="text-[#A9A9A9] leading-relaxed">{faq.answer}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-    </>
-  );
-};
-
-// Instagram Section Component
-const GallerySection: React.FC = () => {
-  const [ref, isVisible] = useIntersectionObserver();
-
-  const galleryImages = [
-    {
-      src: "/jabaliesytablas.jpeg",
-      alt: "Equipo Los Jabalíes celebrando su escape exitoso"
-    },
-    {
-      src: "/pichitos.jpeg",
-      alt: "Equipo Pichitos después de completar la aventura"
-    },
-    {
-      src: "/16ojos.jpeg",
-      alt: "Grupo 16 Ojos después de completar la aventura"
-    },
-    {
-      src: "/lospifiados.jpeg",
-      alt: "Los Pifiados disfrutando su experiencia en el escape room"
-    },
-    {
-      src: "/ganyateam.jpeg",
-      alt: "Ganya Team celebrando su victoria en Los Misterios de la Casona"
-    },
-    {
-      src: "/lasindomitas.jpeg",
-      alt: "Las Indomitas después de completar su aventura en 58:33"
-    },
-    {
-      src: "/lasrafitas.jpeg",
-      alt: "Las Rafitas celebrando su experiencia en el escape room"
-    },
-    {
-      src: "/clubdechecho.jpeg",
-      alt: "Club de Checho después de escapar en 54:47"
-    }
-  ];
-
-  return (
-    <>
-      <SectionDivider />
-      <section ref={ref} className="py-20 bg-[#363636]">
+      {/* Rooms */}
+      <section ref={ref} id="temuco-rooms" className="py-28" style={{ background: '#0d0d0d' }}>
         <div className="max-w-6xl mx-auto px-4">
-          <h2 
-            className={`text-4xl md:text-5xl font-bold text-[#D4AF37] text-center mb-12 transition-all duration-1000 ease-out ${
-              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}
-          >
-            Galería de Aventureros
-          </h2>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            {galleryImages.map((image, index) => (
-              <div
-                key={index}
-                className={`aspect-square overflow-hidden rounded-lg hover:scale-103 transition-all duration-300 hover:shadow-lg relative group cursor-pointer ${
-                  isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                }`}
-                style={{ transitionDelay: `${index * 100}ms` }}
-              >
-                <img 
-                  src={image.src} 
-                  alt={image.alt}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 flex items-center justify-center">
-                  <div className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-center p-2">
-                    <p className="text-sm font-semibold">Ver más</p>
-                  </div>
-                </div>
-              </div>
-            ))}
+          <div className={`text-center mb-16 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="h-px w-12 bg-[#D4AF37]" />
+              <span className="text-[#D4AF37] text-xs font-bold tracking-[0.3em] uppercase">Salas en Temuco</span>
+              <div className="h-px w-12 bg-[#D4AF37]" />
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-white">Elige tu <span className="text-[#D4AF37]">Mundo</span></h2>
           </div>
-          
-          <div className="text-center">
-            <a
-              href="https://wa.me/56996543715?text=Hola%2C%20me%20interesa%20reservar%20un%20escape%20room%20y%20ser%20parte%20de%20esta%20galería."
-              className="inline-block bg-[#8B0000] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#D4AF37] hover:scale-105 transition-all duration-300"
-            >
-              ¡Reserva y Sé Parte de Nuestra Galería!
-            </a>
+          <div className="grid md:grid-cols-2 gap-8">
+            <RoomCard title="Sala El Pirata Pinwine"
+              description="Una aventura de misterio pirata llena de puzzles de lógica. Desentraña los secretos del Capitán Pinwine para cumplir tu misión. Disponible en español e inglés."
+              difficulty="Media" players="2-8" image="/pirata.png" alt="Sala del Pirata Pinwine" delay={200} cardType="pirate" />
+            <RoomCard title="Sala El Elixir Zombie"
+              description="Una aventura post-apocalíptica donde deben encontrar la cura para un virus zombie. Investiga el laboratorio y colabora bajo presión antes de que los zombies regresen."
+              difficulty="Alta" players="2-8" image="/zombie.png" alt="Sala El Elixir Zombie" delay={400} cardType="zombie" />
           </div>
         </div>
       </section>
-    </>
-  );
-};
 
-// La Casona Section Component
-const LaCasonaSection: React.FC = () => {
-  const [ref, isVisible] = useIntersectionObserver();
-  const [currentConceptImageIndex, setCurrentConceptImageIndex] = useState(0);
-  const [currentCafeteriaImageIndex, setCurrentCafeteriaImageIndex] = useState(0);
+      {/* How it works */}
+      <HowItWorksSection />
 
-  const conceptStoreImages = [
-    '/TIENDACONCEPT1.jpeg',
-    '/TIENDACONCEPT.jpeg'
-  ];
-
-  const cafeteriaImages = [
-    '/CAFETERIA1.jpeg',
-    '/CAFETERIA.jpeg',
-    '/CAFETERIA2.jpeg'
-  ];
-
-  useEffect(() => {
-    const conceptInterval = setInterval(() => {
-      setCurrentConceptImageIndex((prev) => (prev + 1) % conceptStoreImages.length);
-    }, 4000); // Cambia cada 4 segundos
-
-    const cafeteriaInterval = setInterval(() => {
-      setCurrentCafeteriaImageIndex((prev) => (prev + 1) % cafeteriaImages.length);
-    }, 4000); // Cambia cada 4 segundos
-
-    return () => {
-      clearInterval(conceptInterval);
-      clearInterval(cafeteriaInterval);
-    };
-  }, []);
-
-  const modules = [
-    {
-      title: 'Tienda Concept Store:\nLa Casona Pucón, Un Mundo de Descubrimientos',
-      description: 'Sumérgete en un espacio lleno de encanto y originalidad en Concept Store "La Casona". Aquí podrás descubrir una variada selección de productos y marcas, ideales para encontrar ese detalle especial, un regalo único o simplemente algo que te encante. Desde artículos de diseño y decoración hasta moda y artesanía local, cada visita es una oportunidad para encontrar algo diferente y llevarte un pedacito de Pucón.',
-      images: conceptStoreImages,
-      currentIndex: currentConceptImageIndex,
-      setCurrentIndex: setCurrentConceptImageIndex,
-      isCarousel: true,
-      alt: 'Interior de tienda concept store con productos únicos y artesanía local'
-    },
-    {
-      title: 'Cafetería de Especialidad:\nVistas Inolvidables al Lago',
-      description: 'Después de la adrenalina de tu escape, o simplemente para disfrutar de un momento único, relájate en la cafetería de especialidad Calma. Situada estratégicamente a la orilla del lago, la cual ofrece no solo el mejor café y una deliciosa selección de pastelería y snacks, sino también una vista espectacular que te dejará sin aliento. Es el spot ideal para recargar energías, conversar con amigos o simplemente contemplar la belleza de Pucón.',
-      images: cafeteriaImages,
-      currentIndex: currentCafeteriaImageIndex,
-      setCurrentIndex: setCurrentCafeteriaImageIndex,
-      isCarousel: true,
-      alt: 'Cafetería con vista al lago, ambiente acogedor con café de especialidad'
-    },
-    {
-      title: 'Actividades y Talleres:\nUn Espacio Siempre Vivo',
-      description: 'En La Casona Pucón, la experiencia nunca se detiene. Regularmente, somos anfitriones de una variedad de actividades y talleres diseñados para enriquecer tu visita. Desde exposiciones de arte y charlas culturales hasta workshops creativos y eventos comunitarios, siempre hay algo nuevo y emocionante sucediendo. ¡Mantente atento a nuestras redes sociales o consulta en el lugar para conocer la programación de este mes y sumarte a la acción!',
-      image: '/ACTIVIDADES1.jpeg',
-      isCarousel: false,
-      alt: 'Espacio de actividades y talleres en La Casona Pucón'
-    },
-    {
-      title: 'Paseo a Orilla del Lago:\nUn Agradable Recorrido Peatonal',
-      description: 'Aprovecha nuestra ubicación privilegiada para disfrutar de un relajante paseo peatonal por la hermosa orilla del lago Villarrica, justo al salir de La Casona. Conecta con la naturaleza y disfruta de las vistas panorámicas, el complemento perfecto para tu día de aventura y diversión en Pucón.',
-      image: '/CAFETERIA.jpeg',
-      isCarousel: false,
-      alt: 'Vista de la cafetería al atardecer con ambiente cálido y acogedor'
-    }
-  ];
-
-  return (
-    <>
-      <SectionDivider />
-      <section ref={ref} className="py-20 bg-[#363636]">
+      {/* Contact Temuco */}
+      <section className="py-28 bg-[#0a0a0a]">
         <div className="max-w-6xl mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 
-              className={`text-4xl md:text-5xl font-bold text-[#D4AF37] mb-8 transition-all duration-1000 ease-out ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-              }`}
-            >
-              Más Allá del Escape Room:<br />Descubre La Casona Pucón
-            </h2>
-            
-            <p 
-              className={`text-xl text-white max-w-4xl mx-auto leading-relaxed transition-all duration-1000 ease-out delay-300 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-              }`}
-            >
-              Tu aventura en Escape Room Pucón es solo el comienzo. Ubicados en la histórica La Casona Pucón, te invitamos a explorar un espacio vibrante que complementa tu experiencia de juego con opciones únicas para relajarte, comprar y disfrutar. En nuestro mismo lugar, encontrarás:
-            </p>
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div className="h-px w-12 bg-[#D4AF37]" />
+              <span className="text-[#D4AF37] text-xs font-bold tracking-[0.3em] uppercase">Contacto Temuco</span>
+              <div className="h-px w-12 bg-[#D4AF37]" />
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold text-white">Reserva en <span className="text-[#D4AF37]">Temuco</span></h2>
           </div>
-          
-          <div className="space-y-12">
-            {modules.map((module, index) => (
-              <div 
-                key={index}
-                className={`grid md:grid-cols-2 gap-8 items-center transition-all duration-1000 ease-out ${
-                  isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-                } ${index % 2 === 1 ? 'md:grid-flow-col-dense' : ''}`}
-                style={{ transitionDelay: `${(index + 1) * 200}ms` }}
-              >
-                {module.isCarousel ? (
-                  <div className={`${index % 2 === 1 ? 'md:col-start-2' : ''} relative`}>
-                    <div className="relative w-full h-80 rounded-lg overflow-hidden shadow-lg">
-                      {module.images?.map((img, imgIndex) => (
-                        <img 
-                          key={imgIndex}
-                          src={img} 
-                          alt={`${module.alt} - Imagen ${imgIndex + 1}`}
-                          className={`absolute inset-0 w-full h-full object-cover transition-all duration-1500 ease-in-out ${
-                            imgIndex === module.currentIndex 
-                              ? 'opacity-100 scale-100 blur-0' 
-                              : 'opacity-0 scale-110 blur-sm'
-                          }`}
-                        />
-                      ))}
-                      
-                      {/* Indicadores del carrusel */}
-                      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
-                        {module.images?.map((_, imgIndex) => (
-                          <button
-                            key={imgIndex}
-                            onClick={() => module.setCurrentIndex?.(imgIndex)}
-                            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                              imgIndex === module.currentIndex 
-                                ? 'bg-[#D4AF37] scale-110' 
-                                : 'bg-white bg-opacity-50 hover:bg-opacity-75'
-                            }`}
-                          />
-                        ))}
-                      </div>
-                      
-                      {/* Overlay con efecto hover */}
-                      <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-10 transition-all duration-300 cursor-pointer"
-                           onClick={() => module.setCurrentIndex?.((prev) => (prev + 1) % (module.images?.length || 1))}
-                      />
-                    </div>
-                  </div>
-                ) : (
-                  <div className={`${index % 2 === 1 ? 'md:col-start-2' : ''}`}>
-                    <img 
-                      src={module.image} 
-                      alt={module.alt}
-                      className="w-full h-80 object-cover rounded-lg shadow-lg hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                )}
-                
-                <div className={`${index % 2 === 1 ? 'md:col-start-1' : ''}`}>
-                  <h3 className="text-2xl md:text-3xl font-bold text-[#D4AF37] mb-6">
-                    {module.title.split('\n').map((line, lineIndex) => (
-                      <React.Fragment key={lineIndex}>
-                        {line}
-                        {lineIndex < module.title.split('\n').length - 1 && <br />}
-                      </React.Fragment>
-                    ))}
-                  </h3>
-                  <p className="text-white leading-relaxed text-lg">
-                    {module.description}
-                  </p>
+          <div className="max-w-lg mx-auto space-y-4">
+            {[
+              { icon: <Phone size={20} />, label: 'WhatsApp', value: '+56 9 9654 3715', href: 'https://wa.me/56996543715' },
+              { icon: <Mail size={20} />, label: 'Email', value: 'escaperoompucon@gmail.com', href: 'mailto:escaperoompucon@gmail.com' },
+              { icon: <Instagram size={20} />, label: 'Instagram', value: '@escaperoom_pucon', href: 'https://www.instagram.com/escaperoom_pucon/?hl=es' },
+            ].map(({ icon, label, value, href }) => (
+              <div key={label} className="flex items-start gap-4 p-5 rounded-xl border border-white/6 hover:border-[#D4AF37]/30 transition-all duration-300" style={{ background: '#111' }}>
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center text-black flex-shrink-0" style={{ background: '#D4AF37' }}>{icon}</div>
+                <div>
+                  <p className="text-white/35 text-xs uppercase tracking-wide mb-1">{label}</p>
+                  <a href={href} className="text-white hover:text-[#D4AF37] transition-colors duration-300 font-medium">{value}</a>
                 </div>
               </div>
             ))}
-          </div>
-          
-          <div className={`text-center mt-12 transition-all duration-1000 ease-out delay-800 ${
-            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-          }`}>
-            <a
-              href="https://wa.me/56996543715?text=Hola%2C%20me%20interesa%20conocer%20más%20sobre%20La%20Casona%20Pucón%20y%20sus%20servicios."
-              className="inline-block bg-[#8B0000] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#D4AF37] hover:scale-105 transition-all duration-300"
-            >
-              Descubre Todo Lo Que Tenemos Para Ti
-            </a>
-          </div>
-        </div>
-      </section>
-    </>
-  );
-};
-
-// Contact Section Component
-const ContactSection: React.FC = () => {
-  const [ref, isVisible] = useIntersectionObserver();
-
-  return (
-    <>
-      <TemucoBanner />
-      <SectionDivider />
-      <section ref={ref} id="contact" className="py-20 bg-black">
-        <div className="max-w-6xl mx-auto px-4">
-          <h2 
-            className={`text-4xl md:text-5xl font-bold text-[#D4AF37] text-center mb-12 transition-all duration-1000 ease-out ${
-              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-            }`}
-          >
-            Encuéntranos y Contáctanos
-          </h2>
-          
-          <div className="grid md:grid-cols-2 gap-12">
-            <div className={`space-y-6 transition-all duration-1000 ease-out delay-300 ${
-              isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
-            }`}>
-              <div className="flex items-start gap-4">
-                <MapPin className="text-[#D4AF37] mt-1" size={24} />
-                <div>
-                  <h3 className="text-white font-semibold mb-1">Dirección</h3>
-                  <p className="text-[#A9A9A9]">Ramón Quezada 0470, Pucón</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-4">
-                <Phone className="text-[#D4AF37] mt-1" size={24} />
-                <div>
-                  <h3 className="text-white font-semibold mb-1">Teléfono</h3>
-                  <a 
-                    href="https://wa.me/56996543715?text=Hola%2C%20me%20interesa%20reservar%20un%20escape%20room%20en%20Los%20Misterios%20de%20la%20Casona."
-                    className="text-[#A9A9A9] hover:text-[#D4AF37] transition-colors duration-300"
-                  >
-                    +56 9 9654 3715
-                  </a>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-4">
-                <Mail className="text-[#D4AF37] mt-1" size={24} />
-                <div>
-                  <h3 className="text-white font-semibold mb-1">Email</h3>
-                  <a 
-                    href="mailto:escaperoompucon@gmail.com"
-                    className="text-[#A9A9A9] hover:text-[#D4AF37] transition-colors duration-300"
-                  >
-                    escaperoompucon@gmail.com
-                  </a>
-                </div>
-              </div>
-              
-              <div className="flex items-center gap-4 pt-4">
-                <h3 className="text-white font-semibold">Síguenos:</h3>
-                <div className="flex gap-3">
-                  <a 
-                    href="https://www.instagram.com/escaperoom_pucon/?hl=es" 
-                    className="text-[#A9A9A9] hover:text-[#D4AF37] transition-colors duration-300"
-                  >
-                    <Instagram size={24} />
-                  </a>
-                </div>
-              </div>
-              
-              <div className="pt-4">
-                <a
-                  href="https://wa.me/56996543715?text=Hola%2C%20me%20interesa%20reservar%20un%20escape%20room%20en%20Los%20Misterios%20de%20la%20Casona."
-                  className="inline-block bg-[#8B0000] text-white px-8 py-3 rounded-lg font-semibold hover:bg-[#D4AF37] hover:scale-105 transition-all duration-300"
-                >
-                  Reserva Ahora por WhatsApp
-                </a>
-              </div>
-            </div>
-            
-            <div className={`transition-all duration-1000 ease-out delay-600 ${
-              isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'
-            }`}>
-              <div className="rounded-lg overflow-hidden">
-                <iframe 
-                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3131.234567890123!2d-71.9762225!3d-39.2666282!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x96147f4838ebcf1d:0x5f6543199a9b5c15!2sEscape+room+pucon!5e0!3m2!1ses!2scl!4v1678901234567!5m2!1ses!2scl"
-                  width="100%" 
-                  height="350" 
-                  style={{ border: 0 }}
-                  allowFullScreen={true}
-                  loading="lazy" 
-                  referrerPolicy="no-referrer-when-downgrade"
-                 title="Ubicación de Escape Room Pucón - Los Misterios de la Casona"
-                />
-              </div>
+            <div className="pt-4 text-center">
+              <a href="https://wa.me/56996543715?text=Hola%2C%20me%20interesa%20reservar%20en%20Temuco."
+                className="inline-flex items-center gap-2 bg-[#8B0000] text-white px-8 py-4 rounded-xl font-bold hover:bg-[#D4AF37] hover:text-black transition-all duration-300 hover:scale-105">
+                Reservar ahora en Temuco <ArrowRight size={16} />
+              </a>
             </div>
           </div>
         </div>
       </section>
-    </>
+
+      {/* Footer */}
+      <footer className="py-10 border-t border-white/8" style={{ background: '#080808' }}>
+        <div className="max-w-6xl mx-auto px-4 text-center">
+          <p className="text-white/25 text-sm">© 2026 Los Misterios de la Casona — Escape Room Araucanía</p>
+          <button onClick={onChangeCity} className="mt-3 text-[#D4AF37]/40 hover:text-[#D4AF37] text-xs transition-colors duration-300 underline underline-offset-4">
+            Ir a la sede de Pucón
+          </button>
+        </div>
+      </footer>
+    </div>
   );
 };
 
-// Footer Component
-const Footer: React.FC = () => {
-  return (
-    <footer className="bg-[#363636] py-8 border-t border-[#A9A9A9]">
+// ─── Pucón Site ───────────────────────────────────────────────────────────────
+const PuconSite: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => (
+  <div className="min-h-screen bg-[#080808] text-white">
+    <HeroSection onChangeCity={onChangeCity} />
+    <TemucoBanner />
+    <AboutSection />
+    <RoomsSection />
+    <HowItWorksSection />
+    <ContactSection />
+    <TestimonialsSection />
+    <FAQSection />
+    <GallerySection />
+    <LaCasonaSection />
+    <footer className="py-10 border-t border-white/8" style={{ background: '#080808' }}>
       <div className="max-w-6xl mx-auto px-4">
-        <div className="text-center">
-          <p className="text-[#A9A9A9] mb-4">
-            © 2025 Los Misterios de la Casona. Todos los derechos reservados.
-          </p>
-          <div className="flex justify-center gap-6">
-            <a 
-              href="#" 
-              className="text-[#A9A9A9] hover:text-[#D4AF37] hover:underline transition-all duration-200"
-            >
-              Política de Privacidad
-            </a>
-            <a 
-              href="#" 
-              className="text-[#A9A9A9] hover:text-[#D4AF37] hover:underline transition-all duration-200"
-            >
-              Términos y Condiciones
-            </a>
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex items-center gap-3">
+            <img src="/logoescaperoom.jpg" alt="Los Misterios de la Casona" className="h-10 w-auto rounded-lg" />
+            <div>
+              <p className="text-white font-semibold text-sm">Los Misterios de la Casona</p>
+              <p className="text-white/30 text-xs">Escape Room — Pucón & Temuco</p>
+            </div>
+          </div>
+          <p className="text-white/25 text-sm">© 2026 Los Misterios de la Casona. Todos los derechos reservados.</p>
+          <div className="flex gap-6">
+            <a href="#" className="text-white/25 hover:text-[#D4AF37] text-xs transition-colors duration-300">Política de Privacidad</a>
+            <a href="#" className="text-white/25 hover:text-[#D4AF37] text-xs transition-colors duration-300">Términos y Condiciones</a>
           </div>
         </div>
       </div>
     </footer>
-  );
-};
+  </div>
+);
 
-// Main App Component
+// ─── App ──────────────────────────────────────────────────────────────────────
 function App() {
-  return (
-    <div className="min-h-screen bg-black text-white">
-      <HeroSection />
-      <TemucoBanner />
-      <AboutSection />
-      <RoomsSection />
-      <HowItWorksSection />
-      <ContactSection />
-      <TestimonialsSection />
-      <FAQSection />
-      <GallerySection />
-      <LaCasonaSection />
-      <Footer />
-    </div>
-  );
+  const [city, setCity] = useState<null | 'pucon' | 'temuco'>(null);
+
+  if (city === null) return <CitySelector onSelect={setCity} />;
+  if (city === 'temuco') return <TemucoPuconSite onChangeCity={() => setCity(null)} />;
+  return <PuconSite onChangeCity={() => setCity(null)} />;
 }
 
 export default App;
