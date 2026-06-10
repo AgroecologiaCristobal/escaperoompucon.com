@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MapPin, Phone, Mail, Instagram, Users, Star, ChevronDown, ChevronUp, MessageCircle, Navigation, TowerControl as GameController, Trophy, MapPinned, ArrowRight, CheckCircle, ChevronRight } from 'lucide-react';
+import TemucoPuconSite from './TemucoPuconSite';
 
 // ─── Intersection Observer ────────────────────────────────────────────────────
 const useIntersectionObserver = (threshold = 0.1) => {
@@ -816,124 +817,6 @@ const SiteFooter: React.FC<{ onChangeCity: () => void; city: string }> = ({ onCh
   </footer>
 );
 
-// ─── Temuco Site ──────────────────────────────────────────────────────────────
-const TemucoPuconSite: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
-  const [ref, isVisible] = useIntersectionObserver();
-  return (
-    <div className="min-h-screen bg-[#080808] text-white">
-      <section className="relative min-h-screen overflow-hidden bg-black">
-        <div className="absolute inset-0">
-          <img src="/CAFETERIA1.jpeg" alt="Temuco"
-            className="w-full h-full object-cover"
-            style={{ filter: 'brightness(0.28)', transform: 'scale(1.05)' }} />
-        </div>
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.5) 65%, rgba(0,0,0,0.98) 100%)' }} />
-        <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.4) 100%)' }} />
-
-        <div className="absolute top-6 right-6 z-20">
-          <img src="/logoescaperoom.jpg" alt="Logo" className="h-20 w-auto rounded-xl" style={{ boxShadow: '0 0 30px rgba(0,0,0,0.6)' }} />
-        </div>
-        <button onClick={onChangeCity}
-          className="absolute top-8 left-8 z-20 flex items-center gap-2 text-white/30 hover:text-[#D4AF37] transition-all duration-300 text-[10px] font-bold tracking-[0.25em] uppercase">
-          <MapPin size={13} /> Cambiar ciudad
-        </button>
-
-        <div className="relative z-10 min-h-screen flex flex-col justify-end px-6 pb-20">
-          <div className="max-w-4xl">
-            <div className="flex items-center gap-3 mb-5">
-              <div className="h-px w-12" style={{ background: 'linear-gradient(90deg, transparent, #D4AF37)' }} />
-              <span className="text-[#D4AF37] text-[10px] font-bold tracking-[0.35em] uppercase">Escape Room Araucanía — Temuco</span>
-            </div>
-            <h1 className="leading-none mb-1">
-              <span className="misterios-text block text-5xl md:text-7xl">Los Misterios</span>
-            </h1>
-            <h1 className="leading-none mb-7">
-              <span className="casona-text block text-4xl md:text-6xl">en Temuco</span>
-            </h1>
-            <p className="text-white/60 text-lg md:text-xl max-w-xl mb-9 leading-relaxed">
-              Ya estamos atendiendo en Temuco. La misma experiencia de misterio, adrenalina y puzzles que conquista la Araucanía, ahora en el corazón de la capital regional.
-            </p>
-            <div className="flex flex-wrap gap-3 mb-12">
-              <a href="https://wa.me/56996543715?text=Hola%2C%20me%20interesa%20reservar%20en%20Temuco."
-                className="group flex items-center gap-3 bg-[#D4AF37] text-black px-8 py-4 rounded-xl text-sm font-bold hover:bg-white transition-all duration-300"
-                style={{ boxShadow: '0 0 30px rgba(212,175,55,0.35)' }}>
-                Reservar en Temuco <ArrowRight size={15} className="group-hover:translate-x-1 transition-transform duration-300" />
-              </a>
-              <a href="#temuco-rooms" className="flex items-center gap-3 border border-white/20 text-white/75 px-8 py-4 rounded-xl text-sm font-semibold hover:border-[#D4AF37]/60 hover:text-[#D4AF37] transition-all duration-300">
-                Ver Salas
-              </a>
-            </div>
-            <div className="flex gap-10 pt-6 border-t border-white/8">
-              {[['60', 'min de aventura'], ['2-8', 'jugadores'], ['2', 'salas disponibles']].map(([num, label]) => (
-                <div key={label}>
-                  <div className="text-2xl font-black text-[#D4AF37]">{num}</div>
-                  <div className="text-white/30 text-xs uppercase tracking-wide mt-0.5">{label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section ref={ref} id="temuco-rooms" className="py-28" style={{ background: '#080808' }}>
-        <div className="max-w-6xl mx-auto px-6">
-          <div className={`text-center mb-16 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <SectionLabel text="Salas en Temuco" />
-            <h2 className="text-4xl md:text-5xl font-bold text-white" style={{ fontFamily: "'Cinzel', serif" }}>
-              Elige tu <span className="text-[#D4AF37]">mundo</span>
-            </h2>
-          </div>
-          <div className="grid md:grid-cols-2 gap-7">
-            <RoomCard title="Sala El Pirata Pinwine"
-              description="Una aventura de misterio pirata llena de puzzles de lógica. Desentraña los secretos del Capitán Pinwine. Ideal para grupos de amigos, parejas y familias. Disponible en español e inglés."
-              difficulty="Media" players="2-8" image="/pirata.png" alt="Sala del Pirata Pinwine" delay={200} cardType="pirate" />
-            <RoomCard title="Sala El Elixir Zombie"
-              description="Una aventura post-apocalíptica donde deben encontrar la cura para un virus zombie. Investiga el laboratorio y colabora bajo presión antes de que los zombies regresen."
-              difficulty="Alta" players="2-8" image="/zombie.png" alt="Sala El Elixir Zombie" delay={400} cardType="zombie" />
-          </div>
-        </div>
-      </section>
-
-      <HowItWorksSection />
-
-      <section className="py-28" style={{ background: '#080808' }}>
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <SectionLabel text="Contacto Temuco" />
-            <h2 className="text-4xl md:text-5xl font-bold text-white" style={{ fontFamily: "'Cinzel', serif" }}>
-              Reserva en <span className="text-[#D4AF37]">Temuco</span>
-            </h2>
-          </div>
-          <div className="max-w-md mx-auto space-y-3">
-            {[
-              { icon: <Phone size={18} />, label: 'WhatsApp', value: '+56 9 9654 3715', href: 'https://wa.me/56996543715' },
-              { icon: <Mail size={18} />, label: 'Email', value: 'escaperoompucon@gmail.com', href: 'mailto:escaperoompucon@gmail.com' },
-              { icon: <Instagram size={18} />, label: 'Instagram', value: '@escaperoom_pucon', href: 'https://www.instagram.com/escaperoom_pucon/?hl=es' },
-            ].map(({ icon, label, value, href }) => (
-              <div key={label} className="flex items-center gap-4 p-4 rounded-xl border border-white/5 hover:border-[#D4AF37]/25 transition-all duration-300 group"
-                style={{ background: '#0f0f0f' }}>
-                <div className="w-9 h-9 rounded-lg flex items-center justify-center text-black flex-shrink-0 group-hover:scale-110 transition-transform duration-300"
-                  style={{ background: '#D4AF37' }}>{icon}</div>
-                <div>
-                  <p className="text-white/30 text-[10px] uppercase tracking-widest mb-0.5">{label}</p>
-                  <a href={href} className="text-white/80 hover:text-[#D4AF37] transition-colors duration-300 font-medium text-sm">{value}</a>
-                </div>
-              </div>
-            ))}
-            <div className="pt-3 text-center">
-              <a href="https://wa.me/56996543715?text=Hola%2C%20me%20interesa%20reservar%20en%20Temuco."
-                className="inline-flex items-center gap-2 bg-[#8B0000] text-white px-8 py-4 rounded-xl font-bold text-sm hover:bg-[#D4AF37] hover:text-black transition-all duration-300 hover:scale-105">
-                Reservar ahora en Temuco <ArrowRight size={15} />
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <SiteFooter onChangeCity={onChangeCity} city="temuco" />
-    </div>
-  );
-};
 
 // ─── Pucón Site ───────────────────────────────────────────────────────────────
 const PuconSite: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => (
