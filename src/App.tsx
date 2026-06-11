@@ -117,7 +117,7 @@ const CitySelector: React.FC<{ onSelect: (city: Dest) => void }> = ({ onSelect }
 
       {/* ── DESKTOP: 3 panels horizontal ── */}
       {!isMobile && (
-        <div className="flex h-full w-full">
+        <div style={{ display: 'flex', height: '100%', width: '100%' }}>
           {PANELS.map((p, idx) => {
             const isHov = hovered === p.id;
             const otherHov = hovered !== null && !isHov;
@@ -136,11 +136,9 @@ const CitySelector: React.FC<{ onSelect: (city: Dest) => void }> = ({ onSelect }
                 <div
                   className="relative overflow-hidden cursor-pointer"
                   style={{
-                    flexGrow: isHov ? 1.8 : otherHov ? 0.6 : 1,
-                    flexShrink: 1,
-                    flexBasis: 0,
-                    minWidth: 0,
-                    transition: 'flex-grow 0.65s cubic-bezier(0.4,0,0.2,1)',
+                    width: isHov ? '58%' : otherHov ? '21%' : '33.33%',
+                    flexShrink: 0,
+                    transition: 'width 0.65s cubic-bezier(0.4,0,0.2,1)',
                   }}
                   onMouseEnter={() => setHovered(p.id)}
                   onMouseLeave={() => setHovered(null)}
@@ -158,33 +156,30 @@ const CitySelector: React.FC<{ onSelect: (city: Dest) => void }> = ({ onSelect }
                   <div className="absolute inset-0 pointer-events-none"
                     style={{ background: `radial-gradient(ellipse at 50% 80%, ${p.tint}, transparent 65%)`, opacity: isHov ? 1 : 0, transition: 'opacity 0.65s' }} />
 
-                  {/* Content — bottom center, hides when panel is compressed */}
+                  {/* Content — bottom center */}
                   <div className="absolute bottom-0 left-0 right-0 pb-10 flex flex-col items-center text-center"
-                    style={{ opacity: isHov ? 1 : otherHov ? 0.25 : 0.7, transition: 'opacity 0.5s', padding: '0 clamp(8px, 3%, 24px) 40px' }}>
+                    style={{ opacity: isHov ? 1 : otherHov ? 0.3 : 0.75, transition: 'opacity 0.5s', padding: '0 clamp(6px, 2.5%, 24px) 40px' }}>
 
-                    {/* Label — always visible */}
                     <div className={`flex items-center justify-center gap-2 mb-3 transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
                       style={{ transitionDelay: `${300 + idx * 100}ms` }}>
-                      <div className="h-px w-5" style={{ background: p.accent, opacity: 0.8 }} />
-                      <span className="text-[8px] font-black tracking-[0.3em] uppercase whitespace-nowrap" style={{ color: p.accent }}>{p.label}</span>
-                      <div className="h-px w-5" style={{ background: p.accent, opacity: 0.8 }} />
+                      <div className="h-px w-4 flex-shrink-0" style={{ background: p.accent, opacity: 0.8 }} />
+                      <span className="text-[8px] font-black tracking-[0.28em] uppercase whitespace-nowrap overflow-hidden" style={{ color: p.accent }}>{p.label}</span>
+                      <div className="h-px w-4 flex-shrink-0" style={{ background: p.accent, opacity: 0.8 }} />
                     </div>
 
-                    {/* Title */}
                     <div className={`mb-3 tracking-tight transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
                       style={{
                         transitionDelay: `${420 + idx * 100}ms`,
                         textShadow: isHov ? `0 0 30px ${p.glow}` : 'none',
                         transition: 'text-shadow 0.6s, opacity 0.7s, transform 0.7s',
-                        fontSize: 'clamp(20px, 3.5vw, 52px)',
+                        fontSize: 'clamp(18px, 3vw, 50px)',
                         lineHeight: 1.05,
                       }}>
                       {p.titleEl}
                     </div>
 
-                    {/* Description + button — only show when hovered */}
                     <div style={{ opacity: isHov ? 1 : 0, transform: isHov ? 'translateY(0)' : 'translateY(8px)', transition: 'opacity 0.4s, transform 0.4s', pointerEvents: isHov ? 'auto' : 'none' }}>
-                      <p className="text-white/40 text-xs leading-relaxed mx-auto mb-5" style={{ maxWidth: 'min(180px, 80%)' }}>{p.desc}</p>
+                      <p className="text-white/40 text-xs leading-relaxed mx-auto mb-5" style={{ maxWidth: 'min(200px, 80%)' }}>{p.desc}</p>
                       <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs text-black"
                         style={{ background: p.accent, boxShadow: `0 0 20px ${p.glow}` }}>
                         {p.btnText} <ArrowRight size={12} />

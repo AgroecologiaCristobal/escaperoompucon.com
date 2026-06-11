@@ -113,9 +113,18 @@ const Navbar: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
           </a>
         </div>
 
-        <button onClick={() => setOpen(!open)} className="md:hidden text-white/60 hover:text-white">
-          {open ? <X size={22} /> : <Menu size={22} />}
-        </button>
+        <div className="md:hidden flex items-center gap-3">
+          <button onClick={onChangeCity}
+            className="text-[10px] font-bold tracking-[0.2em] uppercase flex items-center gap-1 transition-colors duration-300"
+            style={{ color: 'rgba(96,165,250,0.45)' }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = C; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'rgba(96,165,250,0.45)'; }}>
+            <MapPin size={11} /> Cambiar
+          </button>
+          <button onClick={() => setOpen(!open)} className="text-white/60 hover:text-white">
+            {open ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </div>
 
       <div className={`md:hidden transition-all duration-400 overflow-hidden ${open ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
@@ -159,15 +168,6 @@ const Hero: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
       </div>
       <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(0,0,12,0.55) 0%, rgba(0,0,12,0.1) 40%, rgba(0,0,12,0.75) 80%, rgba(0,0,12,0.98) 100%)' }} />
       <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 70% 40%, rgba(96,165,250,0.06) 0%, transparent 65%)' }} />
-
-      {/* Change city button — top left */}
-      <button onClick={onChangeCity}
-        className="absolute top-6 left-6 z-20 flex items-center gap-1.5 transition-all duration-300 text-[10px] font-bold tracking-[0.25em] uppercase"
-        style={{ color: 'rgba(96,165,250,0.35)' }}
-        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = C; }}
-        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'rgba(96,165,250,0.35)'; }}>
-        <MapPin size={12} /> Cambiar sede
-      </button>
 
       <div className="relative z-10 min-h-screen flex flex-col justify-end px-6 pb-16 pt-32">
         <div className="max-w-4xl mx-auto w-full">

@@ -111,11 +111,11 @@ const Navbar: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
           ))}
         </div>
 
-        {/* CTA + change city */}
+        {/* CTA + change city (desktop) */}
         <div className="hidden md:flex items-center gap-4">
           <button onClick={onChangeCity}
             className="text-white/25 hover:text-white/60 text-[10px] font-bold tracking-[0.25em] uppercase transition-colors duration-300 flex items-center gap-1.5">
-            <MapPin size={11} /> Ir a Pucón
+            <MapPin size={11} /> Cambiar sede
           </button>
           <a href="#precios"
             className="px-5 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider transition-all duration-300 hover:scale-105"
@@ -124,10 +124,19 @@ const Navbar: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
           </a>
         </div>
 
-        {/* Mobile menu button */}
-        <button onClick={() => setOpen(!open)} className="md:hidden text-white/60 hover:text-white transition-colors duration-300">
-          {open ? <X size={22} /> : <Menu size={22} />}
-        </button>
+        {/* Mobile: cambiar sede + hamburger */}
+        <div className="md:hidden flex items-center gap-3">
+          <button onClick={onChangeCity}
+            className="text-[10px] font-bold tracking-[0.2em] uppercase flex items-center gap-1 transition-colors duration-300"
+            style={{ color: 'rgba(0,255,136,0.45)' }}
+            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = N; }}
+            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'rgba(0,255,136,0.45)'; }}>
+            <MapPin size={11} /> Cambiar
+          </button>
+          <button onClick={() => setOpen(!open)} className="text-white/60 hover:text-white transition-colors duration-300">
+            {open ? <X size={22} /> : <Menu size={22} />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile menu */}
@@ -177,15 +186,6 @@ const Hero: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
       {/* Scanlines subtle */}
       <div className="absolute inset-0 pointer-events-none opacity-5"
         style={{ backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,136,0.15) 2px, rgba(0,255,136,0.15) 3px)', backgroundSize: '100% 4px' }} />
-
-      {/* Change city button — top left */}
-      <button onClick={onChangeCity}
-        className="absolute top-6 left-6 z-20 flex items-center gap-1.5 transition-all duration-300 text-[10px] font-bold tracking-[0.25em] uppercase"
-        style={{ color: 'rgba(0,255,136,0.35)' }}
-        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = N; }}
-        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'rgba(0,255,136,0.35)'; }}>
-        <MapPin size={12} /> Cambiar sede
-      </button>
 
       {/* Content */}
       <div className="relative z-10 min-h-screen flex flex-col justify-end px-6 pb-16 pt-32">
