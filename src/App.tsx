@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MapPin, Phone, Mail, Instagram, Users, Star, ChevronDown, ChevronUp, MessageCircle, Navigation, TowerControl as GameController, Trophy, MapPinned, ArrowRight, CheckCircle, ChevronRight } from 'lucide-react';
 import TemucoPuconSite from './TemucoPuconSite';
+import CorporateSite from './CorporateSite';
 
 // ─── Intersection Observer ────────────────────────────────────────────────────
 const useIntersectionObserver = (threshold = 0.1) => {
@@ -27,173 +28,227 @@ const SectionLabel: React.FC<{ text: string }> = ({ text }) => (
 );
 
 // ─── City Selector ────────────────────────────────────────────────────────────
-const CitySelector: React.FC<{ onSelect: (city: 'pucon' | 'temuco') => void }> = ({ onSelect }) => {
-  const [hovered, setHovered] = useState<'pucon' | 'temuco' | null>(null);
+type Dest = 'temuco' | 'pucon' | 'corporativo';
+
+const PANELS: Array<{
+  id: Dest;
+  image: string;
+  accent: string;
+  glow: string;
+  tint: string;
+  label: string;
+  titleEl: React.ReactNode;
+  desc: string;
+  btnText: string;
+}> = [
+  {
+    id: 'temuco',
+    image: '/CAFETERIA1.jpeg',
+    accent: '#00FF88',
+    glow: 'rgba(0,255,136,0.4)',
+    tint: 'rgba(0,255,136,0.08)',
+    label: 'La Araucanía',
+    titleEl: <span className="font-black text-white">Temuco</span>,
+    desc: 'Nueva sede — Vive la experiencia de escape room en el corazón de Temuco',
+    btnText: 'Ir a Temuco',
+  },
+  {
+    id: 'pucon',
+    image: '/familiazoologico.jpeg',
+    accent: '#D4AF37',
+    glow: 'rgba(212,175,55,0.4)',
+    tint: 'rgba(212,175,55,0.08)',
+    label: 'Pucón — Origen',
+    titleEl: (
+      <>
+        <span className="misterios-text block text-4xl md:text-5xl lg:text-6xl leading-tight">Los Misterios</span>
+        <span className="casona-text block text-3xl md:text-4xl lg:text-5xl leading-tight">de la Casona</span>
+      </>
+    ),
+    desc: 'El primer escape room de Pucón — Misterio y adrenalina junto al lago Villarrica',
+    btnText: 'Ir a Pucón',
+  },
+  {
+    id: 'corporativo',
+    image: '/ganyateam.jpeg',
+    accent: '#60A5FA',
+    glow: 'rgba(96,165,250,0.4)',
+    tint: 'rgba(96,165,250,0.08)',
+    label: 'Team Building & Eventos',
+    titleEl: <span className="font-black text-white">Corporativo</span>,
+    desc: 'Fortalece tu equipo con la experiencia más intensa de trabajo colaborativo',
+    btnText: 'Ver opciones',
+  },
+];
+
+const CitySelector: React.FC<{ onSelect: (city: Dest) => void }> = ({ onSelect }) => {
+  const [hovered, setHovered] = useState<Dest | null>(null);
   const [visible, setVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < 768 : false
+  );
 
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 80);
-    return () => clearTimeout(t);
+    const mq = window.matchMedia('(max-width: 767px)');
+    const fn = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener('change', fn);
+    return () => { clearTimeout(t); mq.removeEventListener('change', fn); };
   }, []);
 
   return (
     <div className="fixed inset-0 bg-black overflow-hidden z-50">
 
-      {/* ── Full-bleed split panels ── */}
-      <div className="flex h-full">
-
-        {/* Temuco */}
-        <div
-          className="relative overflow-hidden cursor-pointer"
-          style={{
-            flex: hovered === 'temuco' ? '1.72' : hovered === 'pucon' ? '0.28' : '1',
-            transition: 'flex 0.65s cubic-bezier(0.4,0,0.2,1)',
-          }}
-          onMouseEnter={() => setHovered('temuco')}
-          onMouseLeave={() => setHovered(null)}
-          onClick={() => onSelect('temuco')}
-        >
-          <img src="/CAFETERIA1.jpeg" alt="Temuco"
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{
-              filter: `brightness(${hovered === 'temuco' ? 0.55 : 0.28})`,
-              transform: hovered === 'temuco' ? 'scale(1.03)' : 'scale(1.12)',
-              transition: 'filter 0.65s ease, transform 0.9s ease',
-            }} />
-
-          {/* Gradient: dark on left edge, dark at bottom */}
-          <div className="absolute inset-0 pointer-events-none" style={{
-            background: 'linear-gradient(to right, rgba(0,0,0,0.6) 0%, transparent 50%), linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 55%)',
-          }} />
-          {/* Neon green tint on hover */}
-          <div className="absolute inset-0 pointer-events-none transition-opacity duration-700"
-            style={{ background: 'linear-gradient(135deg, rgba(0,255,136,0.10), transparent 60%)', opacity: hovered === 'temuco' ? 1 : 0 }} />
-
-          {/* Content — bottom left */}
-          <div className="absolute bottom-0 left-0 right-0 px-8 md:px-14 pb-12 md:pb-16 flex flex-col items-start gap-2">
-            <div className={`flex items-center gap-2 transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`} style={{ transitionDelay: '300ms' }}>
-              <div className="w-5 h-5 rounded-full border flex items-center justify-center" style={{ borderColor: 'rgba(0,255,136,0.6)' }}>
-                <MapPin size={10} style={{ color: '#00FF88' }} />
-              </div>
-              <span className="text-xs font-bold tracking-[0.3em] uppercase" style={{ color: '#00FF88' }}>La Araucanía</span>
-            </div>
-
-            <h2 className={`text-5xl md:text-7xl lg:text-8xl font-black text-white leading-none tracking-tight transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-              style={{ transitionDelay: '450ms', textShadow: hovered === 'temuco' ? '0 0 40px rgba(0,255,136,0.5), 0 0 80px rgba(0,255,136,0.2)' : 'none', transition: 'opacity 0.7s, transform 0.7s, text-shadow 0.7s' }}>
-              Temuco
-            </h2>
-
-            <div className={`transition-all duration-500 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ transitionDelay: '600ms' }}>
-              <p className="text-white/45 text-sm leading-relaxed max-w-xs mb-5">
-                Nueva sede — Vive la experiencia de escape room en el corazón de Temuco
-              </p>
-              <div className="flex items-center gap-3 transition-all duration-500"
-                style={{ opacity: hovered === 'temuco' ? 1 : 0, transform: hovered === 'temuco' ? 'translateX(0)' : 'translateX(-12px)' }}>
-                <div className="flex items-center gap-2 text-black px-6 py-3 rounded-xl font-bold text-sm" style={{ background: '#00FF88', boxShadow: '0 0 20px rgba(0,255,136,0.4)' }}>
-                  Reservar en Temuco <ArrowRight size={14} />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Active border */}
-          <div className="absolute inset-0 border-2 pointer-events-none transition-all duration-500"
-            style={{ borderColor: hovered === 'temuco' ? 'rgba(0,255,136,0.3)' : 'transparent' }} />
-        </div>
-
-        {/* Divider — green left, gold right */}
-        <div className="relative flex-none w-px z-20 pointer-events-none"
-          style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(0,255,136,0.3) 30%, rgba(212,175,55,0.3) 70%, transparent 100%)' }}>
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center bg-black"
-            style={{ border: '1px solid rgba(255,255,255,0.15)', boxShadow: '0 0 20px rgba(255,255,255,0.04)' }}>
-            <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: hovered === 'temuco' ? '#00FF88' : hovered === 'pucon' ? '#D4AF37' : '#888' }} />
-          </div>
-        </div>
-
-        {/* Pucón */}
-        <div
-          className="relative overflow-hidden cursor-pointer"
-          style={{
-            flex: hovered === 'pucon' ? '1.72' : hovered === 'temuco' ? '0.28' : '1',
-            transition: 'flex 0.65s cubic-bezier(0.4,0,0.2,1)',
-          }}
-          onMouseEnter={() => setHovered('pucon')}
-          onMouseLeave={() => setHovered(null)}
-          onClick={() => onSelect('pucon')}
-        >
-          <img src="/familiazoologico.jpeg" alt="Pucón"
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{
-              filter: `brightness(${hovered === 'pucon' ? 0.5 : 0.28})`,
-              transform: hovered === 'pucon' ? 'scale(1.03)' : 'scale(1.12)',
-              transition: 'filter 0.65s ease, transform 0.9s ease',
-            }} />
-
-          <div className="absolute inset-0 pointer-events-none" style={{
-            background: 'linear-gradient(to left, rgba(0,0,0,0.6) 0%, transparent 50%), linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 55%)',
-          }} />
-          <div className="absolute inset-0 pointer-events-none transition-opacity duration-700"
-            style={{ background: 'linear-gradient(225deg, rgba(212,175,55,0.12), transparent 60%)', opacity: hovered === 'pucon' ? 1 : 0 }} />
-
-          {/* Content — bottom right */}
-          <div className="absolute bottom-0 left-0 right-0 px-8 md:px-14 pb-12 md:pb-16 flex flex-col items-end text-right gap-2">
-            <div className={`flex items-center gap-2 transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`} style={{ transitionDelay: '400ms' }}>
-              <span className="text-[#D4AF37] text-xs font-bold tracking-[0.3em] uppercase">Pucón — Origen</span>
-              <div className="w-5 h-5 rounded-full border border-[#D4AF37]/70 flex items-center justify-center">
-                <MapPin size={10} className="text-[#D4AF37]" />
-              </div>
-            </div>
-
-            {/* Mysterious title */}
-            <div className={`text-right transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`} style={{ transitionDelay: '550ms' }}>
-              <span className="misterios-text block text-4xl md:text-6xl lg:text-7xl font-bold leading-tight">Los Misterios</span>
-              <span className="casona-text block text-3xl md:text-5xl lg:text-6xl font-semibold leading-tight">de la Casona</span>
-            </div>
-
-            <div className={`transition-all duration-500 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`} style={{ transitionDelay: '700ms' }}>
-              <p className="text-white/45 text-sm leading-relaxed max-w-xs mb-5">
-                El primer escape room de Pucón — Misterio, adrenalina y aventura junto al lago Villarrica
-              </p>
-              <div className="flex items-center justify-end gap-3 transition-all duration-500"
-                style={{ opacity: hovered === 'pucon' ? 1 : 0, transform: hovered === 'pucon' ? 'translateX(0)' : 'translateX(12px)' }}>
-                <div className="flex items-center gap-2 bg-[#D4AF37] text-black px-6 py-3 rounded-xl font-bold text-sm">
-                  Reservar en Pucón <ArrowRight size={14} />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="absolute inset-0 border-2 pointer-events-none transition-all duration-500"
-            style={{ borderColor: hovered === 'pucon' ? 'rgba(212,175,55,0.25)' : 'transparent' }} />
-        </div>
-      </div>
-
-      {/* ── Overlay: brand header centered at top ── */}
-      <div className="absolute top-0 left-0 right-0 z-30 pointer-events-none">
-        <div className="flex flex-col items-center pt-8 px-4"
-          style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.3) 70%, transparent 100%)', paddingBottom: '3rem' }}>
-          <div className={`text-center transition-all duration-1000 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`} style={{ transitionDelay: '100ms' }}>
-            <p className="text-[#D4AF37] text-[10px] font-black tracking-[0.5em] uppercase mb-4">Escape Room Araucanía</p>
-            <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-3 leading-snug">
-              ¿Quieres vivir tu aventura en{' '}
-              <span className="text-[#D4AF37]">Temuco</span> o en{' '}
-              <span className="text-[#D4AF37]">Pucón</span>?
+      {/* ── Brand header overlay (desktop only) ── */}
+      <div className="hidden md:block absolute top-0 left-0 right-0 z-30 pointer-events-none">
+        <div className="flex flex-col items-center pt-7 px-4"
+          style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 75%, transparent 100%)', paddingBottom: '3rem' }}>
+          <div className={`text-center transition-all duration-1000 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
+            <p className="text-[#D4AF37] text-[9px] font-black tracking-[0.55em] uppercase mb-3">Escape Room Araucanía</p>
+            <h1 className="text-lg md:text-2xl lg:text-3xl font-bold text-white mb-2 leading-snug">
+              ¿A dónde quieres ir hoy?
             </h1>
-            <p className="text-white/40 text-xs md:text-sm max-w-md mx-auto leading-relaxed">
-              En Escape Room Araucanía avanzamos para que el entretenimiento potencie tu pensamiento y cerebro.{' '}
-              <span className="text-white/60">¡Tú eliges dónde reservar!</span>
+            <p className="text-white/35 text-xs max-w-sm mx-auto">
+              Elige tu destino y vive la experiencia que más se adapta a ti
             </p>
           </div>
         </div>
       </div>
 
-      {/* ── Bottom hint ── */}
-      <div className="absolute bottom-5 left-0 right-0 z-30 flex justify-center pointer-events-none">
-        <div className={`flex items-center gap-2 transition-all duration-1000 ${visible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '900ms' }}>
-          <div className="w-16 h-px bg-white/15" />
-          <span className="text-white/25 text-[10px] tracking-[0.3em] uppercase hidden md:block">Pasa el cursor para explorar</span>
-          <span className="text-white/25 text-[10px] tracking-[0.3em] uppercase md:hidden">Toca para elegir</span>
-          <div className="w-16 h-px bg-white/15" />
+      {/* ── DESKTOP: 3 panels horizontal ── */}
+      {!isMobile && (
+        <div className="flex h-full">
+          {PANELS.map((p, idx) => {
+            const isHov = hovered === p.id;
+            const otherHov = hovered !== null && !isHov;
+            return (
+              <React.Fragment key={p.id}>
+                {idx > 0 && (
+                  <div className="relative flex-none w-px z-20 pointer-events-none"
+                    style={{ background: `linear-gradient(to bottom, transparent 0%, ${PANELS[idx-1].accent}44 35%, ${p.accent}44 65%, transparent 100%)` }}>
+                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-7 h-7 rounded-full flex items-center justify-center bg-black"
+                      style={{ border: '1px solid rgba(255,255,255,0.12)' }}>
+                      <div className="w-1.5 h-1.5 rounded-full animate-pulse"
+                        style={{ background: hovered === PANELS[idx-1].id ? PANELS[idx-1].accent : hovered === p.id ? p.accent : '#555' }} />
+                    </div>
+                  </div>
+                )}
+                <div
+                  className="relative overflow-hidden cursor-pointer"
+                  style={{
+                    flex: isHov ? '1.8' : otherHov ? '0.6' : '1',
+                    transition: 'flex 0.6s cubic-bezier(0.4,0,0.2,1)',
+                  }}
+                  onMouseEnter={() => setHovered(p.id)}
+                  onMouseLeave={() => setHovered(null)}
+                  onClick={() => onSelect(p.id)}
+                >
+                  <img src={p.image} alt={p.id}
+                    className="absolute inset-0 w-full h-full object-cover"
+                    style={{
+                      filter: `brightness(${isHov ? 0.52 : 0.24})`,
+                      transform: isHov ? 'scale(1.04)' : 'scale(1.12)',
+                      transition: 'filter 0.6s ease, transform 0.9s ease',
+                    }} />
+                  <div className="absolute inset-0 pointer-events-none"
+                    style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.3) 45%, transparent 70%)' }} />
+                  <div className="absolute inset-0 pointer-events-none transition-opacity duration-600"
+                    style={{ background: `radial-gradient(ellipse at 50% 80%, ${p.tint}, transparent 65%)`, opacity: isHov ? 1 : 0 }} />
+
+                  {/* Content — bottom center */}
+                  <div className="absolute bottom-0 left-0 right-0 px-6 pb-10 flex flex-col items-center text-center gap-2">
+                    <div className={`transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+                      style={{ transitionDelay: `${300 + idx * 100}ms` }}>
+                      <div className="flex items-center justify-center gap-2 mb-3">
+                        <div className="h-px w-6" style={{ background: p.accent, opacity: 0.7 }} />
+                        <span className="text-[9px] font-black tracking-[0.35em] uppercase" style={{ color: p.accent }}>{p.label}</span>
+                        <div className="h-px w-6" style={{ background: p.accent, opacity: 0.7 }} />
+                      </div>
+                      <div className="text-3xl md:text-4xl lg:text-5xl leading-none mb-3 tracking-tight"
+                        style={{ textShadow: isHov ? `0 0 30px ${p.glow}` : 'none', transition: 'text-shadow 0.6s' }}>
+                        {p.titleEl}
+                      </div>
+                      <p className="text-white/40 text-xs leading-relaxed max-w-48 mx-auto mb-5">{p.desc}</p>
+                      <div className="transition-all duration-400"
+                        style={{ opacity: isHov ? 1 : 0, transform: isHov ? 'translateY(0) scale(1)' : 'translateY(6px) scale(0.97)' }}>
+                        <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs text-black"
+                          style={{ background: p.accent, boxShadow: `0 0 20px ${p.glow}` }}>
+                          {p.btnText} <ArrowRight size={12} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="absolute inset-0 border-2 pointer-events-none transition-all duration-500"
+                    style={{ borderColor: isHov ? `${p.accent}44` : 'transparent' }} />
+                </div>
+              </React.Fragment>
+            );
+          })}
+        </div>
+      )}
+
+      {/* ── MOBILE: 3 panels vertical ── */}
+      {isMobile && (
+        <div className="flex flex-col h-full">
+          {/* Brand header mobile */}
+          <div className={`flex-none z-20 text-center px-4 py-4 transition-all duration-800 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-3'}`}
+            style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+            <p className="text-[#D4AF37] text-[9px] font-black tracking-[0.45em] uppercase mb-1">Escape Room Araucanía</p>
+            <p className="text-white font-bold text-sm">¿A dónde quieres ir hoy?</p>
+          </div>
+
+          {PANELS.map((p, idx) => (
+            <div key={p.id}
+              className="relative flex-1 cursor-pointer overflow-hidden"
+              onClick={() => onSelect(p.id)}
+            >
+              <img src={p.image} alt={p.id}
+                className="absolute inset-0 w-full h-full object-cover"
+                style={{ filter: 'brightness(0.30)' }} />
+              <div className="absolute inset-0 pointer-events-none"
+                style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%, transparent 100%)' }} />
+              <div className="absolute inset-0 pointer-events-none"
+                style={{ background: `linear-gradient(135deg, ${p.tint}, transparent 55%)` }} />
+
+              {/* Content */}
+              <div className={`absolute inset-0 flex items-end px-5 pb-5 transition-all duration-800 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+                style={{ transitionDelay: `${200 + idx * 120}ms` }}>
+                <div className="flex items-end justify-between w-full">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <div className="h-px w-5" style={{ background: p.accent }} />
+                      <span className="text-[9px] font-black tracking-[0.3em] uppercase" style={{ color: p.accent }}>{p.label}</span>
+                    </div>
+                    <div className="text-2xl leading-none mb-1" style={{ textShadow: `0 0 20px ${p.glow}` }}>
+                      {p.titleEl}
+                    </div>
+                    <p className="text-white/45 text-[11px] leading-relaxed max-w-[200px] mt-1">{p.desc}</p>
+                  </div>
+                  {/* Arrow CTA */}
+                  <div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ml-3"
+                    style={{ background: p.accent, boxShadow: `0 0 16px ${p.glow}` }}>
+                    <ArrowRight size={16} className="text-black" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Top separator line */}
+              {idx > 0 && (
+                <div className="absolute top-0 left-0 right-0 h-px"
+                  style={{ background: `linear-gradient(90deg, transparent, ${PANELS[idx-1].accent}50, ${p.accent}50, transparent)` }} />
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* ── Desktop bottom hint ── */}
+      <div className="hidden md:flex absolute bottom-4 left-0 right-0 z-30 justify-center pointer-events-none">
+        <div className={`flex items-center gap-2 transition-all duration-1000 ${visible ? 'opacity-100' : 'opacity-0'}`} style={{ transitionDelay: '1000ms' }}>
+          <div className="w-10 h-px bg-white/12" />
+          <span className="text-white/20 text-[9px] tracking-[0.35em] uppercase">Pasa el cursor para explorar</span>
+          <div className="w-10 h-px bg-white/12" />
         </div>
       </div>
     </div>
@@ -837,10 +892,11 @@ const PuconSite: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => 
 
 // ─── App ──────────────────────────────────────────────────────────────────────
 function App() {
-  const [city, setCity] = useState<null | 'pucon' | 'temuco'>(null);
+  const [city, setCity] = useState<null | 'pucon' | 'temuco' | 'corporativo'>(null);
 
   if (city === null) return <CitySelector onSelect={setCity} />;
   if (city === 'temuco') return <TemucoPuconSite onChangeCity={() => setCity(null)} />;
+  if (city === 'corporativo') return <CorporateSite onChangeCity={() => setCity(null)} />;
   return <PuconSite onChangeCity={() => setCity(null)} />;
 }
 
