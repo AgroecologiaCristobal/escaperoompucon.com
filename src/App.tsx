@@ -65,21 +65,21 @@ const CitySelector: React.FC<{ onSelect: (city: 'pucon' | 'temuco') => void }> =
           <div className="absolute inset-0 pointer-events-none" style={{
             background: 'linear-gradient(to right, rgba(0,0,0,0.6) 0%, transparent 50%), linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 55%)',
           }} />
-          {/* Crimson tint on hover */}
+          {/* Neon green tint on hover */}
           <div className="absolute inset-0 pointer-events-none transition-opacity duration-700"
-            style={{ background: 'linear-gradient(135deg, rgba(139,0,0,0.35), transparent 60%)', opacity: hovered === 'temuco' ? 1 : 0 }} />
+            style={{ background: 'linear-gradient(135deg, rgba(0,255,136,0.10), transparent 60%)', opacity: hovered === 'temuco' ? 1 : 0 }} />
 
           {/* Content — bottom left */}
           <div className="absolute bottom-0 left-0 right-0 px-8 md:px-14 pb-12 md:pb-16 flex flex-col items-start gap-2">
             <div className={`flex items-center gap-2 transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`} style={{ transitionDelay: '300ms' }}>
-              <div className="w-5 h-5 rounded-full border border-[#D4AF37]/70 flex items-center justify-center">
-                <MapPin size={10} className="text-[#D4AF37]" />
+              <div className="w-5 h-5 rounded-full border flex items-center justify-center" style={{ borderColor: 'rgba(0,255,136,0.6)' }}>
+                <MapPin size={10} style={{ color: '#00FF88' }} />
               </div>
-              <span className="text-[#D4AF37] text-xs font-bold tracking-[0.3em] uppercase">La Araucanía</span>
+              <span className="text-xs font-bold tracking-[0.3em] uppercase" style={{ color: '#00FF88' }}>La Araucanía</span>
             </div>
 
             <h2 className={`text-5xl md:text-7xl lg:text-8xl font-black text-white leading-none tracking-tight transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
-              style={{ transitionDelay: '450ms', textShadow: hovered === 'temuco' ? '0 0 60px rgba(139,0,0,0.4)' : 'none', transition: 'opacity 0.7s, transform 0.7s, text-shadow 0.7s' }}>
+              style={{ transitionDelay: '450ms', textShadow: hovered === 'temuco' ? '0 0 40px rgba(0,255,136,0.5), 0 0 80px rgba(0,255,136,0.2)' : 'none', transition: 'opacity 0.7s, transform 0.7s, text-shadow 0.7s' }}>
               Temuco
             </h2>
 
@@ -89,7 +89,7 @@ const CitySelector: React.FC<{ onSelect: (city: 'pucon' | 'temuco') => void }> =
               </p>
               <div className="flex items-center gap-3 transition-all duration-500"
                 style={{ opacity: hovered === 'temuco' ? 1 : 0, transform: hovered === 'temuco' ? 'translateX(0)' : 'translateX(-12px)' }}>
-                <div className="flex items-center gap-2 bg-[#D4AF37] text-black px-6 py-3 rounded-xl font-bold text-sm">
+                <div className="flex items-center gap-2 text-black px-6 py-3 rounded-xl font-bold text-sm" style={{ background: '#00FF88', boxShadow: '0 0 20px rgba(0,255,136,0.4)' }}>
                   Reservar en Temuco <ArrowRight size={14} />
                 </div>
               </div>
@@ -98,15 +98,15 @@ const CitySelector: React.FC<{ onSelect: (city: 'pucon' | 'temuco') => void }> =
 
           {/* Active border */}
           <div className="absolute inset-0 border-2 pointer-events-none transition-all duration-500"
-            style={{ borderColor: hovered === 'temuco' ? 'rgba(212,175,55,0.25)' : 'transparent' }} />
+            style={{ borderColor: hovered === 'temuco' ? 'rgba(0,255,136,0.3)' : 'transparent' }} />
         </div>
 
-        {/* Divider */}
+        {/* Divider — green left, gold right */}
         <div className="relative flex-none w-px z-20 pointer-events-none"
-          style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(212,175,55,0.4) 30%, rgba(212,175,55,0.4) 70%, transparent 100%)' }}>
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center bg-black border border-[#D4AF37]/40"
-            style={{ boxShadow: '0 0 20px rgba(212,175,55,0.15)' }}>
-            <div className="w-1.5 h-1.5 rounded-full bg-[#D4AF37] animate-pulse" />
+          style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(0,255,136,0.3) 30%, rgba(212,175,55,0.3) 70%, transparent 100%)' }}>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-9 h-9 rounded-full flex items-center justify-center bg-black"
+            style={{ border: '1px solid rgba(255,255,255,0.15)', boxShadow: '0 0 20px rgba(255,255,255,0.04)' }}>
+            <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: hovered === 'temuco' ? '#00FF88' : hovered === 'pucon' ? '#D4AF37' : '#888' }} />
           </div>
         </div>
 
