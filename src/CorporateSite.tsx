@@ -146,7 +146,7 @@ const Navbar: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
 };
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
-const Hero: React.FC = () => {
+const Hero: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
   const [vis, setVis] = useState(false);
   useEffect(() => { setTimeout(() => setVis(true), 200); }, []);
 
@@ -159,6 +159,15 @@ const Hero: React.FC = () => {
       </div>
       <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(0,0,12,0.55) 0%, rgba(0,0,12,0.1) 40%, rgba(0,0,12,0.75) 80%, rgba(0,0,12,0.98) 100%)' }} />
       <div className="absolute inset-0" style={{ background: 'radial-gradient(ellipse at 70% 40%, rgba(96,165,250,0.06) 0%, transparent 65%)' }} />
+
+      {/* Change city button — top left */}
+      <button onClick={onChangeCity}
+        className="absolute top-6 left-6 z-20 flex items-center gap-1.5 transition-all duration-300 text-[10px] font-bold tracking-[0.25em] uppercase"
+        style={{ color: 'rgba(96,165,250,0.35)' }}
+        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = C; }}
+        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'rgba(96,165,250,0.35)'; }}>
+        <MapPin size={12} /> Cambiar sede
+      </button>
 
       <div className="relative z-10 min-h-screen flex flex-col justify-end px-6 pb-16 pt-32">
         <div className="max-w-4xl mx-auto w-full">
@@ -485,7 +494,7 @@ const Footer: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => (
 const CorporateSite: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => (
   <div className="min-h-screen text-white" style={{ background: '#080808' }}>
     <Navbar onChangeCity={onChangeCity} />
-    <Hero />
+    <Hero onChangeCity={onChangeCity} />
     <Services />
     <HowItWorks />
     <WhyUs />

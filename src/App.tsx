@@ -85,12 +85,12 @@ const CitySelector: React.FC<{ onSelect: (city: Dest) => void }> = ({ onSelect }
   const [hovered, setHovered] = useState<Dest | null>(null);
   const [visible, setVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(() =>
-    typeof window !== 'undefined' ? window.innerWidth < 768 : false
+    typeof window !== 'undefined' ? window.innerWidth < 540 : false
   );
 
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 80);
-    const mq = window.matchMedia('(max-width: 767px)');
+    const mq = window.matchMedia('(max-width: 539px)');
     const fn = (e: MediaQueryListEvent) => setIsMobile(e.matches);
     mq.addEventListener('change', fn);
     return () => { clearTimeout(t); mq.removeEventListener('change', fn); };

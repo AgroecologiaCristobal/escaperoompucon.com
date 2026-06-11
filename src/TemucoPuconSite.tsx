@@ -159,7 +159,7 @@ const Navbar: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
 };
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
-const Hero: React.FC = () => {
+const Hero: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
   const [vis, setVis] = useState(false);
   useEffect(() => { setTimeout(() => setVis(true), 200); }, []);
 
@@ -177,6 +177,15 @@ const Hero: React.FC = () => {
       {/* Scanlines subtle */}
       <div className="absolute inset-0 pointer-events-none opacity-5"
         style={{ backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,136,0.15) 2px, rgba(0,255,136,0.15) 3px)', backgroundSize: '100% 4px' }} />
+
+      {/* Change city button — top left */}
+      <button onClick={onChangeCity}
+        className="absolute top-6 left-6 z-20 flex items-center gap-1.5 transition-all duration-300 text-[10px] font-bold tracking-[0.25em] uppercase"
+        style={{ color: 'rgba(0,255,136,0.35)' }}
+        onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = N; }}
+        onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'rgba(0,255,136,0.35)'; }}>
+        <MapPin size={12} /> Cambiar sede
+      </button>
 
       {/* Content */}
       <div className="relative z-10 min-h-screen flex flex-col justify-end px-6 pb-16 pt-32">
@@ -776,7 +785,7 @@ const Footer: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => (
 const TemucoPuconSite: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => (
   <div className="min-h-screen text-white" style={{ background: '#080808' }}>
     <Navbar onChangeCity={onChangeCity} />
-    <Hero />
+    <Hero onChangeCity={onChangeCity} />
     <About />
     <Rooms />
     <HowItWorks />
