@@ -61,8 +61,8 @@ const PANELS: Array<{
     label: 'Pucón — Origen',
     titleEl: (
       <>
-        <span className="misterios-text block text-4xl md:text-5xl lg:text-6xl leading-tight">Los Misterios</span>
-        <span className="casona-text block text-3xl md:text-4xl lg:text-5xl leading-tight">de la Casona</span>
+        <span className="misterios-text block leading-tight" style={{ fontSize: 'inherit' }}>Los Misterios</span>
+        <span className="casona-text block leading-tight" style={{ fontSize: '0.78em' }}>de la Casona</span>
       </>
     ),
     desc: 'El primer escape room de Pucón — Misterio y adrenalina junto al lago Villarrica',
@@ -117,7 +117,7 @@ const CitySelector: React.FC<{ onSelect: (city: Dest) => void }> = ({ onSelect }
 
       {/* ── DESKTOP: 3 panels horizontal ── */}
       {!isMobile && (
-        <div className="flex h-full">
+        <div className="flex h-full w-full">
           {PANELS.map((p, idx) => {
             const isHov = hovered === p.id;
             const otherHov = hovered !== null && !isHov;
@@ -136,8 +136,11 @@ const CitySelector: React.FC<{ onSelect: (city: Dest) => void }> = ({ onSelect }
                 <div
                   className="relative overflow-hidden cursor-pointer"
                   style={{
-                    flex: isHov ? '1.8' : otherHov ? '0.6' : '1',
-                    transition: 'flex 0.6s cubic-bezier(0.4,0,0.2,1)',
+                    flexGrow: isHov ? 1.8 : otherHov ? 0.6 : 1,
+                    flexShrink: 1,
+                    flexBasis: 0,
+                    minWidth: 0,
+                    transition: 'flex-grow 0.65s cubic-bezier(0.4,0,0.2,1)',
                   }}
                   onMouseEnter={() => setHovered(p.id)}
                   onMouseLeave={() => setHovered(null)}
@@ -148,39 +151,49 @@ const CitySelector: React.FC<{ onSelect: (city: Dest) => void }> = ({ onSelect }
                     style={{
                       filter: `brightness(${isHov ? 0.52 : 0.24})`,
                       transform: isHov ? 'scale(1.04)' : 'scale(1.12)',
-                      transition: 'filter 0.6s ease, transform 0.9s ease',
+                      transition: 'filter 0.65s ease, transform 0.9s ease',
                     }} />
                   <div className="absolute inset-0 pointer-events-none"
-                    style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.3) 45%, transparent 70%)' }} />
-                  <div className="absolute inset-0 pointer-events-none transition-opacity duration-600"
-                    style={{ background: `radial-gradient(ellipse at 50% 80%, ${p.tint}, transparent 65%)`, opacity: isHov ? 1 : 0 }} />
+                    style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.35) 45%, transparent 70%)' }} />
+                  <div className="absolute inset-0 pointer-events-none"
+                    style={{ background: `radial-gradient(ellipse at 50% 80%, ${p.tint}, transparent 65%)`, opacity: isHov ? 1 : 0, transition: 'opacity 0.65s' }} />
 
-                  {/* Content — bottom center */}
-                  <div className="absolute bottom-0 left-0 right-0 px-6 pb-10 flex flex-col items-center text-center gap-2">
-                    <div className={`transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
+                  {/* Content — bottom center, hides when panel is compressed */}
+                  <div className="absolute bottom-0 left-0 right-0 pb-10 flex flex-col items-center text-center"
+                    style={{ opacity: isHov ? 1 : otherHov ? 0.25 : 0.7, transition: 'opacity 0.5s', padding: '0 clamp(8px, 3%, 24px) 40px' }}>
+
+                    {/* Label — always visible */}
+                    <div className={`flex items-center justify-center gap-2 mb-3 transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
                       style={{ transitionDelay: `${300 + idx * 100}ms` }}>
-                      <div className="flex items-center justify-center gap-2 mb-3">
-                        <div className="h-px w-6" style={{ background: p.accent, opacity: 0.7 }} />
-                        <span className="text-[9px] font-black tracking-[0.35em] uppercase" style={{ color: p.accent }}>{p.label}</span>
-                        <div className="h-px w-6" style={{ background: p.accent, opacity: 0.7 }} />
-                      </div>
-                      <div className="text-3xl md:text-4xl lg:text-5xl leading-none mb-3 tracking-tight"
-                        style={{ textShadow: isHov ? `0 0 30px ${p.glow}` : 'none', transition: 'text-shadow 0.6s' }}>
-                        {p.titleEl}
-                      </div>
-                      <p className="text-white/40 text-xs leading-relaxed max-w-48 mx-auto mb-5">{p.desc}</p>
-                      <div className="transition-all duration-400"
-                        style={{ opacity: isHov ? 1 : 0, transform: isHov ? 'translateY(0) scale(1)' : 'translateY(6px) scale(0.97)' }}>
-                        <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs text-black"
-                          style={{ background: p.accent, boxShadow: `0 0 20px ${p.glow}` }}>
-                          {p.btnText} <ArrowRight size={12} />
-                        </div>
+                      <div className="h-px w-5" style={{ background: p.accent, opacity: 0.8 }} />
+                      <span className="text-[8px] font-black tracking-[0.3em] uppercase whitespace-nowrap" style={{ color: p.accent }}>{p.label}</span>
+                      <div className="h-px w-5" style={{ background: p.accent, opacity: 0.8 }} />
+                    </div>
+
+                    {/* Title */}
+                    <div className={`mb-3 tracking-tight transition-all duration-700 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+                      style={{
+                        transitionDelay: `${420 + idx * 100}ms`,
+                        textShadow: isHov ? `0 0 30px ${p.glow}` : 'none',
+                        transition: 'text-shadow 0.6s, opacity 0.7s, transform 0.7s',
+                        fontSize: 'clamp(20px, 3.5vw, 52px)',
+                        lineHeight: 1.05,
+                      }}>
+                      {p.titleEl}
+                    </div>
+
+                    {/* Description + button — only show when hovered */}
+                    <div style={{ opacity: isHov ? 1 : 0, transform: isHov ? 'translateY(0)' : 'translateY(8px)', transition: 'opacity 0.4s, transform 0.4s', pointerEvents: isHov ? 'auto' : 'none' }}>
+                      <p className="text-white/40 text-xs leading-relaxed mx-auto mb-5" style={{ maxWidth: 'min(180px, 80%)' }}>{p.desc}</p>
+                      <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs text-black"
+                        style={{ background: p.accent, boxShadow: `0 0 20px ${p.glow}` }}>
+                        {p.btnText} <ArrowRight size={12} />
                       </div>
                     </div>
                   </div>
 
-                  <div className="absolute inset-0 border-2 pointer-events-none transition-all duration-500"
-                    style={{ borderColor: isHov ? `${p.accent}44` : 'transparent' }} />
+                  <div className="absolute inset-0 border-2 pointer-events-none"
+                    style={{ borderColor: isHov ? `${p.accent}44` : 'transparent', transition: 'border-color 0.5s' }} />
                 </div>
               </React.Fragment>
             );
