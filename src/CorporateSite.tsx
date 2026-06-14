@@ -3,6 +3,8 @@ import {
   MapPin, Phone, Mail, Instagram, Users, ArrowRight,
   CheckCircle, Star, Zap, Shield, Trophy, Heart, Menu, X
 } from 'lucide-react';
+import { useLang } from './translations';
+import LangSwitcher from './LangSwitcher';
 
 const C = '#60A5FA';           // corporate neon blue
 const C_DIM = 'rgba(96,165,250,0.10)';
@@ -59,14 +61,15 @@ const SecHeader: React.FC<{ label: string; title: React.ReactNode }> = ({ label,
 
 // ─── Navbar ───────────────────────────────────────────────────────────────────
 const Navbar: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
+  const { t } = useLang();
+  const cn = t.corporate.nav;
   const scrolled = useScrolled();
   const [open, setOpen] = useState(false);
   const links = [
-    { label: 'Inicio', href: '#inicio' },
-    { label: 'Servicios', href: '#servicios' },
-    { label: 'Cómo Funciona', href: '#como-funciona' },
-    { label: 'Galería', href: '#galeria' },
-    { label: 'Contacto', href: '#contacto' },
+    { label: cn.services, href: '#servicios' },
+    { label: cn.howItWorks, href: '#como-funciona' },
+    { label: cn.gallery, href: '#galeria' },
+    { label: cn.contact, href: '#contacto' },
   ];
 
   return (
@@ -102,24 +105,26 @@ const Navbar: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
         </div>
 
         <div className="hidden md:flex items-center gap-4">
+          <LangSwitcher compact />
           <button onClick={onChangeCity}
             className="text-white/25 hover:text-white/60 text-[10px] font-bold tracking-[0.25em] uppercase transition-colors duration-300 flex items-center gap-1.5">
-            <MapPin size={11} /> Cambiar sede
+            <MapPin size={11} /> {cn.changeCity}
           </button>
           <a href="#contacto"
             className="px-5 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider transition-all duration-300 hover:scale-105"
             style={{ background: C, color: '#000', boxShadow: `0 0 18px ${C_GLOW}` }}>
-            Cotizar
+            {cn.quote}
           </a>
         </div>
 
-        <div className="md:hidden flex items-center gap-3">
+        <div className="md:hidden flex items-center gap-2">
+          <LangSwitcher compact />
           <button onClick={onChangeCity}
             className="text-[10px] font-bold tracking-[0.2em] uppercase flex items-center gap-1 transition-colors duration-300"
             style={{ color: 'rgba(96,165,250,0.45)' }}
             onMouseEnter={e => { (e.currentTarget as HTMLElement).style.color = C; }}
             onMouseLeave={e => { (e.currentTarget as HTMLElement).style.color = 'rgba(96,165,250,0.45)'; }}>
-            <MapPin size={11} /> Cambiar
+            <MapPin size={11} />
           </button>
           <button onClick={() => setOpen(!open)} className="text-white/60 hover:text-white">
             {open ? <X size={22} /> : <Menu size={22} />}
@@ -140,12 +145,12 @@ const Navbar: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
             <a href="#contacto" onClick={() => setOpen(false)}
               className="flex-1 text-center py-3 rounded-xl font-black text-xs uppercase tracking-wider"
               style={{ background: C, color: '#000' }}>
-              Cotizar Ahora
+              {cn.quote}
             </a>
             <button onClick={() => { setOpen(false); onChangeCity(); }}
               className="flex-1 text-center py-3 rounded-xl font-black text-xs uppercase tracking-wider border"
               style={{ borderColor: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.45)' }}>
-              Cambiar sede
+              {cn.changeCity}
             </button>
           </div>
         </div>
@@ -156,6 +161,8 @@ const Navbar: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 const Hero: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
+  const { t } = useLang();
+  const h = t.corporate.hero;
   const [vis, setVis] = useState(false);
   useEffect(() => { setTimeout(() => setVis(true), 200); }, []);
 
@@ -174,33 +181,37 @@ const Hero: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
           <div className={`transition-all duration-1000 ease-out ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{ transitionDelay: '200ms' }}>
             <div className="flex items-center gap-3 mb-5">
               <div className="w-1 h-6 rounded-full" style={{ background: C, boxShadow: `0 0 10px ${C_GLOW}` }} />
-              <span className="text-[10px] font-black tracking-[0.4em] uppercase" style={{ color: C }}>Team Building & Eventos Corporativos</span>
+              <span className="text-[10px] font-black tracking-[0.4em] uppercase" style={{ color: C }}>{h.label}</span>
             </div>
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-none mb-4 tracking-tight" style={{ fontFamily: "'Cinzel', serif" }}>
-              ESCAPE ROOM
+              {h.title1}
               <br />
-              <span style={{ color: C, textShadow: `0 0 30px ${C_GLOW}, 0 0 60px rgba(96,165,250,0.15)` }}>CORPORATIVO</span>
+              <span style={{ color: C, textShadow: `0 0 30px ${C_GLOW}, 0 0 60px rgba(96,165,250,0.15)` }}>{h.title2}</span>
             </h1>
           </div>
 
           <p className={`text-white/60 text-xl md:text-2xl mb-9 max-w-2xl leading-relaxed transition-all duration-1000 ease-out ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
             style={{ transitionDelay: '450ms' }}>
-            Fortalece tu equipo a través de la experiencia más intensa de trabajo colaborativo. Misterio, adrenalina y resultados <span className="text-white/85">reales para tu empresa</span>.
+            {h.subtitle} <span className="text-white/85">{h.subtitleHighlight}</span>.
           </p>
 
           <div className={`flex flex-wrap gap-3 mb-14 transition-all duration-1000 ease-out ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
             style={{ transitionDelay: '700ms' }}>
             <BlueBtn href="#contacto">
-              Cotizar para mi empresa <ArrowRight size={15} />
+              {h.cta} <ArrowRight size={15} />
             </BlueBtn>
             <BlueBtn href="#servicios" outline>
-              Ver Servicios
+              {h.ctaSecondary}
             </BlueBtn>
           </div>
 
           <div className={`flex flex-wrap gap-8 pt-7 border-t transition-all duration-1000 ease-out ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
             style={{ transitionDelay: '950ms', borderColor: 'rgba(96,165,250,0.12)' }}>
-            {[['2-50+', 'participantes'], ['60', 'min de desafío'], ['Pucón & Temuco', 'disponible']].map(([num, label]) => (
+            {[
+              { num: h.stat2, label: h.stat2Label },
+              { num: h.stat3, label: h.stat3Label },
+              { num: 'Pucón & Temuco', label: h.stat1Label },
+            ].map(({ num, label }) => (
               <div key={label}>
                 <div className="font-black text-sm" style={{ color: C }}>{num}</div>
                 <div className="text-white/35 text-xs uppercase tracking-widest mt-0.5">{label}</div>
@@ -217,55 +228,41 @@ const Hero: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
 
 // ─── Services ─────────────────────────────────────────────────────────────────
 const Services: React.FC = () => {
+  const { t } = useLang();
+  const sv = t.corporate.services;
   const [ref, vis] = useInView();
-  const services = [
-    {
-      icon: <Users size={24} />,
-      title: 'Team Building',
-      desc: 'Actividad diseñada para fortalecer la comunicación, confianza y trabajo en equipo de tu organización. Resultados medibles, diversión garantizada.',
-      features: ['Grupos de 6 a 50+ personas', 'Modalidad competitiva o colaborativa', 'Informe de desempeño del equipo'],
-    },
-    {
-      icon: <Trophy size={24} />,
-      title: 'Eventos Corporativos',
-      desc: 'Celebra lanzamientos, aniversarios o logros de empresa con una experiencia única e inmersiva que tu equipo nunca olvidará.',
-      features: ['Personalización con la identidad de tu marca', 'Coordinación integral del evento', 'Espacio exclusivo para grupos'],
-    },
-    {
-      icon: <Zap size={24} />,
-      title: 'Incentivos & Premios',
-      desc: 'Premia a tus mejores talentos o motiva a tu fuerza de ventas con una experiencia diferente que demuestra cuánto valoras a tu gente.',
-      features: ['Gift cards disponibles', 'Certificados de participación', 'Flexibilidad de fechas y horarios'],
-    },
-    {
-      icon: <Heart size={24} />,
-      title: 'Bienestar Laboral',
-      desc: 'Rompe la rutina y revitaliza el ánimo de tu equipo. El escape room es una poderosa herramienta de bienestar organizacional.',
-      features: ['Promueve el pensamiento lateral', 'Reduce el estrés de forma lúdica', 'Ideal para toda edad y condición física'],
-    },
-  ];
+  const icons = [<Users size={24} />, <Trophy size={24} />, <Zap size={24} />, <Heart size={24} />];
+  const featuresByLang: string[][] = t.corporate.services.items.map((item, i) => {
+    const fallback = [
+      ['Grupos de 6 a 50+ personas', 'Modalidad competitiva o colaborativa', 'Informe de desempeño del equipo'],
+      ['Personalización con la identidad de tu marca', 'Coordinación integral del evento', 'Espacio exclusivo para grupos'],
+      ['Gift cards disponibles', 'Certificados de participación', 'Flexibilidad de fechas y horarios'],
+      ['Promueve el pensamiento lateral', 'Reduce el estrés de forma lúdica', 'Ideal para toda edad y condición física'],
+    ];
+    return fallback[i] ?? [];
+  });
 
   return (
     <section ref={ref} id="servicios" className="py-28" style={{ background: '#0a0a0f' }}>
       <div className="max-w-6xl mx-auto px-6">
         <div className={`transition-all duration-1000 ease-out ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <SecHeader label="Servicios" title={<>Nuestros <span style={{ color: C }}>Servicios</span></>} />
+          <SecHeader label={sv.label} title={<>{sv.title.split(' ').slice(0, -1).join(' ')} <span style={{ color: C }}>{sv.title.split(' ').slice(-1)[0]}</span></>} />
         </div>
         <div className="grid md:grid-cols-2 gap-6">
-          {services.map(({ icon, title, desc, features }, i) => (
+          {sv.items.map(({ title, desc }, i) => (
             <div key={title}
-              className={`group p-8 rounded-2xl border transition-all duration-700 ease-out hover:-translate-y-1 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+              className={`group relative p-8 rounded-2xl border transition-all duration-700 ease-out hover:-translate-y-1 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
               style={{ transitionDelay: `${i * 120}ms`, background: '#0f0f18', borderColor: 'rgba(96,165,250,0.08)' }}
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(96,165,250,0.25)'; (e.currentTarget as HTMLElement).style.boxShadow = `0 0 40px rgba(96,165,250,0.05)`; }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(96,165,250,0.08)'; (e.currentTarget as HTMLElement).style.boxShadow = 'none'; }}>
               <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5 transition-all duration-300 group-hover:scale-110"
                 style={{ background: C_DIM, color: C, border: `1px solid rgba(96,165,250,0.2)` }}>
-                {icon}
+                {icons[i]}
               </div>
               <h3 className="text-xl font-black text-white mb-3" style={{ fontFamily: "'Cinzel', serif" }}>{title}</h3>
               <p className="text-white/45 text-sm leading-relaxed mb-5">{desc}</p>
               <div className="space-y-2">
-                {features.map(f => (
+                {featuresByLang[i].map(f => (
                   <div key={f} className="flex items-center gap-2.5">
                     <CheckCircle size={12} style={{ color: C, flexShrink: 0 }} />
                     <span className="text-white/50 text-xs">{f}</span>
@@ -284,30 +281,26 @@ const Services: React.FC = () => {
 
 // ─── How It Works ─────────────────────────────────────────────────────────────
 const HowItWorks: React.FC = () => {
+  const { t } = useLang();
+  const hw = t.corporate.howItWorks;
   const [ref, vis] = useInView();
-  const steps = [
-    { num: '01', title: 'Cotiza', desc: 'Cuéntanos el tamaño de tu equipo, la fecha y el objetivo. Preparamos una propuesta personalizada en 24 horas.' },
-    { num: '02', title: 'Personaliza', desc: 'Adaptamos la experiencia a tu empresa: temática, narrativa, branding y nivel de dificultad según tu equipo.' },
-    { num: '03', title: 'Vive la Experiencia', desc: '60 minutos de adrenalina colectiva. Tu equipo trabaja unido bajo presión real en un entorno controlado y seguro.' },
-    { num: '04', title: 'Celebra', desc: 'Foto grupal, debriefing de liderazgo y análisis de cómo trabajó tu equipo. Resultados que se llevan al día a día.' },
-  ];
 
   return (
     <section ref={ref} id="como-funciona" className="py-28" style={{ background: '#080808' }}>
       <div className="max-w-6xl mx-auto px-6">
         <div className={`transition-all duration-1000 ease-out ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <SecHeader label="El Proceso" title={<>¿Cómo <span style={{ color: C }}>Funciona?</span></>} />
+          <SecHeader label={hw.label} title={<>¿Cómo <span style={{ color: C }}>{hw.title.split(' ').slice(1).join(' ') || 'Funciona?'}</span></>} />
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
-          {steps.map(({ num, title, desc }, i) => (
-            <div key={num}
+          {hw.steps.map(({ title, desc }, i) => (
+            <div key={title}
               className={`group relative p-7 rounded-2xl border transition-all duration-700 ease-out hover:-translate-y-2 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
               style={{ transitionDelay: `${i * 120}ms`, background: '#0f0f18', borderColor: 'rgba(96,165,250,0.07)' }}
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(96,165,250,0.25)'; }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(96,165,250,0.07)'; }}>
               <div className="text-6xl font-black leading-none mb-5 select-none"
                 style={{ color: 'rgba(96,165,250,0.07)', fontFamily: "'Cinzel', serif" }}>
-                {num}
+                {String(i + 1).padStart(2, '0')}
               </div>
               <h3 className="font-black text-white text-sm uppercase tracking-wide mb-2">{title}</h3>
               <p className="text-white/38 text-xs leading-relaxed">{desc}</p>
@@ -321,35 +314,30 @@ const HowItWorks: React.FC = () => {
 
 // ─── Why Us ───────────────────────────────────────────────────────────────────
 const WhyUs: React.FC = () => {
+  const { t } = useLang();
+  const w = t.corporate.whyUs;
   const [ref, vis] = useInView();
-  const items = [
-    { icon: <Shield size={20} />, label: 'Experiencia comprobada', desc: 'Años llevando el primer escape room de Pucón. Tu empresa merece la mejor experiencia.' },
-    { icon: <Users size={20} />, label: 'Grupos grandes', desc: 'Capacidad para equipos de 6 hasta 50+ personas con sesiones personalizadas.' },
-    { icon: <Star size={20} />, label: 'Personalización total', desc: 'Adaptamos la narrativa, dificultad y branding a los valores e identidad de tu empresa.' },
-    { icon: <Trophy size={20} />, label: 'Resultados medibles', desc: 'Debriefing post-experiencia con análisis del desempeño del equipo.' },
-    { icon: <Zap size={20} />, label: 'Pucón y Temuco', desc: 'Disponible en ambas sedes. Elige la que mejor se adapte a tu equipo.' },
-    { icon: <Heart size={20} />, label: 'Atención dedicada', desc: 'Un coordinador asignado a tu evento desde la cotización hasta la experiencia final.' },
-  ];
+  const icons = [<Shield size={20} />, <Users size={20} />, <Star size={20} />, <Trophy size={20} />, <Zap size={20} />, <Heart size={20} />];
 
   return (
     <section ref={ref} className="py-28" style={{ background: '#0a0a0f' }}>
       <div className="max-w-6xl mx-auto px-6">
         <div className={`transition-all duration-1000 ease-out ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <SecHeader label="Diferencial" title={<>¿Por Qué <span style={{ color: C }}>Elegirnos?</span></>} />
+          <SecHeader label={w.label} title={<>¿Por Qué <span style={{ color: C }}>{w.title.split(' ').slice(-1)[0]}?</span></>} />
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {items.map(({ icon, label, desc }, i) => (
-            <div key={label}
+          {w.items.map(({ title, desc }, i) => (
+            <div key={title}
               className={`flex gap-4 p-6 rounded-2xl border transition-all duration-700 ease-out hover:-translate-y-1 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
               style={{ transitionDelay: `${i * 80}ms`, background: '#0f0f18', borderColor: 'rgba(96,165,250,0.07)' }}
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(96,165,250,0.2)'; }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(96,165,250,0.07)'; }}>
               <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
                 style={{ background: C_DIM, color: C, border: `1px solid rgba(96,165,250,0.18)` }}>
-                {icon}
+                {icons[i]}
               </div>
               <div>
-                <p className="text-white font-bold text-sm mb-1">{label}</p>
+                <p className="text-white font-bold text-sm mb-1">{title}</p>
                 <p className="text-white/38 text-xs leading-relaxed">{desc}</p>
               </div>
             </div>
@@ -362,21 +350,23 @@ const WhyUs: React.FC = () => {
 
 // ─── Gallery ──────────────────────────────────────────────────────────────────
 const Gallery: React.FC = () => {
+  const { t } = useLang();
+  const g = t.corporate.gallery;
   const [ref, vis] = useInView();
   const imgs = [
-    { src: '/ganyateam.jpeg', alt: 'Equipo corporativo' },
+    { src: '/ganyateam.jpeg', alt: 'Corporate team' },
     { src: '/jabaliesytablas.jpeg', alt: 'Team building' },
-    { src: '/familiazoologico.jpeg', alt: 'Grupo aventurero' },
-    { src: '/clubdechecho.jpeg', alt: 'Club corporativo' },
-    { src: '/lasindomitas.jpeg', alt: 'Equipo femenino' },
-    { src: '/lospifiados.jpeg', alt: 'Grupo en acción' },
+    { src: '/familiazoologico.jpeg', alt: 'Group adventure' },
+    { src: '/clubdechecho.jpeg', alt: 'Corporate club' },
+    { src: '/lasindomitas.jpeg', alt: 'Team experience' },
+    { src: '/lospifiados.jpeg', alt: 'Group in action' },
   ];
 
   return (
     <section ref={ref} id="galeria" className="py-28" style={{ background: '#080808' }}>
       <div className="max-w-6xl mx-auto px-6">
         <div className={`transition-all duration-1000 ease-out ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <SecHeader label="Galería" title={<>Empresas que <span style={{ color: C }}>Nos Eligieron</span></>} />
+          <SecHeader label={g.label} title={<>{g.title.split(' ').slice(0, -1).join(' ')} <span style={{ color: C }}>{g.title.split(' ').slice(-1)[0]}</span></>} />
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {imgs.map((img, i) => (
@@ -399,41 +389,41 @@ const Gallery: React.FC = () => {
 
 // ─── Contact ──────────────────────────────────────────────────────────────────
 const Contact: React.FC = () => {
+  const { t } = useLang();
+  const c = t.corporate.contact;
   const [ref, vis] = useInView();
   return (
     <section ref={ref} id="contacto" className="py-28" style={{ background: '#0a0a0f' }}>
       <div className="max-w-5xl mx-auto px-6">
         <div className={`transition-all duration-1000 ease-out ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <SecHeader label="Contacto" title={<>Cotiza para <span style={{ color: C }}>tu Empresa</span></>} />
+          <SecHeader label={c.label} title={<>{c.title.split(' ').slice(0, -1).join(' ')} <span style={{ color: C }}>{c.title.split(' ').slice(-1)[0]}</span></>} />
         </div>
 
-        {/* CTA banner */}
-        <div className={`p-8 md:p-12 rounded-2xl text-center mb-10 transition-all duration-1000 ease-out delay-200 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+        <div className={`relative p-8 md:p-12 rounded-2xl text-center mb-10 transition-all duration-1000 ease-out delay-200 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
           style={{ background: '#0f0f18', border: `1px solid rgba(96,165,250,0.15)`, boxShadow: `0 0 60px rgba(96,165,250,0.05)` }}>
           <div className="absolute top-0 left-0 right-0 h-px rounded-t-2xl" style={{ background: `linear-gradient(90deg, transparent, ${C}, transparent)`, opacity: 0.5 }} />
-          <p className="text-white/40 text-xs font-bold uppercase tracking-widest mb-3">¿Listo para potenciar tu equipo?</p>
+          <p className="text-white/40 text-xs font-bold uppercase tracking-widest mb-3">{c.title}</p>
           <h3 className="text-2xl md:text-3xl font-black text-white mb-4" style={{ fontFamily: "'Cinzel', serif" }}>
-            Escríbenos y te preparamos una <span style={{ color: C }}>propuesta a medida</span>
+            {c.subtitle.split(' ').slice(0, 6).join(' ')} <span style={{ color: C }}>{c.subtitle.split(' ').slice(6).join(' ')}</span>
           </h3>
           <p className="text-white/40 text-sm mb-7 max-w-md mx-auto leading-relaxed">
-            Cuéntanos el tamaño de tu equipo y el objetivo del evento. Te respondemos en menos de 24 horas.
+            {c.messagePlaceholder}
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
             <BlueBtn href="https://wa.me/56996543715?text=Hola%2C%20me%20interesa%20cotizar%20un%20evento%20corporativo%20de%20escape%20room.">
-              Cotizar por WhatsApp <ArrowRight size={14} />
+              {c.whatsappBtn} <ArrowRight size={14} />
             </BlueBtn>
             <BlueBtn href="mailto:escaperoompucon@gmail.com" outline>
-              Enviar Email
+              {c.sendBtn}
             </BlueBtn>
           </div>
         </div>
 
-        {/* Contact cards */}
         <div className={`grid md:grid-cols-3 gap-4 transition-all duration-1000 ease-out delay-400 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           {[
-            { icon: <Phone size={18} />, label: 'WhatsApp', value: '+56 9 9654 3715', href: 'https://wa.me/56996543715' },
+            { icon: <Phone size={18} />, label: c.whatsappBtn, value: '+56 9 9654 3715', href: 'https://wa.me/56996543715' },
             { icon: <Mail size={18} />, label: 'Email', value: 'escaperoompucon@gmail.com', href: 'mailto:escaperoompucon@gmail.com' },
-            { icon: <MapPin size={18} />, label: 'Sedes', value: 'Pucón & Temuco', href: null },
+            { icon: <MapPin size={18} />, label: t.shared.contact, value: 'Pucón & Temuco', href: null },
           ].map(({ icon, label, value, href }) => (
             <div key={label} className="flex items-center gap-3 p-4 rounded-xl border"
               style={{ background: '#0f0f18', borderColor: 'rgba(96,165,250,0.07)' }}>
@@ -460,7 +450,10 @@ const Contact: React.FC = () => {
 };
 
 // ─── Footer ───────────────────────────────────────────────────────────────────
-const Footer: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => (
+const Footer: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
+  const { t } = useLang();
+  const f = t.corporate.footer;
+  return (
   <footer className="py-10 border-t" style={{ background: '#060609', borderColor: 'rgba(96,165,250,0.07)' }}>
     <div className="max-w-6xl mx-auto px-6">
       <div className="flex flex-col md:flex-row justify-between items-center gap-5">
@@ -470,11 +463,12 @@ const Footer: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => (
           </div>
           <div>
             <p className="text-white/70 font-semibold text-xs">Escape Room Corporativo — Araucanía</p>
-            <p className="text-white/22 text-[10px]">Pucón & Temuco</p>
+            <p className="text-white/22 text-[10px]">{f.tagline}</p>
           </div>
         </div>
-        <p className="text-white/18 text-xs">© 2026 Escape Room Araucanía. Todos los derechos reservados.</p>
+        <p className="text-white/18 text-xs">© 2026 Escape Room Araucanía. {f.rights}</p>
         <div className="flex items-center gap-5">
+          <LangSwitcher compact />
           <a href="https://www.instagram.com/escaperoom_pucon/?hl=es" className="text-white/22 hover:text-white/50 transition-colors duration-300">
             <Instagram size={16} />
           </a>
@@ -482,13 +476,14 @@ const Footer: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => (
             style={{ color: 'rgba(96,165,250,0.35)' }}
             onMouseEnter={e => { (e.target as HTMLElement).style.color = C; }}
             onMouseLeave={e => { (e.target as HTMLElement).style.color = 'rgba(96,165,250,0.35)'; }}>
-            Cambiar sede
+            {t.shared.changeCity}
           </button>
         </div>
       </div>
     </div>
   </footer>
-);
+  );
+};
 
 // ─── Corporate Site ───────────────────────────────────────────────────────────
 const CorporateSite: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => (
