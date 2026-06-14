@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MapPin, Phone, Mail, Instagram, Users, Star, ChevronDown, ChevronUp, MessageCircle, Navigation, TowerControl as GameController, Trophy, MapPinned, ArrowRight, CheckCircle, ChevronRight } from 'lucide-react';
+import { MapPin, Phone, Mail, Instagram, Users, Star, ChevronDown, ChevronUp, MessageCircle, Navigation, TowerControl as GameController, Trophy, MapPinned, ArrowRight, CheckCircle, ChevronRight, ExternalLink } from 'lucide-react';
 import TemucoPuconSite from './TemucoPuconSite';
 import CorporateSite from './CorporateSite';
 import translations, { LangContext, Lang, useLang } from './translations';
@@ -39,6 +39,7 @@ const CitySelector: React.FC<{ onSelect: (city: Dest) => void }> = ({ onSelect }
   const [isMobile, setIsMobile] = useState(() =>
     typeof window !== 'undefined' ? window.innerWidth < 540 : false
   );
+  const touchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => setVisible(true), 80);
@@ -47,6 +48,14 @@ const CitySelector: React.FC<{ onSelect: (city: Dest) => void }> = ({ onSelect }
     mq.addEventListener('change', fn);
     return () => { clearTimeout(timer); mq.removeEventListener('change', fn); };
   }, []);
+
+  const handleTouchStart = (id: Dest) => {
+    if (touchTimerRef.current) clearTimeout(touchTimerRef.current);
+    setHovered(id);
+    touchTimerRef.current = setTimeout(() => {
+      onSelect(id);
+    }, 420);
+  };
 
   const panels = [
     {
@@ -98,9 +107,16 @@ const CitySelector: React.FC<{ onSelect: (city: Dest) => void }> = ({ onSelect }
           style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 75%, transparent 100%)', paddingBottom: '3rem' }}>
           <div className={`text-center transition-all duration-1000 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
             <p className="text-[#D4AF37] text-[9px] font-black tracking-[0.55em] uppercase mb-3">{t.selector.brand}</p>
-            <h1 className="text-lg md:text-2xl lg:text-3xl font-bold text-white mb-2 leading-snug">
+            <h1 className="text-lg md:text-2xl lg:text-3xl font-bold text-white mb-4 leading-snug">
               {t.selector.heading}
             </h1>
+            {/* Logo with glow */}
+            <div className={`flex justify-center mb-2 pointer-events-none transition-all duration-1000 ${visible ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}
+              style={{ transitionDelay: '300ms' }}>
+              <img src="/logoescaperoom.jpg" alt="Escape Room Araucanía"
+                className="h-20 w-auto rounded-2xl"
+                style={{ animation: 'logoGlow 3s ease-in-out infinite' }} />
+            </div>
             <p className="text-white/35 text-xs max-w-sm mx-auto">
               {t.selector.sub}
             </p>
@@ -135,6 +151,7 @@ const CitySelector: React.FC<{ onSelect: (city: Dest) => void }> = ({ onSelect }
                   }}
                   onMouseEnter={() => setHovered(p.id)}
                   onMouseLeave={() => setHovered(null)}
+                  onTouchStart={() => handleTouchStart(p.id)}
                   onClick={() => onSelect(p.id)}
                 >
                   <img src={p.image} alt={p.id}
@@ -187,14 +204,20 @@ const CitySelector: React.FC<{ onSelect: (city: Dest) => void }> = ({ onSelect }
       {/* ── MOBILE: 3 panels vertical ── */}
       {isMobile && (
         <div className="flex flex-col h-full">
-          <div className={`flex-none z-20 text-center px-4 py-4 transition-all duration-800 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-3'}`}
+          <div className={`flex-none z-20 text-center px-4 py-3 transition-all duration-800 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-3'}`}
             style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
             <p className="text-[#D4AF37] text-[9px] font-black tracking-[0.45em] uppercase mb-1">{t.selector.brand}</p>
-            <p className="text-white font-bold text-sm">{t.selector.heading}</p>
+            <p className="text-white font-bold text-sm mb-2">{t.selector.heading}</p>
+            <div className="flex justify-center">
+              <img src="/logoescaperoom.jpg" alt="Escape Room Araucanía"
+                className="h-10 w-auto rounded-xl"
+                style={{ animation: 'logoGlow 3s ease-in-out infinite' }} />
+            </div>
           </div>
           {panels.map((p, idx) => (
             <div key={p.id}
               className="relative flex-1 cursor-pointer overflow-hidden"
+              onTouchStart={() => handleTouchStart(p.id)}
               onClick={() => onSelect(p.id)}>
               <img src={p.image} alt={p.id}
                 className="absolute inset-0 w-full h-full object-cover"
@@ -239,45 +262,6 @@ const CitySelector: React.FC<{ onSelect: (city: Dest) => void }> = ({ onSelect }
           <div className="w-8 h-px bg-white/10" />
           <span className="text-white/18 text-[8px] tracking-[0.35em] uppercase">{t.selector.hint}</span>
           <div className="w-8 h-px bg-white/10" />
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// ─── Temuco Banner ────────────────────────────────────────────────────────────
-const TemucoBanner: React.FC = () => {
-  const { t } = useLang();
-  const tb = t.pucon.temucoBanner;
-  const [isVisible, setIsVisible] = useState(false);
-  useEffect(() => {
-    const timer = setTimeout(() => setIsVisible(true), 600);
-    return () => clearTimeout(timer);
-  }, []);
-  return (
-    <div className="relative overflow-hidden" style={{ background: 'linear-gradient(100deg, #0a0a0a 0%, #180000 35%, #8B0000 55%, #180000 75%, #0a0a0a 100%)' }}>
-      <div className="absolute top-0 w-full h-px" style={{ background: 'linear-gradient(90deg, transparent, #D4AF37 50%, transparent)' }} />
-      <div className="absolute bottom-0 w-full h-px" style={{ background: 'linear-gradient(90deg, transparent, #D4AF37 50%, transparent)' }} />
-      <div className="relative z-10 max-w-5xl mx-auto px-4 py-5">
-        <div className={`transition-all duration-900 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          <div className="flex flex-col md:flex-row items-center justify-center gap-5 text-center md:text-left">
-            <div className="flex items-center gap-4">
-              <MapPinned className="text-[#D4AF37] flex-shrink-0 hidden md:block" size={28} />
-              <div>
-                <div className="flex items-center justify-center md:justify-start gap-2 mb-1">
-                  <span className="bg-[#D4AF37] text-black text-[10px] font-black px-2 py-0.5 rounded uppercase tracking-widest">{tb.badge}</span>
-                  <span className="text-[#D4AF37] text-xs font-bold tracking-[0.25em] uppercase">{tb.highlight}</span>
-                </div>
-                <p className="text-xl md:text-2xl font-bold text-white">{tb.title} <span className="text-[#D4AF37]">{tb.highlight}</span>!</p>
-                <p className="text-[#D4AF37] font-medium text-sm mt-0.5">{tb.desc}</p>
-              </div>
-            </div>
-            <a href="https://wa.me/56996543715?text=Hola%2C%20me%20interesa%20reservar%20en%20Temuco."
-              className="flex-shrink-0 flex items-center gap-2 bg-[#D4AF37] text-black px-6 py-3 rounded-xl font-bold text-sm hover:bg-white transition-all duration-300 hover:scale-105"
-              style={{ boxShadow: '0 0 24px rgba(212,175,55,0.35)' }}>
-              {tb.cta} <ArrowRight size={14} />
-            </a>
-          </div>
         </div>
       </div>
     </div>
@@ -343,7 +327,7 @@ const HeroSection: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) =
 
           <div className={`flex flex-wrap gap-3 mb-12 transition-all duration-1000 ease-out ${isTextVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
             style={{ transitionDelay: '750ms' }}>
-            <a href="https://wa.me/56996543715?text=Hola%2C%20me%20interesa%20reservar%20un%20escape%20room%20en%20Los%20Misterios%20de%20la%20Casona."
+            <a href="https://wa.me/56961898877?text=Hola%2C%20me%20interesa%20reservar%20un%20escape%20room%20en%20Los%20Misterios%20de%20la%20Casona."
               className="group flex items-center gap-3 bg-[#D4AF37] text-black px-8 py-4 rounded-xl text-sm font-bold hover:bg-white transition-all duration-300"
               style={{ boxShadow: '0 0 30px rgba(212,175,55,0.35)' }}>
               {h.cta}
@@ -386,14 +370,14 @@ const AboutSection: React.FC = () => {
             <p className="text-white/55 text-base leading-relaxed mb-5">{a.desc1}</p>
             <p className="text-white/55 text-base leading-relaxed mb-8">{a.desc2}</p>
             <div className="space-y-3 mb-9">
-              {[a.item1Title, a.item2Title, a.item3Title].map(item => (
+              {[a.item2Title, a.item3Title].map(item => (
                 <div key={item} className="flex items-center gap-3">
                   <CheckCircle className="text-[#D4AF37] flex-shrink-0" size={16} />
                   <span className="text-white/60 text-sm">{item}</span>
                 </div>
               ))}
             </div>
-            <a href="https://wa.me/56996543715?text=Hola%2C%20quiero%20reservar%20mi%20pr%C3%B3xima%20aventura."
+            <a href="https://wa.me/56961898877?text=Hola%2C%20quiero%20reservar%20mi%20pr%C3%B3xima%20aventura."
               className="inline-flex items-center gap-2 bg-[#8B0000] text-white px-8 py-4 rounded-xl font-bold text-sm hover:bg-[#D4AF37] hover:text-black transition-all duration-300 hover:scale-105">
               {t.pucon.contact.reserveBtn} <ArrowRight size={15} />
             </a>
@@ -421,8 +405,8 @@ const AboutSection: React.FC = () => {
 const RoomCard: React.FC<{
   title: string; description: string; difficulty: string;
   players: string; image: string; alt: string; delay: number; cardType: 'pirate' | 'zombie';
-  difficultyLabel: string; playersLabel: string; reserveLabel: string;
-}> = ({ title, description, difficulty, players, image, alt, delay, cardType, difficultyLabel, playersLabel, reserveLabel }) => {
+  difficultyLabel: string; playersLabel: string; reserveLabel: string; comingSoon?: boolean; comingSoonLabel?: string;
+}> = ({ title, description, difficulty, players, image, alt, delay, cardType, difficultyLabel, playersLabel, reserveLabel, comingSoon, comingSoonLabel }) => {
   const [ref, isVisible] = useIntersectionObserver();
   const accent = cardType === 'pirate' ? '#D4AF37' : '#8B0000';
 
@@ -433,29 +417,42 @@ const RoomCard: React.FC<{
       <div className="relative overflow-hidden" style={{ height: '280px' }}>
         <img src={image} alt={alt}
           className="w-full h-full object-cover transition-transform duration-800 group-hover:scale-110"
-          style={{ objectPosition: 'center' }} />
+          style={{ objectPosition: 'center', filter: comingSoon ? 'brightness(0.3) grayscale(0.5)' : undefined }} />
         <div className="absolute inset-0" style={{ background: 'linear-gradient(0deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)' }} />
         <div className="absolute top-4 left-4">
           <span className="text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider"
             style={{ background: accent, color: cardType === 'pirate' ? '#000' : '#fff' }}>
-            {difficultyLabel} {difficulty}
+            {difficultyLabel}: {difficulty}
           </span>
         </div>
         <div className="absolute top-4 right-4 flex items-center gap-1.5 bg-black/70 backdrop-blur-sm px-3 py-1.5 rounded-full">
           <Users size={11} className="text-white/60" />
           <span className="text-white/60 text-xs font-medium">{players} {playersLabel}</span>
         </div>
+        {comingSoon && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="bg-black/70 text-white/50 text-xs font-bold tracking-widest uppercase px-4 py-2 rounded-full border border-white/10">
+              {comingSoonLabel}
+            </span>
+          </div>
+        )}
       </div>
       <div className="p-7">
         <div className="w-6 h-0.5 mb-4" style={{ background: accent }} />
         <h3 className="text-xl font-bold text-white mb-3" style={{ fontFamily: "'Cinzel', serif" }}>{title}</h3>
         <p className="text-white/45 leading-relaxed text-sm mb-6 line-clamp-3">{description}</p>
-        <a href="https://wa.me/56996543715?text=Hola%2C%20me%20interesa%20reservar%20una%20sala."
-          className="group/btn inline-flex items-center gap-2 font-semibold text-xs uppercase tracking-widest transition-all duration-300 hover:gap-3"
-          style={{ color: accent }}>
-          {reserveLabel}
-          <ChevronRight size={13} className="transition-transform duration-300 group-hover/btn:translate-x-1" />
-        </a>
+        {comingSoon ? (
+          <span className="inline-flex items-center gap-2 font-semibold text-xs uppercase tracking-widest text-white/25 cursor-not-allowed">
+            {comingSoonLabel}
+          </span>
+        ) : (
+          <a href="https://wa.me/56961898877?text=Hola%2C%20me%20interesa%20reservar%20una%20sala."
+            className="group/btn inline-flex items-center gap-2 font-semibold text-xs uppercase tracking-widest transition-all duration-300 hover:gap-3"
+            style={{ color: accent }}>
+            {reserveLabel}
+            <ChevronRight size={13} className="transition-transform duration-300 group-hover/btn:translate-x-1" />
+          </a>
+        )}
       </div>
       <div className="absolute bottom-0 left-0 w-full h-0.5 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-600"
         style={{ background: `linear-gradient(90deg, ${accent}, transparent)` }} />
@@ -478,13 +475,13 @@ const RoomsSection: React.FC = () => {
           </h2>
         </div>
         <div className="grid md:grid-cols-2 gap-7">
-          <RoomCard title="Sala El Pirata Pinwine"
-            description="Una aventura de misterio pirata llena de puzzles de lógica. Desentraña los secretos del Capitán Pinwine para cumplir tu misión. Ideal para grupos de amigos, parejas y familias. Disponible en español e inglés."
-            difficulty={r.difficulty} players="2-8" image="/pirata.png" alt="Sala del Pirata Pinwine" delay={200} cardType="pirate"
+          <RoomCard title="Elixir Zombie"
+            description="Una aventura post-apocalíptica donde deben encontrar la cura para un virus zombie. Investiga el laboratorio y colabora bajo presión antes de que los zombies regresen."
+            difficulty="8/10" players="2-8" image="/elixir_zombie.png" alt="Sala El Elixir Zombie" delay={200} cardType="zombie"
             difficultyLabel={r.difficulty} playersLabel={r.players} reserveLabel={r.reserve} />
-          <RoomCard title="Sala El Elixir Zombie"
-            description="Una aventura post-apocalíptica donde deben encontrar la cura para un virus zombie. Investiga el laboratorio y colabora bajo presión antes de que los zombies regresen. Disponible en inglés y español."
-            difficulty={r.difficulty} players="2-8" image="/zombie.png" alt="Sala El Elixir Zombie" delay={400} cardType="zombie"
+          <RoomCard title="Refugio 42"
+            description="Un refugio secreto esconde oscuros secretos. Descifra los códigos, sigue las pistas y logra escapar antes de que sea demasiado tarde."
+            difficulty="7/10" players="2-8" image="/refugio_42.png" alt="Sala Refugio 42" delay={400} cardType="pirate"
             difficultyLabel={r.difficulty} playersLabel={r.players} reserveLabel={r.reserve} />
         </div>
       </div>
@@ -498,7 +495,12 @@ const HowItWorksSection: React.FC = () => {
   const h = t.pucon.howItWorks;
   const [ref, isVisible] = useIntersectionObserver();
   const icons = [<MessageCircle size={20} />, <Navigation size={20} />, <GameController size={20} />, <Trophy size={20} />];
-  const links = ['https://wa.me/56996543715', '#contact', '#rooms', '#testimonials'];
+  const links = [
+    'https://wa.me/56961898877',
+    'https://maps.google.com/?q=Ramón+Quezada+0470+Pucón+Chile',
+    '#rooms',
+    '#testimonials',
+  ];
   return (
     <section ref={ref} className="py-28" style={{ background: '#0c0c0c' }}>
       <div className="max-w-6xl mx-auto px-6">
@@ -522,9 +524,93 @@ const HowItWorksSection: React.FC = () => {
               </div>
               <h3 className="text-base font-bold text-white mb-2">{step.title}</h3>
               <p className="text-white/40 text-xs leading-relaxed">{step.desc}</p>
-              {i === 0 && <p className="text-[#D4AF37] text-xs font-bold mt-3">+56 9 9654 3715</p>}
+              {i === 0 && <p className="text-[#D4AF37] text-xs font-bold mt-3">+56 9 6189 8877</p>}
             </a>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// ─── Pricing (Pucón) ──────────────────────────────────────────────────────────
+const PuconPricingSection: React.FC = () => {
+  const { t } = useLang();
+  const [ref, isVisible] = useIntersectionObserver();
+  const lang = t === translations.en ? 'en' : t === translations.pt ? 'pt' : 'es';
+
+  const slots = lang === 'en' ? [
+    { time: '10:00 – 12:00', label: 'Escape Coffee', price: '$12.000', note: 'per person' },
+    { time: '12:00 – 17:00', label: 'Afternoon', price: '$10.000', note: 'per person' },
+    { time: '18:00 – 21:00', label: 'Evening', price: '$12.000', note: 'per person' },
+    { time: '22:00 – 00:00', label: 'Night', price: '$15.000', note: 'per person', highlight: true },
+  ] : lang === 'pt' ? [
+    { time: '10:00 – 12:00', label: 'Escape Coffee', price: '$12.000', note: 'por pessoa' },
+    { time: '12:00 – 17:00', label: 'Tarde', price: '$10.000', note: 'por pessoa' },
+    { time: '18:00 – 21:00', label: 'Noite', price: '$12.000', note: 'por pessoa' },
+    { time: '22:00 – 00:00', label: 'Madrugada', price: '$15.000', note: 'por pessoa', highlight: true },
+  ] : [
+    { time: '10:00 – 12:00', label: 'Escape Coffee', price: '$12.000', note: 'por persona' },
+    { time: '12:00 – 17:00', label: 'Tarde', price: '$10.000', note: 'por persona' },
+    { time: '18:00 – 21:00', label: 'Noche', price: '$12.000', note: 'por persona' },
+    { time: '22:00 – 00:00', label: 'Noche Oscura', price: '$15.000', note: 'por persona', highlight: true },
+  ];
+
+  return (
+    <section ref={ref} id="precios" className="py-28" style={{ background: '#0c0c0c' }}>
+      <div className="max-w-4xl mx-auto px-6">
+        <div className={`text-center mb-14 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <SectionLabel text={lang === 'en' ? 'Pricing' : lang === 'pt' ? 'Preços' : 'Precios'} />
+          <h2 className="text-4xl md:text-5xl font-bold text-white" style={{ fontFamily: "'Cinzel', serif" }}>
+            {lang === 'en' ? 'Choose your moment' : lang === 'pt' ? 'Escolha seu momento' : 'Elige tu momento'}
+          </h2>
+        </div>
+
+        <div className={`grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10 transition-all duration-1000 ease-out delay-200 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          {slots.map((slot, i) => (
+            <div key={i} className="relative p-6 rounded-2xl text-center transition-all duration-300 hover:-translate-y-1"
+              style={{
+                background: slot.highlight ? 'linear-gradient(135deg, #1a0000, #2d0000)' : '#0f0f0f',
+                border: `1px solid ${slot.highlight ? 'rgba(139,0,0,0.5)' : 'rgba(212,175,55,0.12)'}`,
+                boxShadow: slot.highlight ? '0 0 30px rgba(139,0,0,0.2)' : 'none',
+              }}>
+              {slot.highlight && (
+                <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, #8B0000, transparent)' }} />
+              )}
+              <p className="text-[#D4AF37] text-[9px] font-black tracking-[0.3em] uppercase mb-1">{slot.time}</p>
+              <p className="text-white/60 text-xs mb-3 font-medium">{slot.label}</p>
+              <div className="text-3xl font-black text-white mb-1" style={{ color: slot.highlight ? '#ff4444' : '#D4AF37' }}>
+                {slot.price}
+              </div>
+              <p className="text-white/30 text-[10px] uppercase tracking-wider">{slot.note}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Escape Party callout */}
+        <div className={`relative p-8 rounded-2xl overflow-hidden transition-all duration-1000 ease-out delay-400 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+          style={{ background: 'linear-gradient(100deg, #0a0a0a, #180000 40%, #8B0000 60%, #180000 80%, #0a0a0a)', border: '1px solid rgba(212,175,55,0.2)' }}>
+          <div className="absolute top-0 w-full h-px left-0" style={{ background: 'linear-gradient(90deg, transparent, #D4AF37 50%, transparent)' }} />
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+            <div>
+              <p className="text-[#D4AF37] text-[10px] font-black tracking-[0.4em] uppercase mb-2">
+                {lang === 'en' ? 'Special Package' : lang === 'pt' ? 'Pacote Especial' : 'Paquete Especial'}
+              </p>
+              <h3 className="text-2xl font-bold text-white mb-2" style={{ fontFamily: "'Cinzel', serif" }}>Escape Party</h3>
+              <p className="text-white/50 text-sm max-w-md">
+                {lang === 'en'
+                  ? 'Celebrate your birthday or special occasion with a private session + decorations + photos. Ask for your personalized quote.'
+                  : lang === 'pt'
+                  ? 'Celebre seu aniversário ou ocasião especial com sessão privada + decoração + fotos. Solicite seu orçamento personalizado.'
+                  : 'Celebra tu cumpleaños u ocasión especial con sesión privada + decoración + fotos. Consulta tu cotización personalizada.'}
+              </p>
+            </div>
+            <a href="https://wa.me/56961898877?text=Hola%2C%20me%20interesa%20el%20paquete%20Escape%20Party."
+              className="flex-shrink-0 inline-flex items-center gap-2 bg-[#D4AF37] text-black px-7 py-3.5 rounded-xl font-bold text-sm hover:bg-white transition-all duration-300 hover:scale-105"
+              style={{ boxShadow: '0 0 24px rgba(212,175,55,0.3)' }}>
+              {lang === 'en' ? 'Request a quote' : lang === 'pt' ? 'Solicitar orçamento' : 'Consultar precio'} <ArrowRight size={14} />
+            </a>
+          </div>
         </div>
       </div>
     </section>
@@ -577,6 +663,13 @@ const TestimonialsSection: React.FC = () => {
           ))}
         </div>
       </div>
+      <div className={`text-center mt-10 transition-all duration-1000 ease-out delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+        <a href="https://www.google.com/search?q=escape+room+pucon+los+misterios+de+la+casona#lrd=0x0:0x0,1"
+          target="_blank" rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 border border-[#D4AF37]/40 text-[#D4AF37] px-7 py-3 rounded-xl font-bold text-sm hover:bg-[#D4AF37]/10 transition-all duration-300">
+          Ver reseñas en Google <ExternalLink size={14} />
+        </a>
+      </div>
     </section>
   );
 };
@@ -594,9 +687,9 @@ const FAQSection: React.FC = () => {
     { q: '¿Qué pasa si no logramos escapar a tiempo?', a: 'No te preocupes. El Game Master entrará para explicarte las soluciones de los puzzles restantes y celebrar tu esfuerzo. Lo importante es la diversión.' },
     { q: '¿Se puede jugar con movilidad reducida?', a: 'Sí, nuestras salas están diseñadas para ser accesibles en general. Te recomendamos contactarnos por WhatsApp antes de reservar para confirmar la adaptabilidad.' },
     { q: '¿Cuántas personas pueden jugar?', a: 'Nuestras salas están diseñadas para grupos de 2 hasta 8 personas. Para grupos más grandes recomendamos reservar sesiones consecutivas.' },
-    { q: '¿Hay edad mínima para participar?', a: 'Sala del Capitán Pinwine: recomendada para mayores de 8 años. Los menores de 14 deben ir con un adulto. Sala Zombie: edad mínima recomendada 12-14 años.' },
-    { q: '¿Cuál es el precio por persona?', a: 'El precio es de $10.000 CLP por persona.' },
-    { q: '¿Cómo puedo reservar?', a: 'Las reservas se realizan vía WhatsApp al +56 9 9654 3715. Envíanos un mensaje con la fecha, hora y sala que te interesa.' },
+    { q: '¿Hay edad mínima para participar?', a: 'Recomendamos el escape room para personas de 12 años en adelante. Los menores de edad deben ir acompañados de un adulto.' },
+    { q: '¿Cuál es el precio por persona?', a: 'Los precios varían según el horario: desde $10.000 CLP (tarde) hasta $15.000 CLP (noche). Consulta la sección de Precios para todos los detalles.' },
+    { q: '¿Cómo puedo reservar?', a: 'Las reservas se realizan vía WhatsApp al +56 9 6189 8877. Envíanos un mensaje con la fecha, hora y sala que te interesa.' },
     { q: '¿Con cuánta anticipación debo llegar?', a: 'Te pedimos llegar 10-15 minutos antes de la hora reservada para la introducción y para asegurar que tu juego comience a tiempo.' },
     { q: '¿Cuánto dura la experiencia total?', a: 'El juego dura 60 minutos. Considera 10-15 minutos antes para introducción y 5-10 minutos después para foto. En total, unas 80-90 minutos.' },
     { q: '¿Cómo funciona la cancelación?', a: 'Para reservar se necesita el 50% del valor total. En caso de cancelación, ese 50% no se reembolsa. Puedes modificar tu reserva avisando con 24-48 horas de anticipación.' },
@@ -687,10 +780,15 @@ const GallerySection: React.FC = () => {
             </div>
           ))}
         </div>
-        <div className={`text-center mt-10 transition-all duration-1000 ease-out delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <a href="https://wa.me/56996543715?text=Hola%2C%20quiero%20reservar%20y%20ser%20parte%20de%20la%20galería."
+        <div className={`text-center mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 transition-all duration-1000 ease-out delay-500 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <a href="https://wa.me/56961898877?text=Hola%2C%20quiero%20reservar%20y%20ser%20parte%20de%20la%20galería."
             className="inline-flex items-center gap-2 bg-[#8B0000] text-white px-8 py-4 rounded-xl font-bold text-sm hover:bg-[#D4AF37] hover:text-black transition-all duration-300 hover:scale-105">
             {t.pucon.contact.reserveBtn} <ArrowRight size={15} />
+          </a>
+          <a href="https://www.google.com/search?q=escape+room+pucon+los+misterios+de+la+casona"
+            target="_blank" rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 border border-[#D4AF37]/40 text-[#D4AF37] px-7 py-4 rounded-xl font-bold text-sm hover:bg-[#D4AF37]/10 transition-all duration-300">
+            Ver galería en Google <ExternalLink size={14} />
           </a>
         </div>
       </div>
@@ -718,7 +816,6 @@ const LaCasonaSection: React.FC = () => {
     { title: lc.feature2Title, subtitle: lc.feature2Desc, description: lc.desc1, images: conceptImgs, currentIdx: conceptIdx, setIdx: setConceptIdx, isCarousel: true },
     { title: lc.feature1Title, subtitle: lc.feature1Desc, description: lc.desc2, images: cafeteriaImgs, currentIdx: cafeteriaIdx, setIdx: setCafeteriaIdx, isCarousel: true },
     { title: lc.feature3Title, subtitle: lc.feature3Desc, description: lc.desc1, image: '/ACTIVIDADES1.jpeg', isCarousel: false },
-    { title: lc.feature4Title, subtitle: lc.feature4Desc, description: lc.desc2, image: '/CAFETERIA.jpeg', isCarousel: false },
   ];
 
   return (
@@ -765,7 +862,7 @@ const LaCasonaSection: React.FC = () => {
           ))}
         </div>
         <div className={`text-center mt-16 transition-all duration-1000 ease-out delay-700 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <a href="https://wa.me/56996543715?text=Hola%2C%20me%20interesa%20conocer%20La%20Casona%20Puc%C3%B3n."
+          <a href="https://wa.me/56961898877?text=Hola%2C%20me%20interesa%20conocer%20La%20Casona%20Puc%C3%B3n."
             className="inline-flex items-center gap-2 bg-[#8B0000] text-white px-8 py-4 rounded-xl font-bold text-sm hover:bg-[#D4AF37] hover:text-black transition-all duration-300 hover:scale-105">
             {t.pucon.contact.reserveBtn} <ArrowRight size={15} />
           </a>
@@ -781,64 +878,94 @@ const ContactSection: React.FC = () => {
   const c = t.pucon.contact;
   const [ref, isVisible] = useIntersectionObserver();
   return (
-    <>
-      <TemucoBanner />
-      <section ref={ref} id="contact" className="py-28" style={{ background: '#0c0c0c' }}>
-        <div className="max-w-6xl mx-auto px-6">
-          <div className={`text-center mb-14 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-            <SectionLabel text={c.label} />
-            <h2 className="text-4xl md:text-5xl font-bold text-white" style={{ fontFamily: "'Cinzel', serif" }}>
-              {c.title}
-            </h2>
-          </div>
-          <div className="grid md:grid-cols-2 gap-12">
-            <div className={`transition-all duration-1000 ease-out delay-300 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
-              <div className="space-y-3 mb-8">
-                {[
-                  { icon: <MapPin size={18} />, label: c.location, value: 'Ramón Quezada 0470, Pucón', href: null },
-                  { icon: <Phone size={18} />, label: c.phone, value: '+56 9 9654 3715', href: 'https://wa.me/56996543715' },
-                  { icon: <Mail size={18} />, label: c.email, value: 'escaperoompucon@gmail.com', href: 'mailto:escaperoompucon@gmail.com' },
-                ].map(({ icon, label, value, href }) => (
-                  <div key={label} className="flex items-center gap-4 p-4 rounded-xl border border-white/5 hover:border-[#D4AF37]/25 transition-all duration-300 group"
-                    style={{ background: '#0f0f0f' }}>
-                    <div className="w-9 h-9 rounded-lg flex items-center justify-center text-black flex-shrink-0 transition-all duration-300 group-hover:scale-110"
-                      style={{ background: '#D4AF37' }}>{icon}</div>
-                    <div>
-                      <p className="text-white/30 text-[10px] uppercase tracking-widest mb-0.5">{label}</p>
-                      {href ? <a href={href} className="text-white/80 hover:text-[#D4AF37] transition-colors duration-300 font-medium text-sm">{value}</a>
-                        : <p className="text-white/80 font-medium text-sm">{value}</p>}
-                    </div>
+    <section ref={ref} id="contact" className="py-28" style={{ background: '#0c0c0c' }}>
+      <div className="max-w-6xl mx-auto px-6">
+        <div className={`text-center mb-14 transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <SectionLabel text={c.label} />
+          <h2 className="text-4xl md:text-5xl font-bold text-white" style={{ fontFamily: "'Cinzel', serif" }}>
+            {c.title}
+          </h2>
+        </div>
+        <div className="grid md:grid-cols-2 gap-12">
+          <div className={`transition-all duration-1000 ease-out delay-300 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-10'}`}>
+            <div className="space-y-3 mb-8">
+              {[
+                { icon: <MapPin size={18} />, label: c.location, value: 'Ramón Quezada 0470, Pucón', href: null },
+                { icon: <Phone size={18} />, label: c.phone, value: '+56 9 6189 8877', href: 'https://wa.me/56961898877' },
+                { icon: <Mail size={18} />, label: c.email, value: 'escaperoompucon@gmail.com', href: 'mailto:escaperoompucon@gmail.com' },
+              ].map(({ icon, label, value, href }) => (
+                <div key={label} className="flex items-center gap-4 p-4 rounded-xl border border-white/5 hover:border-[#D4AF37]/25 transition-all duration-300 group"
+                  style={{ background: '#0f0f0f' }}>
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center text-black flex-shrink-0 transition-all duration-300 group-hover:scale-110"
+                    style={{ background: '#D4AF37' }}>{icon}</div>
+                  <div>
+                    <p className="text-white/30 text-[10px] uppercase tracking-widest mb-0.5">{label}</p>
+                    {href ? <a href={href} className="text-white/80 hover:text-[#D4AF37] transition-colors duration-300 font-medium text-sm">{value}</a>
+                      : <p className="text-white/80 font-medium text-sm">{value}</p>}
                   </div>
-                ))}
-              </div>
-              <div className="flex items-center gap-3 mb-8">
-                <p className="text-white/30 text-xs">{c.instagram}</p>
-                <a href="https://www.instagram.com/escaperoom_pucon/?hl=es"
-                  className="flex items-center gap-2 text-white/45 hover:text-[#D4AF37] transition-colors duration-300">
-                  <Instagram size={18} />
-                  <span className="text-xs font-semibold">@escaperoom_pucon</span>
-                </a>
-              </div>
-              <a href="https://wa.me/56996543715?text=Hola%2C%20me%20interesa%20reservar%20un%20escape%20room%20en%20Los%20Misterios%20de%20la%20Casona."
-                className="inline-flex items-center gap-2 bg-[#8B0000] text-white px-8 py-4 rounded-xl font-bold text-sm hover:bg-[#D4AF37] hover:text-black transition-all duration-300 hover:scale-105">
-                {c.whatsappBtn} <ArrowRight size={15} />
+                </div>
+              ))}
+            </div>
+            <div className="flex items-center gap-3 mb-8">
+              <p className="text-white/30 text-xs">{c.instagram}</p>
+              <a href="https://www.instagram.com/Escaperoom_araucania/"
+                className="flex items-center gap-2 text-white/45 hover:text-[#D4AF37] transition-colors duration-300">
+                <Instagram size={18} />
+                <span className="text-xs font-semibold">@Escaperoom_araucania</span>
               </a>
             </div>
-            <div className={`transition-all duration-1000 ease-out delay-600 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
-              <div className="rounded-2xl overflow-hidden border border-white/5" style={{ boxShadow: '0 30px 60px rgba(0,0,0,0.6)' }}>
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3131.234567890123!2d-71.9762225!3d-39.2666282!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x96147f4838ebcf1d:0x5f6543199a9b5c15!2sEscape+room+pucon!5e0!3m2!1ses!2scl!4v1678901234567!5m2!1ses!2scl"
-                  width="100%" height="400"
-                  style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg)' }}
-                  allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"
-                  title="Ubicación Escape Room Pucón"
-                />
-              </div>
+            <a href="https://wa.me/56961898877?text=Hola%2C%20me%20interesa%20reservar%20un%20escape%20room%20en%20Los%20Misterios%20de%20la%20Casona."
+              className="inline-flex items-center gap-2 bg-[#8B0000] text-white px-8 py-4 rounded-xl font-bold text-sm hover:bg-[#D4AF37] hover:text-black transition-all duration-300 hover:scale-105">
+              {c.whatsappBtn} <ArrowRight size={15} />
+            </a>
+          </div>
+          <div className={`transition-all duration-1000 ease-out delay-600 ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-10'}`}>
+            <div className="rounded-2xl overflow-hidden border border-white/5" style={{ boxShadow: '0 30px 60px rgba(0,0,0,0.6)' }}>
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3131.234567890123!2d-71.9762225!3d-39.2666282!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x96147f4838ebcf1d:0x5f6543199a9b5c15!2sEscape+room+pucon!5e0!3m2!1ses!2scl!4v1678901234567!5m2!1ses!2scl"
+                width="100%" height="400"
+                style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg)' }}
+                allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"
+                title="Ubicación Escape Room Pucón"
+              />
             </div>
           </div>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
+  );
+};
+
+// ─── Cross-site CTA ───────────────────────────────────────────────────────────
+const GoTemucoCTA: React.FC<{ onSelect: (city: 'temuco') => void }> = ({ onSelect }) => {
+  const { t } = useLang();
+  const lang = t === translations.en ? 'en' : t === translations.pt ? 'pt' : 'es';
+  return (
+    <div className="relative overflow-hidden py-10 px-6"
+      style={{ background: 'linear-gradient(100deg, #080808, #0d1f12 40%, #0a2010 60%, #080808)', borderTop: '1px solid rgba(0,255,136,0.1)', borderBottom: '1px solid rgba(0,255,136,0.1)' }}>
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 60% 50%, rgba(0,255,136,0.04), transparent 65%)' }} />
+      <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-5 text-center md:text-left relative z-10">
+        <div>
+          <p className="text-[10px] font-black tracking-[0.4em] uppercase mb-1" style={{ color: '#00FF88' }}>
+            {lang === 'en' ? 'New Location' : lang === 'pt' ? 'Nova Sede' : 'Nueva Sede'}
+          </p>
+          <h3 className="text-xl md:text-2xl font-bold text-white" style={{ fontFamily: "'Cinzel', serif" }}>
+            {lang === 'en' ? 'Now also in ' : lang === 'pt' ? 'Agora também em ' : 'Ahora también en '}
+            <span style={{ color: '#00FF88' }}>Temuco</span>
+          </h3>
+          <p className="text-white/40 text-sm mt-1">
+            {lang === 'en' ? 'Same adrenaline, new city — two different escape room experiences'
+              : lang === 'pt' ? 'A mesma adrenalina, nova cidade — duas experiências diferentes'
+              : 'La misma adrenalina, nueva ciudad — dos experiencias distintas de escape room'}
+          </p>
+        </div>
+        <button onClick={() => onSelect('temuco')}
+          className="flex-shrink-0 inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm uppercase tracking-wider transition-all duration-300 hover:scale-105"
+          style={{ background: '#00FF88', color: '#000', boxShadow: '0 0 20px rgba(0,255,136,0.3)' }}>
+          {lang === 'en' ? 'Go to Temuco' : lang === 'pt' ? 'Ir a Temuco' : 'Ir a la sede Temuco'} <ArrowRight size={14} />
+        </button>
+      </div>
+    </div>
   );
 };
 
@@ -870,18 +997,19 @@ const SiteFooter: React.FC<{ onChangeCity: () => void; city: string }> = ({ onCh
 };
 
 // ─── Pucón Site ───────────────────────────────────────────────────────────────
-const PuconSite: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => (
+const PuconSite: React.FC<{ onChangeCity: () => void; onSelectCity: (city: 'temuco') => void }> = ({ onChangeCity, onSelectCity }) => (
   <div className="min-h-screen bg-[#080808] text-white">
     <HeroSection onChangeCity={onChangeCity} />
-    <TemucoBanner />
     <AboutSection />
     <RoomsSection />
+    <PuconPricingSection />
     <HowItWorksSection />
-    <ContactSection />
     <TestimonialsSection />
     <FAQSection />
     <GallerySection />
     <LaCasonaSection />
+    <ContactSection />
+    <GoTemucoCTA onSelect={onSelectCity} />
     <SiteFooter onChangeCity={onChangeCity} city="pucon" />
   </div>
 );
@@ -897,7 +1025,7 @@ function App() {
       {city === null && <CitySelector onSelect={setCity} />}
       {city === 'temuco' && <TemucoPuconSite onChangeCity={() => setCity(null)} />}
       {city === 'corporativo' && <CorporateSite onChangeCity={() => setCity(null)} />}
-      {city === 'pucon' && <PuconSite onChangeCity={() => setCity(null)} />}
+      {city === 'pucon' && <PuconSite onChangeCity={() => setCity(null)} onSelectCity={(c) => setCity(c)} />}
     </LangContext.Provider>
   );
 }

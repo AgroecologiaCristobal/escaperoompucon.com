@@ -2,10 +2,10 @@ import React, { useContext } from 'react';
 
 export type Lang = 'es' | 'en' | 'pt';
 
-export const LANGS: { code: Lang; flag: string; label: string }[] = [
-  { code: 'es', flag: '🇨🇱', label: 'ES' },
-  { code: 'en', flag: '🇺🇸', label: 'EN' },
-  { code: 'pt', flag: '🇧🇷', label: 'PT' },
+export const LANGS: { code: Lang; flag: string; label: string; short: string }[] = [
+  { code: 'es', flag: '🇨🇱', label: 'Español', short: 'ES' },
+  { code: 'en', flag: '🇺🇸', label: 'English', short: 'EN' },
+  { code: 'pt', flag: '🇧🇷', label: 'Português', short: 'PT' },
 ];
 
 

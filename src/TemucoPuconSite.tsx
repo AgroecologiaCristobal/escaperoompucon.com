@@ -2,14 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import {
   MapPin, Phone, Mail, Instagram, Facebook, Users, Clock,
   Star, ChevronDown, ChevronUp, MessageCircle, Lock,
-  ArrowRight, CheckCircle, Menu, X, Zap, Shield, ChevronLeft, ChevronRight
+  ArrowRight, CheckCircle, Menu, X, Zap, Shield, ChevronLeft, ChevronRight, ExternalLink
 } from 'lucide-react';
 import { useLang } from './translations';
 import LangSwitcher from './LangSwitcher';
 
-const N = '#00FF88';           // neon green
-const N_DIM = 'rgba(0,255,136,0.12)';  // neon tint bg
-const N_GLOW = 'rgba(0,255,136,0.35)'; // glow shadow
+const N = '#00FF88';
+const N_DIM = 'rgba(0,255,136,0.12)';
+const N_GLOW = 'rgba(0,255,136,0.35)';
 
 const useScrolled = (offset = 60) => {
   const [scrolled, setScrolled] = useState(false);
@@ -87,7 +87,6 @@ const Navbar: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
         borderBottom: scrolled ? `1px solid rgba(0,255,136,0.08)` : 'none',
       }}>
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        {/* Logo */}
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-lg flex items-center justify-center"
             style={{ background: N, boxShadow: `0 0 12px ${N_GLOW}` }}>
@@ -101,7 +100,6 @@ const Navbar: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
           </div>
         </div>
 
-        {/* Desktop links */}
         <div className="hidden md:flex items-center gap-8">
           {links.map(({ label, href }) => (
             <a key={href} href={href}
@@ -113,7 +111,6 @@ const Navbar: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
           ))}
         </div>
 
-        {/* CTA + change city (desktop) */}
         <div className="hidden md:flex items-center gap-4">
           <LangSwitcher compact />
           <button onClick={onChangeCity}
@@ -127,7 +124,6 @@ const Navbar: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
           </a>
         </div>
 
-        {/* Mobile: lang + cambiar + hamburger */}
         <div className="md:hidden flex items-center gap-2">
           <LangSwitcher compact />
           <button onClick={onChangeCity}
@@ -143,7 +139,6 @@ const Navbar: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
         </div>
       </div>
 
-      {/* Mobile menu */}
       <div className={`md:hidden transition-all duration-400 overflow-hidden ${open ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
         style={{ background: 'rgba(8,8,8,0.98)', borderTop: `1px solid rgba(0,255,136,0.08)` }}>
         <div className="px-6 py-5 space-y-4">
@@ -181,7 +176,7 @@ const Hero: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
   return (
     <section id="inicio" className="relative min-h-screen overflow-hidden bg-black">
       <div className="absolute inset-0">
-        <img src="/zombie.png" alt="Escape Room Araucanía"
+        <img src="/pirata_pulcu.png" alt="Escape Room Araucanía"
           className="w-full h-full object-cover"
           style={{ filter: 'brightness(0.22) saturate(0.8)', transform: 'scale(1.06)' }} />
       </div>
@@ -223,7 +218,7 @@ const Hero: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
             style={{ transitionDelay: '950ms', borderColor: 'rgba(0,255,136,0.12)' }}>
             {[
               { icon: <Clock size={16} />, num: '60', label: h.stat1 },
-              { icon: <Users size={16} />, num: '2-6', label: h.stat2 },
+              { icon: <Users size={16} />, num: '6-8', label: h.stat2 },
               { icon: <MapPin size={16} />, num: '', label: h.stat3 },
             ].map(({ icon, num, label }) => (
               <div key={label} className="flex items-center gap-2.5">
@@ -264,7 +259,6 @@ const About: React.FC = () => {
             <p className="text-white/55 text-base leading-relaxed mb-8">{a.desc2}</p>
             <div className="space-y-3 mb-9">
               {[
-                { title: a.item1Title, desc: a.item1Desc },
                 { title: a.item2Title, desc: a.item2Desc },
                 { title: a.item3Title, desc: a.item3Desc },
               ].map(item => (
@@ -303,41 +297,34 @@ const About: React.FC = () => {
 
 // ─── Rooms ────────────────────────────────────────────────────────────────────
 const Rooms: React.FC = () => {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const r = t.temuco.rooms;
   const [ref, vis] = useInView();
 
   const rooms = [
     {
-      title: 'ELIXIR ZOMBIE',
-      description: r.label === 'Our Rooms' || r.label === 'Nossas Salas'
-        ? 'A failed experiment has turned everything to chaos. Find the antidote and survive before the infection spreads.'
-        : 'Un experimento fallido ha convertido todo en caos. Encuentra el antídoto y sobrevive antes de que la infección se propague.',
-      image: '/zombie.png',
-      difficulty: r.label === 'Our Rooms' ? 'High' : r.label === 'Nossas Salas' ? 'Alta' : 'Alta',
-      players: '2-6',
+      title: 'PIRATA PULCÚ',
+      description: lang === 'en'
+        ? 'A pirate mystery adventure full of logic puzzles. Unravel the secrets of Captain Pulcú and complete your mission. Available in Spanish and English.'
+        : lang === 'pt'
+        ? 'Uma aventura de mistério pirata cheia de puzzles de lógica. Desvende os segredos do Capitão Pulcú e complete sua missão. Disponível em espanhol e inglês.'
+        : 'Una aventura de misterio pirata llena de puzzles de lógica. Desentraña los secretos del Capitán Pulcú para cumplir tu misión. Ideal para grupos de amigos, parejas y familias.',
+      image: '/pirata_pulcu.png',
+      difficulty: '6/10',
+      players: '6-8',
       available: true,
-      diffColor: '#FF4444',
-    },
-    {
-      title: 'REFUGIO 42',
-      description: r.label === 'Our Rooms'
-        ? 'A secret shelter hides dark secrets. Decipher the codes, follow the clues and escape before it\'s too late.'
-        : r.label === 'Nossas Salas'
-        ? 'Um abrigo secreto esconde segredos sombrios. Decifre os códigos, siga as pistas e escape antes que seja tarde.'
-        : 'Un refugio secreto esconde oscuros secretos. Descifra los códigos, sigue las pistas y logra escapar antes de que sea tarde.',
-      image: '/familiazooligico2.jpeg',
-      difficulty: r.label === 'Our Rooms' ? 'Medium' : r.label === 'Nossas Salas' ? 'Média' : 'Media',
-      players: '2-6',
-      available: true,
-      diffColor: N,
+      diffColor: '#D4AF37',
     },
     {
       title: 'REFUGIO 40',
-      description: r.comingSoon + ' — ' + (r.label === 'Our Rooms' ? 'A new mission is coming. Get ready for the greatest Escape Room Araucanía challenge.' : r.label === 'Nossas Salas' ? 'Uma nova missão em breve. Prepare-se para o maior desafio do Escape Room Araucanía.' : 'Muy pronto una nueva misión estará disponible. Prepárate para el mayor desafío de Escape Room Araucanía.'),
-      image: '/ACTIVIDADES1.jpeg',
-      difficulty: '???',
-      players: '2-6',
+      description: lang === 'en'
+        ? 'Coming soon — A new mission is on its way. Get ready for the next Escape Room Araucanía challenge in Temuco.'
+        : lang === 'pt'
+        ? 'Em breve — Uma nova missão está a caminho. Prepare-se para o próximo desafio do Escape Room Araucanía em Temuco.'
+        : 'Próximamente — Una nueva misión está en camino. Prepárate para el próximo desafío de Escape Room Araucanía en Temuco.',
+      image: '/refugio_40.png',
+      difficulty: '7/10',
+      players: '6-8',
       available: false,
       diffColor: '#666',
     },
@@ -345,21 +332,21 @@ const Rooms: React.FC = () => {
 
   return (
     <section ref={ref} id="salas" className="py-28" style={{ background: '#080808' }}>
-      <div className="max-w-6xl mx-auto px-6">
+      <div className="max-w-5xl mx-auto px-6">
         <div className={`transition-all duration-1000 ease-out ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <SecHeader label={r.label} title={<>{r.label.split(' ')[0]} <span style={{ color: N }}>{r.label.split(' ').slice(1).join(' ')}</span></>} />
+          <SecHeader label={r.label} title={<>{r.title.split(' ')[0]} <span style={{ color: N }}>{r.title.split(' ').slice(1).join(' ')}</span></>} />
         </div>
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 gap-8">
           {rooms.map((room, i) => (
             <div key={room.title}
               className={`group relative overflow-hidden rounded-2xl transition-all duration-700 ease-out ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-14'} ${!room.available ? 'opacity-70' : ''}`}
               style={{
-                transitionDelay: `${i * 130}ms`,
+                transitionDelay: `${i * 150}ms`,
                 background: '#0f0f0f',
                 border: `1px solid ${room.available ? 'rgba(0,255,136,0.08)' : 'rgba(255,255,255,0.04)'}`,
               }}>
 
-              <div className="relative overflow-hidden h-56">
+              <div className="relative overflow-hidden h-64">
                 <img src={room.image} alt={room.title}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   style={{ filter: room.available ? 'brightness(0.55)' : 'brightness(0.25) grayscale(0.7)' }} />
@@ -379,7 +366,7 @@ const Rooms: React.FC = () => {
                       color: room.available ? room.diffColor : '#666',
                       border: `1px solid ${room.available ? `${room.diffColor}40` : 'rgba(255,255,255,0.08)'}`,
                     }}>
-                    {r.difficulty} {room.difficulty}
+                    {r.difficulty}: {room.difficulty}
                   </span>
                 </div>
                 <div className="absolute top-4 right-4 flex items-center gap-1.5 bg-black/70 px-2.5 py-1.5 rounded-full">
@@ -395,7 +382,7 @@ const Rooms: React.FC = () => {
                 </h3>
                 <p className="text-white/45 text-xs leading-relaxed mb-5">{room.description}</p>
                 {room.available ? (
-                  <a href="https://wa.me/56996543715?text=Hola%2C%20me%20interesa%20reservar%20una%20sala%20en%20Temuco."
+                  <a href="https://wa.me/56961898877?text=Hola%2C%20me%20interesa%20reservar%20una%20sala%20en%20Temuco."
                     className="inline-flex items-center gap-2 font-bold text-xs uppercase tracking-widest transition-all duration-300 hover:gap-3"
                     style={{ color: N }}>
                     {r.reserve} <ArrowRight size={12} />
@@ -424,7 +411,12 @@ const HowItWorks: React.FC = () => {
   const { t } = useLang();
   const hw = t.temuco.howItWorks;
   const [ref, vis] = useInView();
-  const stepLabels = ['1', '2', '3', '4'];
+  const stepLinks = [
+    'https://wa.me/56961898877',
+    'https://maps.google.com/?q=Escape+Room+Araucania+Temuco',
+    '#salas',
+    '#testimonios',
+  ];
 
   return (
     <section ref={ref} id="como-funciona" className="py-28" style={{ background: '#0a0a0a' }}>
@@ -434,7 +426,7 @@ const HowItWorks: React.FC = () => {
         </div>
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
           {hw.steps.map(({ title, desc }, i) => (
-            <div key={title}
+            <a key={title} href={stepLinks[i]}
               className={`group relative p-7 rounded-2xl border transition-all duration-700 ease-out hover:-translate-y-2 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
               style={{
                 transitionDelay: `${i * 120}ms`,
@@ -446,7 +438,7 @@ const HowItWorks: React.FC = () => {
 
               <div className="absolute top-5 right-5 text-[10px] font-black tracking-widest uppercase transition-all duration-300"
                 style={{ color: 'rgba(0,255,136,0.15)' }}>
-                {stepLabels[i]}
+                {i + 1}
               </div>
 
               <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-6 transition-all duration-300 group-hover:scale-110"
@@ -455,7 +447,8 @@ const HowItWorks: React.FC = () => {
               </div>
               <h3 className="text-sm font-black text-white mb-2 uppercase tracking-wide">{title}</h3>
               <p className="text-white/38 text-xs leading-relaxed">{desc}</p>
-            </div>
+              {i === 0 && <p className="text-[10px] font-bold mt-3" style={{ color: N }}>+56 9 6189 8877</p>}
+            </a>
           ))}
         </div>
       </div>
@@ -509,33 +502,32 @@ const Testimonials: React.FC = () => {
     { text: 'The challenges and atmosphere are next level. We\'ve never experienced anything like this in Temuco. A must!', author: 'Tomás R.', role: 'Guest' },
     { text: 'We will definitely return, we loved it. The Game Master was great and the puzzles really made us think.', author: 'Javiera P.', role: 'Guest' },
     { text: 'We went as a work group and it was an amazing team building activity. Highly recommended for companies.', author: 'Carlos V.', role: 'Team Building' },
-    { text: 'The Elixir Zombie room is terrifying in the best way. Pure adrenaline from start to finish!', author: 'María J.', role: 'Guest' },
+    { text: 'Pure adrenaline from start to finish!', author: 'María J.', role: 'Guest' },
   ] : lang === 'pt' ? [
     { text: 'Experiência incrível, 100% recomendada! A ambientação e os puzzles são de outro mundo. Voltaremos em breve.', author: 'Carla M.', role: 'Convidada' },
     { text: 'Os desafios e a ambientação são de outro nível. Nunca vivemos algo assim em Temuco. Imperdível!', author: 'Tomás R.', role: 'Convidado' },
     { text: 'Com certeza voltaremos, adoramos. O Game Master foi ótimo e os puzzles nos fizeram pensar bastante.', author: 'Javiera P.', role: 'Convidada' },
     { text: 'Fomos em grupo de trabalho e foi um team building incrível. Muito recomendado para empresas.', author: 'Carlos V.', role: 'Team Building' },
-    { text: 'A sala Elixir Zombie é aterrorizante no bom sentido. Adrenalina pura do início ao fim!', author: 'María J.', role: 'Convidada' },
+    { text: 'Adrenalina pura do início ao fim!', author: 'María J.', role: 'Convidada' },
   ] : [
     { text: '¡Increíble experiencia, 100% recomendado! La ambientación y los puzzles son de otro mundo. Volvemos pronto.', author: 'Carla M.', role: 'Cliente' },
     { text: 'Los desafíos y la ambientación son de otro nivel. Nunca habíamos vivido algo así en Temuco. ¡Imperdible!', author: 'Tomás R.', role: 'Cliente' },
     { text: 'Volveremos sin duda, nos encantó. El Game Master fue genial y los acertijos nos hicieron pensar bastante.', author: 'Javiera P.', role: 'Cliente' },
     { text: 'Fuimos en grupo de trabajo y fue un team building increíble. Muy recomendado para empresas.', author: 'Carlos V.', role: 'Team Building' },
-    { text: 'La sala Elixir Zombie es terrorífica en el buen sentido. ¡Adrenalina pura de principio a fin!', author: 'María J.', role: 'Cliente' },
+    { text: '¡Adrenalina pura de principio a fin!', author: 'María J.', role: 'Cliente' },
   ];
 
   const prev = () => setCurrent(p => (p - 1 + testimonials.length) % testimonials.length);
   const next = () => setCurrent(p => (p + 1) % testimonials.length);
 
   return (
-    <section ref={ref} className="py-28" style={{ background: '#0a0a0a' }}>
+    <section ref={ref} id="testimonios" className="py-28" style={{ background: '#0a0a0a' }}>
       <div className="max-w-4xl mx-auto px-6">
         <div className={`transition-all duration-1000 ease-out ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <SecHeader label={tl.label} title={<>{tl.title.split(' ').slice(0, -1).join(' ')} <span style={{ color: N }}>{tl.title.split(' ').slice(-1)[0]}</span></>} />
         </div>
 
         <div className={`relative transition-all duration-1000 ease-out delay-300 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          {/* Main testimonial */}
           <div className="p-8 md:p-12 rounded-2xl text-center mb-6"
             style={{ background: '#0f0f0f', border: `1px solid rgba(0,255,136,0.1)`, boxShadow: `0 0 40px rgba(0,255,136,0.04)` }}>
             <div className="flex gap-1 justify-center mb-6">
@@ -552,8 +544,7 @@ const Testimonials: React.FC = () => {
             </div>
           </div>
 
-          {/* Controls */}
-          <div className="flex items-center justify-center gap-5">
+          <div className="flex items-center justify-center gap-5 mb-8">
             <button onClick={prev}
               className="w-10 h-10 rounded-full flex items-center justify-center border transition-all duration-300 hover:scale-110"
               style={{ borderColor: 'rgba(0,255,136,0.2)', color: N }}
@@ -576,6 +567,14 @@ const Testimonials: React.FC = () => {
               <ChevronRight size={16} />
             </button>
           </div>
+
+          <div className="text-center">
+            <a href="https://www.google.com/search?q=escape+room+araucania+temuco"
+              target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 border border-[rgba(0,255,136,0.3)] text-[#00FF88] px-7 py-3 rounded-xl font-bold text-sm hover:bg-[rgba(0,255,136,0.08)] transition-all duration-300">
+              Ver reseñas en Google <ExternalLink size={14} />
+            </a>
+          </div>
         </div>
       </div>
     </section>
@@ -584,47 +583,150 @@ const Testimonials: React.FC = () => {
 
 // ─── Pricing ──────────────────────────────────────────────────────────────────
 const Pricing: React.FC = () => {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const p = t.temuco.pricing;
   const [ref, vis] = useInView();
+
+  const slots = lang === 'en' ? [
+    { time: '10:00 – 12:00', label: 'Escape Coffee', price: '$12.000', note: 'per person' },
+    { time: '12:00 – 17:00', label: 'Afternoon', price: '$10.000', note: 'per person' },
+    { time: '18:00 – 21:00', label: 'Evening', price: '$12.000', note: 'per person' },
+    { time: '22:00 – 00:00', label: 'Night', price: '$15.000', note: 'per person', highlight: true },
+  ] : lang === 'pt' ? [
+    { time: '10:00 – 12:00', label: 'Escape Coffee', price: '$12.000', note: 'por pessoa' },
+    { time: '12:00 – 17:00', label: 'Tarde', price: '$10.000', note: 'por pessoa' },
+    { time: '18:00 – 21:00', label: 'Noite', price: '$12.000', note: 'por pessoa' },
+    { time: '22:00 – 00:00', label: 'Madrugada', price: '$15.000', note: 'por pessoa', highlight: true },
+  ] : [
+    { time: '10:00 – 12:00', label: 'Escape Coffee', price: '$12.000', note: 'por persona' },
+    { time: '12:00 – 17:00', label: 'Tarde', price: '$10.000', note: 'por persona' },
+    { time: '18:00 – 21:00', label: 'Noche', price: '$12.000', note: 'por persona' },
+    { time: '22:00 – 00:00', label: 'Noche Oscura', price: '$15.000', note: 'por persona', highlight: true },
+  ];
+
   return (
     <section ref={ref} id="precios" className="py-28" style={{ background: '#080808' }}>
-      <div className="max-w-6xl mx-auto px-6">
+      <div className="max-w-4xl mx-auto px-6">
         <div className={`transition-all duration-1000 ease-out ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
-          <SecHeader label={p.label} title={<>{p.title.split(' ')[0]} <span style={{ color: N }}>{p.title.split(' ').slice(1).join(' ')}</span></>} />
+          <SecHeader label={p.label} title={<>{lang === 'en' ? 'Choose your ' : lang === 'pt' ? 'Escolha seu ' : 'Elige tu '}<span style={{ color: N }}>{lang === 'en' ? 'moment' : lang === 'pt' ? 'momento' : 'momento'}</span></>} />
         </div>
-        <div className={`grid md:grid-cols-2 gap-8 items-center max-w-3xl mx-auto transition-all duration-1000 ease-out delay-200 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
 
-          <div className="p-10 rounded-2xl text-center relative overflow-hidden"
-            style={{ background: '#0f0f0f', border: `1px solid rgba(0,255,136,0.2)`, boxShadow: `0 0 50px rgba(0,255,136,0.07)` }}>
-            <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, transparent, ${N}, transparent)`, opacity: 0.5 }} />
-            <p className="text-white/30 text-xs font-bold uppercase tracking-widest mb-2">{p.label === 'Pricing' ? 'From' : p.label === 'Preços' ? 'A partir de' : 'Desde'}</p>
-            <div className="mb-2">
-              <span className="text-6xl font-black" style={{ color: N, textShadow: `0 0 20px ${N_GLOW}` }}>$18.000</span>
+        <div className={`grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10 transition-all duration-1000 ease-out delay-200 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          {slots.map((slot, i) => (
+            <div key={i} className="relative p-6 rounded-2xl text-center transition-all duration-300 hover:-translate-y-1"
+              style={{
+                background: slot.highlight ? 'linear-gradient(135deg, #0a1a0a, #0d2a0d)' : '#0f0f0f',
+                border: `1px solid ${slot.highlight ? 'rgba(0,255,136,0.3)' : 'rgba(0,255,136,0.1)'}`,
+                boxShadow: slot.highlight ? `0 0 30px rgba(0,255,136,0.12)` : 'none',
+              }}>
+              {slot.highlight && (
+                <div className="absolute top-0 left-0 right-0 h-px" style={{ background: `linear-gradient(90deg, transparent, ${N}, transparent)` }} />
+              )}
+              <p className="text-[10px] font-black tracking-[0.25em] uppercase mb-1" style={{ color: N, opacity: 0.7 }}>{slot.time}</p>
+              <p className="text-white/60 text-xs mb-3 font-medium">{slot.label}</p>
+              <div className="text-3xl font-black mb-1" style={{ color: slot.highlight ? N : 'white', textShadow: slot.highlight ? `0 0 20px ${N_GLOW}` : 'none' }}>
+                {slot.price}
+              </div>
+              <p className="text-white/30 text-[10px] uppercase tracking-wider">{slot.note}</p>
             </div>
-            <p className="text-white/35 text-xs uppercase tracking-widest mb-8">{p.perPerson}</p>
-            <NeonBtn href="https://wa.me/56996543715?text=Hola%2C%20quiero%20reservar%20en%20Escape%20Room%20Araucania%20Temuco." className="w-full justify-center">
-              {p.cta} <ArrowRight size={14} />
+          ))}
+        </div>
+
+        {/* Escape Party */}
+        <div className={`relative p-8 rounded-2xl overflow-hidden transition-all duration-1000 ease-out delay-400 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}
+          style={{ background: `linear-gradient(100deg, #080808, #0a1a0a 40%, #0d2a0d 60%, #080808)`, border: `1px solid rgba(0,255,136,0.15)` }}>
+          <div className="absolute top-0 w-full h-px left-0" style={{ background: `linear-gradient(90deg, transparent, ${N} 50%, transparent)`, opacity: 0.4 }} />
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+            <div>
+              <p className="text-[10px] font-black tracking-[0.4em] uppercase mb-2" style={{ color: N }}>
+                {lang === 'en' ? 'Special Package' : lang === 'pt' ? 'Pacote Especial' : 'Paquete Especial'}
+              </p>
+              <h3 className="text-2xl font-bold text-white mb-2" style={{ fontFamily: "'Cinzel', serif" }}>Escape Party</h3>
+              <p className="text-white/50 text-sm max-w-md">
+                {lang === 'en'
+                  ? 'Celebrate your birthday or special occasion with a private session + decorations + photos. Ask for your personalized quote.'
+                  : lang === 'pt'
+                  ? 'Celebre seu aniversário ou ocasião especial com sessão privada + decoração + fotos. Solicite seu orçamento personalizado.'
+                  : 'Celebra tu cumpleaños u ocasión especial con sesión privada + decoración + fotos. Consulta tu cotización personalizada.'}
+              </p>
+            </div>
+            <NeonBtn href="https://wa.me/56961898877?text=Hola%2C%20me%20interesa%20el%20paquete%20Escape%20Party%20en%20Temuco." className="flex-shrink-0">
+              {lang === 'en' ? 'Request a quote' : lang === 'pt' ? 'Solicitar orçamento' : 'Consultar precio'} <ArrowRight size={14} />
             </NeonBtn>
           </div>
+        </div>
+      </div>
+    </section>
+  );
+};
 
-          <div className="space-y-4">
-            {p.features.map(item => (
-              <div key={item} className="flex items-center gap-3">
-                <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
-                  style={{ background: N_DIM, border: `1px solid rgba(0,255,136,0.2)` }}>
-                  <CheckCircle size={11} style={{ color: N }} />
+// ─── FAQ ──────────────────────────────────────────────────────────────────────
+const FAQ: React.FC = () => {
+  const { t, lang } = useLang();
+  const [ref, vis] = useInView();
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+
+  const esFaqs = [
+    { q: '¿Qué es un Escape Room?', a: 'Es una experiencia de juego en vivo donde tú y tu equipo tienen 60 minutos para resolver acertijos, encontrar pistas y completar una misión para "escapar" antes de que se acabe el tiempo.' },
+    { q: '¿Estamos realmente encerrados?', a: '¡No! Por seguridad, nunca estás realmente encerrado. Siempre habrá una salida de emergencia accesible. El Game Master te explicará cómo funciona antes de empezar.' },
+    { q: '¿Necesitamos alguna habilidad especial?', a: 'Absolutamente no. Nuestros juegos están diseñados para poner a prueba tu lógica, observación y trabajo en equipo. No necesitas fuerza física ni conocimientos previos.' },
+    { q: '¿Cuántas personas pueden jugar?', a: 'Nuestras salas en Temuco están diseñadas para grupos de 6 a 8 personas. Contáctanos por WhatsApp para coordinar grupos más pequeños.' },
+    { q: '¿Hay edad mínima?', a: 'Recomendamos el escape room para personas de 12 años en adelante. Los menores deben ir acompañados de un adulto.' },
+    { q: '¿Cuál es el precio?', a: 'Los precios varían según el horario: desde $10.000 CLP (tarde) hasta $15.000 CLP (noche). Consulta la sección de Precios para ver todos los horarios.' },
+    { q: '¿Cómo reservo?', a: 'Las reservas se realizan vía WhatsApp al +56 9 6189 8877. Envíanos la fecha, hora y sala que te interesa.' },
+    { q: '¿Con cuánta anticipación debo llegar?', a: 'Te pedimos llegar 10-15 minutos antes para la introducción y para que el juego comience a tiempo.' },
+    { q: '¿Cuánto dura la experiencia total?', a: 'El juego dura 60 minutos. Considera unos 15 minutos previos para la bienvenida y 10 minutos después para fotos. Total: 80-90 minutos.' },
+    { q: '¿Cómo funciona la cancelación?', a: 'Se requiere el 50% del total para reservar. En caso de cancelación, ese monto no se reembolsa. Puedes reprogramar con 24-48 horas de anticipación.' },
+    { q: '¿Puedo usar mi celular dentro?', a: 'No se permite el uso de celulares dentro de la sala para garantizar la inmersión completa.' },
+    { q: '¿Qué hacer en Temuco con amigos?', a: 'El escape room es una de las mejores opciones de entretenimiento en Temuco. En Escape Room Araucanía vivirás 60 minutos de misterio, puzzles y adrenalina con tu grupo. Ideal para 6 a 8 personas.' },
+    { q: '¿Qué planes hay en Temuco para grupos?', a: 'Temuco ya cuenta con experiencias de entretenimiento únicas como nuestro escape room. Una actividad que combina lógica, trabajo en equipo y narrativa inmersiva. Perfecta para cualquier época del año.' },
+    { q: '¿Actividades para team building en Temuco?', a: 'El escape room es una de las actividades de team building más efectivas. Diseñadas para fortalecer la comunicación y el trabajo en equipo de tu empresa. Contáctanos para coordinar tu evento corporativo.' },
+    { q: '¿Hay escape room en Temuco?', a: 'Sí, Escape Room Araucanía tiene sede en Temuco — la misma adrenalina del reconocido escape room de Pucón, ahora en el corazón de La Araucanía.' },
+    { q: '¿Dónde llevar a mi familia en Temuco?', a: 'El escape room es una excelente opción para todas las edades (desde 12 años con adulto). Reserva directamente por WhatsApp al +56 9 6189 8877.' },
+  ];
+
+  const faqs = lang === 'es' ? esFaqs : lang === 'en' ? [
+    { q: 'What is an Escape Room?', a: 'A live-action game where you and your team have 60 minutes to solve puzzles, find clues and complete a mission to "escape" before time runs out.' },
+    { q: 'Are we really locked in?', a: 'No! For safety, you are never actually locked in. There is always an accessible emergency exit. The Game Master will explain before you start.' },
+    { q: 'Do we need special skills?', a: 'Not at all. Our games test logic, observation, creativity and teamwork. No physical strength or prior knowledge required.' },
+    { q: 'How many people can play?', a: 'Our Temuco rooms are designed for groups of 6 to 8 people. Contact us via WhatsApp to coordinate smaller groups.' },
+    { q: 'How do I book?', a: 'Book via WhatsApp at +56 9 6189 8877. Send us the date, time and room you are interested in.' },
+    { q: 'What are the prices?', a: 'Prices vary by time slot: from $10,000 CLP (afternoon) to $15,000 CLP (night). Check the Pricing section for all schedules.' },
+  ] : [
+    { q: 'O que é um Escape Room?', a: 'Uma experiência de jogo ao vivo onde você e sua equipe têm 60 minutos para resolver enigmas, encontrar pistas e completar uma missão para "escapar" antes do tempo acabar.' },
+    { q: 'Estamos realmente presos?', a: 'Não! Por segurança, você nunca está realmente preso. Sempre haverá uma saída de emergência acessível. O Game Master explicará antes de começar.' },
+    { q: 'Precisamos de habilidades especiais?', a: 'Absolutamente não. Nossos jogos testam lógica, observação e trabalho em equipe. Não são necessários força física nem conhecimentos prévios.' },
+    { q: 'Como faço uma reserva?', a: 'Reserve via WhatsApp no +56 9 6189 8877. Envie-nos a data, horário e sala de interesse.' },
+    { q: 'Quais são os preços?', a: 'Os preços variam conforme o horário: de $10.000 CLP (tarde) a $15.000 CLP (noite). Consulte a seção de Preços para todos os horários.' },
+  ];
+
+  return (
+    <section ref={ref} className="py-28" style={{ background: '#0a0a0a' }}>
+      <div className="max-w-3xl mx-auto px-6">
+        <div className={`transition-all duration-1000 ease-out ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+          <SecHeader label="FAQ" title={<>Preguntas <span style={{ color: N }}>frecuentes</span></>} />
+        </div>
+        <div className="space-y-1.5">
+          {faqs.map((faq, index) => (
+            <div key={index} className="rounded-xl overflow-hidden border transition-all duration-300"
+              style={{ background: activeIndex === index ? '#141f14' : '#0f0f0f', borderColor: activeIndex === index ? 'rgba(0,255,136,0.2)' : 'rgba(255,255,255,0.04)' }}>
+              <button onClick={() => setActiveIndex(activeIndex === index ? null : index)}
+                className="w-full py-4 px-6 text-left flex justify-between items-center gap-4 hover:bg-white/2 transition-colors duration-200">
+                <span className="text-white/80 font-medium text-sm">{faq.q}</span>
+                <div className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center transition-all duration-300"
+                  style={{ background: activeIndex === index ? N : N_DIM }}>
+                  {activeIndex === index
+                    ? <ChevronUp className="text-black" size={11} />
+                    : <ChevronDown style={{ color: N }} size={11} />}
                 </div>
-                <span className="text-white/60 text-sm">{item}</span>
+              </button>
+              <div className={`overflow-hidden transition-all duration-400 ease-in-out ${activeIndex === index ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'}`}>
+                <div className="px-6 pb-5">
+                  <p className="text-white/45 text-sm leading-relaxed">{faq.a}</p>
+                </div>
               </div>
-            ))}
-            <p className="text-white/30 text-xs pt-1">{p.minPlayers}</p>
-            <div className="pt-4">
-              <NeonBtn href="https://wa.me/56996543715?text=Hola%2C%20quiero%20reservar%20en%20Escape%20Room%20Araucania%20Temuco." outline>
-                {p.whatsapp}
-              </NeonBtn>
             </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>
@@ -647,7 +749,7 @@ const Location: React.FC = () => {
           <div className="rounded-2xl overflow-hidden border"
             style={{ borderColor: 'rgba(0,255,136,0.1)', boxShadow: `0 30px 60px rgba(0,0,0,0.6), 0 0 30px rgba(0,255,136,0.04)` }}>
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3131.234567890123!2d-71.9762225!3d-39.2666282!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x96147f4838ebcf1d:0x5f6543199a9b5c15!2sEscape+room+pucon!5e0!3m2!1ses!2scl!4v1678901234567!5m2!1ses!2scl"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d99556!2d-72.59!3d-38.73!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sEscape+room+temuco!5e0!3m2!1ses!2scl!4v1700000000000!5m2!1ses!2scl"
               width="100%" height="380"
               style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg) saturate(0.5)' }}
               allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"
@@ -666,7 +768,7 @@ const Location: React.FC = () => {
             {[
               { icon: <MapPin size={18} />, label: loc.label, value: loc.address },
               { icon: <Clock size={18} />, label: loc.hours, value: loc.hoursVal },
-              { icon: <Phone size={18} />, label: 'WhatsApp', value: '+56 9 9654 3715', href: 'https://wa.me/56996543715' },
+              { icon: <Phone size={18} />, label: 'WhatsApp', value: '+56 9 6189 8877', href: 'https://wa.me/56961898877' },
               { icon: <Mail size={18} />, label: 'Email', value: 'escaperoompucon@gmail.com', href: 'mailto:escaperoompucon@gmail.com' },
             ].map(({ icon, label, value, href }) => (
               <div key={label} className="flex items-center gap-4 p-4 rounded-xl"
@@ -690,7 +792,7 @@ const Location: React.FC = () => {
               </div>
             ))}
 
-            <a href="https://maps.google.com/?q=Temuco,Araucania,Chile" target="_blank" rel="noopener noreferrer"
+            <a href="https://maps.google.com/?q=Escape+Room+Araucania+Temuco" target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm uppercase tracking-wider transition-all duration-300 hover:scale-105"
               style={{ border: `1.5px solid ${N}`, color: N, boxShadow: `0 0 15px rgba(0,255,136,0.15)` }}>
               <MapPin size={15} /> {loc.getDirections}
@@ -699,6 +801,38 @@ const Location: React.FC = () => {
         </div>
       </div>
     </section>
+  );
+};
+
+// ─── Cross-site CTA (Go to Pucón) ─────────────────────────────────────────────
+const GoPuconCTA: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
+  const { lang } = useLang();
+  return (
+    <div className="relative overflow-hidden py-10 px-6"
+      style={{ background: 'linear-gradient(100deg, #080808, #180000 40%, #2d0000 60%, #080808)', borderTop: '1px solid rgba(212,175,55,0.15)', borderBottom: '1px solid rgba(212,175,55,0.15)' }}>
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 40% 50%, rgba(139,0,0,0.06), transparent 65%)' }} />
+      <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-5 text-center md:text-left relative z-10">
+        <div>
+          <p className="text-[#D4AF37] text-[10px] font-black tracking-[0.4em] uppercase mb-1">
+            {lang === 'en' ? 'Original Location' : lang === 'pt' ? 'Sede Original' : 'Sede Original'}
+          </p>
+          <h3 className="text-xl md:text-2xl font-bold text-white" style={{ fontFamily: "'Cinzel', serif" }}>
+            {lang === 'en' ? 'Visit us in ' : lang === 'pt' ? 'Visite-nos em ' : 'Ir a la sede '}
+            <span className="text-[#D4AF37]">Pucón</span>
+          </h3>
+          <p className="text-white/40 text-sm mt-1">
+            {lang === 'en' ? 'Los Misterios de la Casona — the original escape room of La Araucanía'
+              : lang === 'pt' ? 'Los Misterios de la Casona — o escape room original da Araucanía'
+              : 'Los Misterios de la Casona — el primer escape room de la Araucanía'}
+          </p>
+        </div>
+        <button onClick={onChangeCity}
+          className="flex-shrink-0 inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm uppercase tracking-wider transition-all duration-300 hover:scale-105"
+          style={{ background: '#D4AF37', color: '#000', boxShadow: '0 0 20px rgba(212,175,55,0.25)' }}>
+          {lang === 'en' ? 'Go to Pucón' : lang === 'pt' ? 'Ir a Pucón' : 'Ir a la sede Pucón'} <ArrowRight size={14} />
+        </button>
+      </div>
+    </div>
   );
 };
 
@@ -743,7 +877,7 @@ const Footer: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
         <div>
           <p className="font-black text-white text-xs uppercase tracking-widest mb-4">{t.shared.contact}</p>
           <ul className="space-y-2.5">
-            <li><a href="https://wa.me/56996543715" className="text-white/35 text-xs">+56 9 9654 3715</a></li>
+            <li><a href="https://wa.me/56961898877" className="text-white/35 text-xs">+56 9 6189 8877</a></li>
             <li><a href="mailto:escaperoompucon@gmail.com" className="text-white/35 text-xs">escaperoompucon@gmail.com</a></li>
             <li><span className="text-white/35 text-xs">Temuco, Araucanía</span></li>
           </ul>
@@ -753,9 +887,9 @@ const Footer: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
           <p className="font-black text-white text-xs uppercase tracking-widest mb-4">{t.shared.whatsapp}</p>
           <div className="flex gap-3">
             {[
-              { icon: <Instagram size={16} />, href: 'https://www.instagram.com/escaperoom_pucon/?hl=es', label: 'Instagram' },
+              { icon: <Instagram size={16} />, href: 'https://www.instagram.com/Escaperoom_araucania/', label: 'Instagram' },
               { icon: <Facebook size={16} />, href: '#', label: 'Facebook' },
-              { icon: <MessageCircle size={16} />, href: 'https://wa.me/56996543715', label: 'WhatsApp' },
+              { icon: <MessageCircle size={16} />, href: 'https://wa.me/56961898877', label: 'WhatsApp' },
             ].map(({ icon, href, label }) => (
               <a key={label} href={href}
                 className="w-9 h-9 rounded-xl flex items-center justify-center border transition-all duration-300 hover:scale-110"
@@ -766,8 +900,9 @@ const Footer: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
               </a>
             ))}
           </div>
+          <p className="text-white/25 text-xs mt-3">@Escaperoom_araucania</p>
           <button onClick={onChangeCity}
-            className="mt-5 text-white/20 hover:text-white/60 text-[10px] font-bold uppercase tracking-widest transition-colors duration-300 underline underline-offset-2">
+            className="mt-4 text-white/20 hover:text-white/60 text-[10px] font-bold uppercase tracking-widest transition-colors duration-300 underline underline-offset-2">
             {f.changeSite}
           </button>
         </div>
@@ -793,7 +928,9 @@ const TemucoPuconSite: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity 
     <WhyUs />
     <Testimonials />
     <Pricing />
+    <FAQ />
     <Location />
+    <GoPuconCTA onChangeCity={onChangeCity} />
     <Footer onChangeCity={onChangeCity} />
   </div>
 );

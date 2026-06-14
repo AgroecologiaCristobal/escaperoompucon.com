@@ -6,10 +6,10 @@ const LangSwitcher: React.FC<{ compact?: boolean }> = ({ compact }) => {
   if (compact) {
     return (
       <div className="flex items-center gap-0.5">
-        {LANGS.map(({ code, flag, label }) => (
+        {LANGS.map(({ code, flag, short }) => (
           <button key={code} onClick={() => setLang(code)}
             className={`px-2 py-1 rounded text-[9px] font-black tracking-wider uppercase transition-all duration-200 ${lang === code ? 'text-[#D4AF37] bg-[#D4AF37]/10' : 'text-white/25 hover:text-white/50'}`}>
-            <span className="mr-0.5">{flag}</span>{label}
+            <span className="mr-0.5">{flag}</span>{short}
           </button>
         ))}
       </div>
