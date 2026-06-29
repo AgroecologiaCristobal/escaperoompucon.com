@@ -10,6 +10,9 @@ const C = '#60A5FA';           // corporate neon blue
 const C_DIM = 'rgba(96,165,250,0.10)';
 const C_GLOW = 'rgba(96,165,250,0.35)';
 
+const scrollTo = (id: string) =>
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+
 const useScrolled = (offset = 60) => {
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
@@ -36,15 +39,23 @@ const useInView = (threshold = 0.1) => {
 
 const BlueBtn: React.FC<{ href: string; children: React.ReactNode; outline?: boolean; className?: string }> = ({
   href, children, outline, className = ''
-}) => (
-  <a href={href}
-    className={`inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm uppercase tracking-wider transition-all duration-300 hover:scale-105 ${className}`}
-    style={outline
-      ? { border: `1.5px solid ${C}`, color: C, background: 'transparent', boxShadow: `0 0 12px ${C_GLOW}` }
-      : { background: C, color: '#000', boxShadow: `0 0 20px ${C_GLOW}, 0 0 40px rgba(96,165,250,0.12)` }}>
-    {children}
-  </a>
-);
+}) => {
+  const handleClick = (e: React.MouseEvent) => {
+    if (href.startsWith('#')) {
+      e.preventDefault();
+      scrollTo(href.slice(1));
+    }
+  };
+  return (
+    <a href={href} onClick={handleClick}
+      className={`inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm uppercase tracking-wider transition-all duration-300 hover:scale-105 ${className}`}
+      style={outline
+        ? { border: `1.5px solid ${C}`, color: C, background: 'transparent', boxShadow: `0 0 12px ${C_GLOW}` }
+        : { background: C, color: '#000', boxShadow: `0 0 20px ${C_GLOW}, 0 0 40px rgba(96,165,250,0.12)` }}>
+      {children}
+    </a>
+  );
+};
 
 const SecHeader: React.FC<{ label: string; title: React.ReactNode }> = ({ label, title }) => (
   <div className="text-center mb-14">
@@ -96,6 +107,7 @@ const Navbar: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
         <div className="hidden md:flex items-center gap-8">
           {links.map(({ label, href }) => (
             <a key={href} href={href}
+              onClick={(e) => { e.preventDefault(); scrollTo(href.slice(1)); }}
               className="text-white/50 text-xs font-semibold tracking-widest uppercase transition-colors duration-300"
               onMouseEnter={e => { (e.target as HTMLElement).style.color = C; }}
               onMouseLeave={e => { (e.target as HTMLElement).style.color = ''; }}>
@@ -111,6 +123,7 @@ const Navbar: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
             <MapPin size={11} /> {cn.changeCity}
           </button>
           <a href="#contacto"
+            onClick={(e) => { e.preventDefault(); scrollTo('contacto'); }}
             className="px-5 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider transition-all duration-300 hover:scale-105"
             style={{ background: C, color: '#000', boxShadow: `0 0 18px ${C_GLOW}` }}>
             {cn.quote}
@@ -136,13 +149,15 @@ const Navbar: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
         style={{ background: 'rgba(8,8,12,0.98)', borderTop: `1px solid rgba(96,165,250,0.08)` }}>
         <div className="px-6 py-5 space-y-4">
           {links.map(({ label, href }) => (
-            <a key={href} href={href} onClick={() => setOpen(false)}
+            <a key={href} href={href}
+              onClick={(e) => { e.preventDefault(); setOpen(false); scrollTo(href.slice(1)); }}
               className="block text-white/60 font-semibold text-sm uppercase tracking-widest hover:text-white transition-colors duration-300">
               {label}
             </a>
           ))}
           <div className="pt-3 border-t border-white/8 flex gap-3">
-            <a href="#contacto" onClick={() => setOpen(false)}
+            <a href="#contacto"
+              onClick={(e) => { e.preventDefault(); setOpen(false); scrollTo('contacto'); }}
               className="flex-1 text-center py-3 rounded-xl font-black text-xs uppercase tracking-wider"
               style={{ background: C, color: '#000' }}>
               {cn.quote}

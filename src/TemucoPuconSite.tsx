@@ -11,6 +11,9 @@ const N = '#00FF88';
 const N_DIM = 'rgba(0,255,136,0.12)';
 const N_GLOW = 'rgba(0,255,136,0.35)';
 
+const scrollTo = (id: string) =>
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+
 const useScrolled = (offset = 60) => {
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
@@ -38,18 +41,26 @@ const useInView = (threshold = 0.1) => {
 // ─── Neon CTA Button ──────────────────────────────────────────────────────────
 const NeonBtn: React.FC<{ href: string; children: React.ReactNode; outline?: boolean; className?: string }> = ({
   href, children, outline, className = ''
-}) => (
-  <a href={href}
-    className={`inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm uppercase tracking-wider transition-all duration-300 ${className}`}
-    style={outline
-      ? { border: `1.5px solid ${N}`, color: N, background: 'transparent',
-          boxShadow: `0 0 12px ${N_GLOW}`,
-          textShadow: `0 0 8px ${N_GLOW}` }
-      : { background: N, color: '#000',
-          boxShadow: `0 0 20px ${N_GLOW}, 0 0 40px rgba(0,255,136,0.15)` }}>
-    {children}
-  </a>
-);
+}) => {
+  const handleClick = (e: React.MouseEvent) => {
+    if (href.startsWith('#')) {
+      e.preventDefault();
+      scrollTo(href.slice(1));
+    }
+  };
+  return (
+    <a href={href} onClick={handleClick}
+      className={`inline-flex items-center gap-2 px-7 py-3.5 rounded-xl font-bold text-sm uppercase tracking-wider transition-all duration-300 ${className}`}
+      style={outline
+        ? { border: `1.5px solid ${N}`, color: N, background: 'transparent',
+            boxShadow: `0 0 12px ${N_GLOW}`,
+            textShadow: `0 0 8px ${N_GLOW}` }
+        : { background: N, color: '#000',
+            boxShadow: `0 0 20px ${N_GLOW}, 0 0 40px rgba(0,255,136,0.15)` }}>
+      {children}
+    </a>
+  );
+};
 
 // ─── Section Header ───────────────────────────────────────────────────────────
 const SecHeader: React.FC<{ label: string; title: React.ReactNode }> = ({ label, title }) => (
@@ -103,6 +114,7 @@ const Navbar: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
         <div className="hidden md:flex items-center gap-8">
           {links.map(({ label, href }) => (
             <a key={href} href={href}
+              onClick={(e) => { e.preventDefault(); scrollTo(href.slice(1)); }}
               className="text-white/50 hover:text-white text-xs font-semibold tracking-widest uppercase transition-colors duration-300"
               onMouseEnter={e => { (e.target as HTMLElement).style.color = N; }}
               onMouseLeave={e => { (e.target as HTMLElement).style.color = ''; }}>
@@ -118,6 +130,7 @@ const Navbar: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
             <MapPin size={11} /> {tn.changeCity}
           </button>
           <a href="#precios"
+            onClick={(e) => { e.preventDefault(); scrollTo('precios'); }}
             className="px-5 py-2.5 rounded-xl font-black text-xs uppercase tracking-wider transition-all duration-300 hover:scale-105"
             style={{ background: N, color: '#000', boxShadow: `0 0 18px ${N_GLOW}` }}>
             {tn.reserve}
@@ -143,13 +156,15 @@ const Navbar: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
         style={{ background: 'rgba(8,8,8,0.98)', borderTop: `1px solid rgba(0,255,136,0.08)` }}>
         <div className="px-6 py-5 space-y-4">
           {links.map(({ label, href }) => (
-            <a key={href} href={href} onClick={() => setOpen(false)}
+            <a key={href} href={href}
+              onClick={(e) => { e.preventDefault(); setOpen(false); scrollTo(href.slice(1)); }}
               className="block text-white/60 font-semibold text-sm uppercase tracking-widest hover:text-white transition-colors duration-300">
               {label}
             </a>
           ))}
           <div className="pt-3 border-t border-white/8 flex gap-3">
-            <a href="#precios" onClick={() => setOpen(false)}
+            <a href="#precios"
+              onClick={(e) => { e.preventDefault(); setOpen(false); scrollTo('precios'); }}
               className="flex-1 text-center py-3 rounded-xl font-black text-xs uppercase tracking-wider"
               style={{ background: N, color: '#000' }}>
               {tn.reserve}

@@ -7,21 +7,19 @@ const LangSwitcher: React.FC<{ compact?: boolean }> = ({ compact }) => {
   if (compact) {
     return (
       <div className="flex items-center gap-0.5 flex-shrink-0 p-0.5 rounded-lg"
-        style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.1)' }}>
-        {LANGS.map(({ code, flag, label }) => (
+        style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(255,255,255,0.12)' }}>
+        {LANGS.map(({ code, flag, short }) => (
           <button
             key={code}
             onClick={() => setLang(code)}
-            title={label}
-            className="flex items-center justify-center rounded-md transition-all duration-200"
+            className={`lang-compact-btn flex items-center gap-1 rounded-md px-1.5 py-1 transition-all duration-200 ${lang === code ? 'active' : ''}`}
             style={{
-              padding: '3px 5px',
-              background: lang === code ? 'rgba(212,175,55,0.2)' : 'transparent',
-              border: lang === code ? '1px solid rgba(212,175,55,0.4)' : '1px solid transparent',
-              opacity: lang === code ? 1 : 0.5,
+              color: lang === code ? '#D4AF37' : 'rgba(255,255,255,0.45)',
+              background: lang === code ? 'rgba(212,175,55,0.12)' : 'transparent',
             }}
           >
-            <span style={{ fontSize: '14px', lineHeight: 1 }}>{flag}</span>
+            <span style={{ fontSize: '13px', lineHeight: 1 }}>{flag}</span>
+            <span style={{ fontSize: '8px', fontWeight: 700, letterSpacing: '0.05em', lineHeight: 1 }}>{short}</span>
           </button>
         ))}
       </div>
@@ -32,31 +30,40 @@ const LangSwitcher: React.FC<{ compact?: boolean }> = ({ compact }) => {
     <div
       className="flex items-center gap-1 p-1.5 rounded-2xl"
       style={{
-        background: 'rgba(255,255,255,0.09)',
-        border: '1px solid rgba(255,255,255,0.15)',
+        background: 'rgba(0,0,0,0.55)',
+        border: '1px solid rgba(212,175,55,0.25)',
         backdropFilter: 'blur(12px)',
+        boxShadow: '0 0 20px rgba(0,0,0,0.4)',
       }}
     >
-      {LANGS.map(({ code, flag, label }) => (
+      {LANGS.map(({ code, flag, label, short }) => (
         <button
           key={code}
           onClick={() => setLang(code)}
           title={label}
-          className="lang-pill flex items-center justify-center px-4 py-2.5 rounded-xl transition-all duration-200"
+          className={`lang-pill flex flex-col items-center justify-center px-4 py-2.5 rounded-xl transition-all duration-300 ${lang === code ? 'active' : ''}`}
           style={
             lang === code
               ? {
-                  background: 'linear-gradient(135deg, rgba(212,175,55,0.25), rgba(212,175,55,0.1))',
-                  border: '1px solid rgba(212,175,55,0.45)',
-                  boxShadow: '0 0 12px rgba(212,175,55,0.15)',
+                  background: 'rgba(212,175,55,0.15)',
+                  border: '1px solid rgba(212,175,55,0.5)',
+                  boxShadow: '0 0 14px rgba(212,175,55,0.2)',
                 }
               : {
-                  opacity: 0.45,
                   border: '1px solid transparent',
+                  opacity: 0.5,
                 }
           }
         >
-          <span style={{ fontSize: '22px', lineHeight: 1 }}>{flag}</span>
+          <span style={{ fontSize: '24px', lineHeight: 1 }}>{flag}</span>
+          <span style={{
+            fontSize: '9px',
+            fontWeight: 800,
+            letterSpacing: '0.12em',
+            marginTop: '3px',
+            lineHeight: 1,
+            color: lang === code ? '#D4AF37' : 'rgba(255,255,255,0.6)',
+          }}>{short}</span>
         </button>
       ))}
     </div>

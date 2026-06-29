@@ -333,7 +333,9 @@ const HeroSection: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) =
               {h.cta}
               <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform duration-300" />
             </a>
-            <a href="#rooms" className="flex items-center gap-3 border border-white/20 text-white/80 px-8 py-4 rounded-xl text-sm font-semibold hover:border-[#D4AF37]/60 hover:text-[#D4AF37] transition-all duration-300">
+            <a href="#rooms"
+              onClick={(e) => { e.preventDefault(); document.getElementById('rooms')?.scrollIntoView({ behavior: 'smooth' }); }}
+              className="flex items-center gap-3 border border-white/20 text-white/80 px-8 py-4 rounded-xl text-sm font-semibold hover:border-[#D4AF37]/60 hover:text-[#D4AF37] transition-all duration-300">
               {h.ctaSecondary}
             </a>
           </div>
@@ -513,6 +515,7 @@ const HowItWorksSection: React.FC = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
           {h.steps.map((step, i) => (
             <a key={step.title} href={links[i]}
+              onClick={(e) => { if (links[i].startsWith('#')) { e.preventDefault(); document.getElementById(links[i].slice(1))?.scrollIntoView({ behavior: 'smooth' }); } }}
               className={`group relative p-7 rounded-2xl border transition-all duration-700 ease-out hover:border-[#D4AF37]/40 hover:-translate-y-2 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
               style={{ transitionDelay: `${i * 130}ms`, background: '#0f0f0f', borderColor: 'rgba(255,255,255,0.05)' }}>
               <div className="absolute top-5 right-5 text-[10px] font-black tracking-[0.15em] uppercase text-[#D4AF37]/20 group-hover:text-[#D4AF37]/50 transition-all duration-400">
