@@ -769,7 +769,7 @@ const Location: React.FC = () => {
               { icon: <MapPin size={18} />, label: loc.label, value: loc.address },
               { icon: <Clock size={18} />, label: loc.hours, value: loc.hoursVal },
               { icon: <Phone size={18} />, label: 'WhatsApp', value: '+56 9 6189 8877', href: 'https://wa.me/56961898877' },
-              { icon: <Mail size={18} />, label: 'Email', value: 'escaperoompucon@gmail.com', href: 'mailto:escaperoompucon@gmail.com' },
+              { icon: <Mail size={18} />, label: 'Email', value: 'escaperoomaraucania@gmail.com', href: 'mailto:escaperoomaraucania@gmail.com' },
             ].map(({ icon, label, value, href }) => (
               <div key={label} className="flex items-center gap-4 p-4 rounded-xl"
                 style={{ background: '#0f0f0f', border: '1px solid rgba(0,255,136,0.07)' }}>
@@ -878,7 +878,7 @@ const Footer: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
           <p className="font-black text-white text-xs uppercase tracking-widest mb-4">{t.shared.contact}</p>
           <ul className="space-y-2.5">
             <li><a href="https://wa.me/56961898877" className="text-white/35 text-xs">+56 9 6189 8877</a></li>
-            <li><a href="mailto:escaperoompucon@gmail.com" className="text-white/35 text-xs">escaperoompucon@gmail.com</a></li>
+            <li><a href="mailto:escaperoomaraucania@gmail.com" className="text-white/35 text-xs">escaperoomaraucania@gmail.com</a></li>
             <li><span className="text-white/35 text-xs">Temuco, Araucanía</span></li>
           </ul>
         </div>

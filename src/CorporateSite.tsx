@@ -413,7 +413,7 @@ const Contact: React.FC = () => {
             <BlueBtn href="https://wa.me/56961898877?text=Hola%2C%20me%20interesa%20cotizar%20un%20evento%20corporativo%20de%20escape%20room.">
               {c.whatsappBtn} <ArrowRight size={14} />
             </BlueBtn>
-            <BlueBtn href="mailto:escaperoompucon@gmail.com" outline>
+            <BlueBtn href="mailto:escaperoomaraucania@gmail.com" outline>
               {c.sendBtn}
             </BlueBtn>
           </div>
@@ -422,7 +422,7 @@ const Contact: React.FC = () => {
         <div className={`grid md:grid-cols-3 gap-4 transition-all duration-1000 ease-out delay-400 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           {[
             { icon: <Phone size={18} />, label: c.whatsappBtn, value: '+56 9 6189 8877', href: 'https://wa.me/56961898877' },
-            { icon: <Mail size={18} />, label: 'Email', value: 'escaperoompucon@gmail.com', href: 'mailto:escaperoompucon@gmail.com' },
+            { icon: <Mail size={18} />, label: 'Email', value: 'escaperoomaraucania@gmail.com', href: 'mailto:escaperoomaraucania@gmail.com' },
             { icon: <MapPin size={18} />, label: t.shared.contact, value: 'Pucón & Temuco', href: null },
           ].map(({ icon, label, value, href }) => (
             <div key={label} className="flex items-center gap-3 p-4 rounded-xl border"

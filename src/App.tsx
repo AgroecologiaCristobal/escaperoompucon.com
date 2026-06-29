@@ -60,7 +60,7 @@ const CitySelector: React.FC<{ onSelect: (city: Dest) => void }> = ({ onSelect }
   const panels = [
     {
       id: 'temuco' as const,
-      image: '/CAFETERIA1.jpeg',
+      image: '/foto_temuco_escaperoom.jpeg',
       accent: '#00FF88',
       glow: 'rgba(0,255,136,0.4)',
       tint: 'rgba(0,255,136,0.08)',
@@ -87,7 +87,7 @@ const CitySelector: React.FC<{ onSelect: (city: Dest) => void }> = ({ onSelect }
     },
     {
       id: 'corporativo' as const,
-      image: '/ganyateam.jpeg',
+      image: '/foto_coorporativa_escaperoom.jpeg',
       accent: '#60A5FA',
       glow: 'rgba(96,165,250,0.4)',
       tint: 'rgba(96,165,250,0.08)',
@@ -892,7 +892,7 @@ const ContactSection: React.FC = () => {
               {[
                 { icon: <MapPin size={18} />, label: c.location, value: 'Ramón Quezada 0470, Pucón', href: null },
                 { icon: <Phone size={18} />, label: c.phone, value: '+56 9 6189 8877', href: 'https://wa.me/56961898877' },
-                { icon: <Mail size={18} />, label: c.email, value: 'escaperoompucon@gmail.com', href: 'mailto:escaperoompucon@gmail.com' },
+                { icon: <Mail size={18} />, label: c.email, value: 'escaperoomaraucania@gmail.com', href: 'mailto:escaperoomaraucania@gmail.com' },
               ].map(({ icon, label, value, href }) => (
                 <div key={label} className="flex items-center gap-4 p-4 rounded-xl border border-white/5 hover:border-[#D4AF37]/25 transition-all duration-300 group"
                   style={{ background: '#0f0f0f' }}>
@@ -1026,6 +1026,19 @@ function App() {
     window.addEventListener('popstate', handlePop);
     return () => window.removeEventListener('popstate', handlePop);
   }, []);
+
+  // Keyboard back: Escape or Backspace returns to selector (unless typing in an input)
+  useEffect(() => {
+    if (!city) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape' && e.key !== 'Backspace') return;
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      goBack();
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [city]);
 
   const selectCity = (c: typeof city) => {
     if (c) window.history.pushState({ city: c }, '', `#${c}`);

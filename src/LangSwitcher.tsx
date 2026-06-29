@@ -7,19 +7,19 @@ const LangSwitcher: React.FC<{ compact?: boolean }> = ({ compact }) => {
   if (compact) {
     return (
       <div className="flex items-center gap-0.5 flex-shrink-0">
-        {LANGS.map(({ code, flag, short }) => (
+        {LANGS.map(({ code, flag, label }) => (
           <button
             key={code}
             onClick={() => setLang(code)}
-            className={`lang-compact-btn px-1.5 py-1 rounded text-[9px] font-black tracking-wider uppercase flex items-center gap-0.5 ${
+            title={label}
+            className={`lang-compact-btn px-1 py-1 rounded flex items-center justify-center ${
               lang === code
-                ? 'active text-[#D4AF37] bg-[#D4AF37]/10'
-                : 'text-white/30 hover:text-white/60'
+                ? 'active bg-[#D4AF37]/10'
+                : 'opacity-40 hover:opacity-70'
             }`}
             style={{ lineHeight: 1 }}
           >
-            <span style={{ fontSize: '11px', lineHeight: 1 }}>{flag}</span>
-            <span>{short}</span>
+            <span style={{ fontSize: '16px', lineHeight: 1 }}>{flag}</span>
           </button>
         ))}
       </div>
@@ -39,24 +39,23 @@ const LangSwitcher: React.FC<{ compact?: boolean }> = ({ compact }) => {
         <button
           key={code}
           onClick={() => setLang(code)}
-          className={`lang-pill flex items-center gap-1.5 px-3 py-2 rounded-xl text-[10px] font-bold tracking-[0.12em] uppercase ${
+          title={label}
+          className={`lang-pill flex items-center justify-center px-3 py-2 rounded-xl ${
             lang === code ? 'active' : ''
           }`}
           style={
             lang === code
               ? {
                   background: 'linear-gradient(135deg, rgba(212,175,55,0.22), rgba(212,175,55,0.08))',
-                  color: '#D4AF37',
                   border: '1px solid rgba(212,175,55,0.35)',
                 }
               : {
-                  color: 'rgba(255,255,255,0.35)',
+                  opacity: 0.4,
                   border: '1px solid transparent',
                 }
           }
         >
-          <span style={{ fontSize: '14px', lineHeight: 1 }}>{flag}</span>
-          <span>{label}</span>
+          <span style={{ fontSize: '20px', lineHeight: 1 }}>{flag}</span>
         </button>
       ))}
     </div>
