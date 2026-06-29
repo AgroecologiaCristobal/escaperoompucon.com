@@ -204,14 +204,15 @@ const CitySelector: React.FC<{ onSelect: (city: Dest) => void }> = ({ onSelect }
       {/* ── MOBILE: 3 panels vertical ── */}
       {isMobile && (
         <div className="flex flex-col h-full">
-          <div className={`flex-none z-20 text-center px-3 py-2 transition-all duration-800 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-3'}`}
+          <div className={`flex-none z-20 px-3 py-2.5 transition-all duration-800 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-3'}`}
             style={{ background: 'rgba(0,0,0,0.90)', backdropFilter: 'blur(14px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-            <p className="text-[#D4AF37] text-[8px] font-black tracking-[0.4em] uppercase mb-0.5">{t.selector.brand}</p>
-            <p className="text-white font-bold text-xs leading-tight mb-1.5">{t.selector.heading}</p>
-            <div className="flex justify-center">
+            <p className="text-[#D4AF37] text-[8px] font-black tracking-[0.4em] uppercase mb-0.5 text-center">{t.selector.brand}</p>
+            <p className="text-white font-bold text-xs leading-tight mb-2 text-center">{t.selector.heading}</p>
+            <div className="flex items-center justify-center gap-3">
               <img src="/logoescaperoom.jpg" alt="Escape Room Araucanía"
-                className="h-9 w-auto rounded-xl"
+                className="h-12 w-auto rounded-xl"
                 style={{ animation: 'logoGlow 3s ease-in-out infinite' }} />
+              <LangSwitcher compact />
             </div>
           </div>
           {panels.map((p, idx) => (
@@ -254,11 +255,11 @@ const CitySelector: React.FC<{ onSelect: (city: Dest) => void }> = ({ onSelect }
         </div>
       )}
 
-      {/* ── Bottom: hint + language switcher ── */}
-      <div className={`absolute bottom-5 left-0 right-0 z-30 flex flex-col items-center gap-3 transition-all duration-1000 ${visible ? 'opacity-100' : 'opacity-0'}`}
+      {/* ── Bottom: hint + language switcher (desktop only) ── */}
+      <div className={`hidden md:flex absolute bottom-5 left-0 right-0 z-30 flex-col items-center gap-3 transition-all duration-1000 ${visible ? 'opacity-100' : 'opacity-0'}`}
         style={{ transitionDelay: '900ms' }}>
         <LangSwitcher />
-        <div className="hidden md:flex items-center gap-2 pointer-events-none">
+        <div className="flex items-center gap-2 pointer-events-none">
           <div className="w-8 h-px bg-white/10" />
           <span className="text-white/18 text-[8px] tracking-[0.35em] uppercase">{t.selector.hint}</span>
           <div className="w-8 h-px bg-white/10" />
