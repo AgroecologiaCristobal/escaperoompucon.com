@@ -61,20 +61,22 @@
 .lang-pill {
   position: relative;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: all 0.25s ease;
 }
 .lang-pill::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(212,175,55,0.15), transparent);
+  background: linear-gradient(135deg, rgba(212,175,55,0.30), rgba(212,175,55,0.08));
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.25s ease;
 }
 .lang-pill:hover::before { opacity: 1; }
 .lang-pill:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 0 14px rgba(212,175,55,0.25);
+  transform: translateY(-2px);
+  opacity: 1 !important;
+  border-color: rgba(212,175,55,0.7) !important;
+  box-shadow: 0 0 22px rgba(212,175,55,0.45), 0 0 6px rgba(212,175,55,0.2) !important;
 }
 .lang-pill.active {
   animation: langGlow 3s ease-in-out infinite;
@@ -83,7 +85,7 @@
 /* Compact-mode button */
 .lang-compact-btn {
   position: relative;
-  transition: all 0.25s ease;
+  transition: all 0.2s ease;
 }
 .lang-compact-btn::after {
   content: '';
@@ -95,11 +97,16 @@
   height: 1.5px;
   background: #D4AF37;
   border-radius: 1px;
-  transition: transform 0.25s ease;
+  transition: transform 0.2s ease;
 }
 .lang-compact-btn:hover::after,
 .lang-compact-btn.active::after { transform: translateX(-50%) scaleX(1); }
-.lang-compact-btn:hover { transform: translateY(-1px); color: #D4AF37 !important; }
+.lang-compact-btn:hover {
+  transform: translateY(-1px);
+  color: #D4AF37 !important;
+  background: rgba(212,175,55,0.18) !important;
+  box-shadow: 0 0 12px rgba(212,175,55,0.30) !important;
+}
 
 .hover\:scale-102:hover { transform: scale(1.02); }
 .hover\:scale-103:hover { transform: scale(1.03); }

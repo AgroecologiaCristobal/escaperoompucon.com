@@ -51,7 +51,7 @@ const LangSwitcher: React.FC<{ compact?: boolean }> = ({ compact }) => {
                 }
               : {
                   border: '1px solid transparent',
-                  opacity: 0.5,
+                  opacity: 0.72,
                 }
           }
         >
