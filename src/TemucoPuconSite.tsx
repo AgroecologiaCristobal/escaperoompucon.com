@@ -176,7 +176,7 @@ const Hero: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
   return (
     <section id="inicio" className="relative min-h-screen overflow-hidden bg-black">
       <div className="absolute inset-0">
-        <img src="/pirata_pulcu.png" alt="Escape Room Araucanía"
+        <img src="/foto_temuco_escaperoom.jpeg" alt="Escape Room Araucanía"
           className="w-full h-full object-cover"
           style={{ filter: 'brightness(0.22) saturate(0.8)', transform: 'scale(1.06)' }} />
       </div>
@@ -277,7 +277,7 @@ const About: React.FC = () => {
             <div className="relative">
               <div className="absolute -inset-3 rounded-2xl opacity-20"
                 style={{ background: `radial-gradient(circle, ${N}, transparent)` }} />
-              <img src="/CAFETERIA1.jpeg" alt="Experiencia inmersiva"
+              <img src="/foto_temuco_escaperoom.jpeg" alt="Experiencia inmersiva"
                 className="w-full h-96 object-cover rounded-2xl relative z-10"
                 style={{ boxShadow: `0 30px 60px rgba(0,0,0,0.7), 0 0 40px rgba(0,255,136,0.06)` }} />
               <div className="absolute inset-0 rounded-2xl z-20 pointer-events-none"
@@ -469,7 +469,7 @@ const WhyUs: React.FC = () => {
         <div className={`transition-all duration-1000 ease-out ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <SecHeader label={w.label} title={<>¿Por qué <span style={{ color: N }}>{w.title}?</span></>} />
         </div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid md:grid-cols-3 gap-5">
           {w.items.map(({ title, desc }, i) => (
             <div key={title}
               className={`group p-8 rounded-2xl border text-center transition-all duration-700 ease-out hover:-translate-y-2 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}

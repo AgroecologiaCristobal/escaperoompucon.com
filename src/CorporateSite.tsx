@@ -169,7 +169,7 @@ const Hero: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
   return (
     <section id="inicio" className="relative min-h-screen overflow-hidden bg-black">
       <div className="absolute inset-0">
-        <img src="/ganyateam.jpeg" alt="Team corporativo"
+        <img src="/foto_coorporativa_escaperoom.jpeg" alt="Team corporativo"
           className="w-full h-full object-cover"
           style={{ filter: 'brightness(0.25) saturate(0.6)', transform: 'scale(1.06)' }} />
       </div>
@@ -410,7 +410,7 @@ const Contact: React.FC = () => {
             {c.messagePlaceholder}
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
-            <BlueBtn href="https://wa.me/56996543715?text=Hola%2C%20me%20interesa%20cotizar%20un%20evento%20corporativo%20de%20escape%20room.">
+            <BlueBtn href="https://wa.me/56961898877?text=Hola%2C%20me%20interesa%20cotizar%20un%20evento%20corporativo%20de%20escape%20room.">
               {c.whatsappBtn} <ArrowRight size={14} />
             </BlueBtn>
             <BlueBtn href="mailto:escaperoompucon@gmail.com" outline>
@@ -421,7 +421,7 @@ const Contact: React.FC = () => {
 
         <div className={`grid md:grid-cols-3 gap-4 transition-all duration-1000 ease-out delay-400 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           {[
-            { icon: <Phone size={18} />, label: c.whatsappBtn, value: '+56 9 9654 3715', href: 'https://wa.me/56996543715' },
+            { icon: <Phone size={18} />, label: c.whatsappBtn, value: '+56 9 6189 8877', href: 'https://wa.me/56961898877' },
             { icon: <Mail size={18} />, label: 'Email', value: 'escaperoompucon@gmail.com', href: 'mailto:escaperoompucon@gmail.com' },
             { icon: <MapPin size={18} />, label: t.shared.contact, value: 'Pucón & Temuco', href: null },
           ].map(({ icon, label, value, href }) => (
@@ -469,7 +469,7 @@ const Footer: React.FC<{ onChangeCity: () => void }> = ({ onChangeCity }) => {
         <p className="text-white/18 text-xs">© 2026 Escape Room Araucanía. {f.rights}</p>
         <div className="flex items-center gap-5">
           <LangSwitcher compact />
-          <a href="https://www.instagram.com/escaperoom_pucon/?hl=es" className="text-white/22 hover:text-white/50 transition-colors duration-300">
+          <a href="https://www.instagram.com/Escaperoom_araucania/" className="text-white/22 hover:text-white/50 transition-colors duration-300">
             <Instagram size={16} />
           </a>
           <button onClick={onChangeCity} className="text-[10px] font-bold uppercase tracking-wider transition-colors duration-300 underline underline-offset-2"

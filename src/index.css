@@ -16,8 +16,8 @@
 }
 
 @keyframes ghostPulse {
-  0%, 100% { opacity: 0.25; }
-  50% { opacity: 0.45; }
+  0%, 100% { opacity: 0.82; text-shadow: 0 0 12px rgba(255,255,255,0.25), 0 2px 8px rgba(0,0,0,0.8); }
+  50% { opacity: 1; text-shadow: 0 0 20px rgba(255,255,255,0.4), 0 0 40px rgba(212,175,55,0.15), 0 2px 8px rgba(0,0,0,0.8); }
 }
 
 @keyframes neonPulse {
@@ -30,6 +30,11 @@
   50% { filter: drop-shadow(0 0 20px rgba(212,175,55,0.8)) drop-shadow(0 0 40px rgba(212,175,55,0.45)) drop-shadow(0 0 60px rgba(212,175,55,0.2)); }
 }
 
+@keyframes langGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(212,175,55,0); }
+  50% { box-shadow: 0 0 18px 3px rgba(212,175,55,0.22); }
+}
+
 .misterios-text {
   font-family: 'Cinzel Decorative', serif;
   color: #8B0000;
@@ -37,23 +42,82 @@
   text-shadow: 0 0 15px rgba(139,0,0,0.8), 0 0 30px rgba(139,0,0,0.5), 0 0 60px rgba(139,0,0,0.3);
 }
 
+/* "de la Casona" — readable with a ghostly shimmer */
 .casona-text {
   font-family: 'Cinzel', serif;
-  color: rgba(255,255,255,0.22);
-  animation: ghostPulse 3s ease-in-out infinite;
+  color: rgba(255,255,255,0.82);
+  animation: ghostPulse 3.5s ease-in-out infinite;
   letter-spacing: 0.15em;
+  text-shadow: 0 0 12px rgba(255,255,255,0.25), 0 2px 8px rgba(0,0,0,0.8);
 }
 
 .animate-scroll {
   animation: scroll 35s linear infinite;
 }
 
+/* ── Language Switcher ────────────────────────────────── */
+
+/* Full-mode pill (city selector) */
+.lang-pill {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+.lang-pill::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(212,175,55,0.15), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.lang-pill:hover::before { opacity: 1; }
+.lang-pill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 14px rgba(212,175,55,0.25);
+}
+.lang-pill.active {
+  animation: langGlow 3s ease-in-out infinite;
+}
+
+/* Compact-mode button */
+.lang-compact-btn {
+  position: relative;
+  transition: all 0.25s ease;
+}
+.lang-compact-btn::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 80%;
+  height: 1.5px;
+  background: #D4AF37;
+  border-radius: 1px;
+  transition: transform 0.25s ease;
+}
+.lang-compact-btn:hover::after,
+.lang-compact-btn.active::after { transform: translateX(-50%) scaleX(1); }
+.lang-compact-btn:hover { transform: translateY(-1px); color: #D4AF37 !important; }
+
 .hover\:scale-102:hover { transform: scale(1.02); }
 .hover\:scale-103:hover { transform: scale(1.03); }
 
 html { scroll-behavior: smooth; }
 
+/* ── Global mobile safety ──────────────────────────────── */
+* { box-sizing: border-box; }
+body { overflow-x: hidden; }
+img { max-width: 100%; }
+
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: #0a0a0a; }
 ::-webkit-scrollbar-thumb { background: #D4AF37; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #8B0000; }
+
+/* ── Touch-friendly tap targets ──────────────────────────── */
+@media (max-width: 768px) {
+  a, button { min-height: 44px; min-width: 44px; }
+  a[href^="#"] { min-height: unset; min-width: unset; }
+}

@@ -204,13 +204,13 @@ const CitySelector: React.FC<{ onSelect: (city: Dest) => void }> = ({ onSelect }
       {/* ── MOBILE: 3 panels vertical ── */}
       {isMobile && (
         <div className="flex flex-col h-full">
-          <div className={`flex-none z-20 text-center px-4 py-3 transition-all duration-800 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-3'}`}
-            style={{ background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-            <p className="text-[#D4AF37] text-[9px] font-black tracking-[0.45em] uppercase mb-1">{t.selector.brand}</p>
-            <p className="text-white font-bold text-sm mb-2">{t.selector.heading}</p>
+          <div className={`flex-none z-20 text-center px-3 py-2 transition-all duration-800 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-3'}`}
+            style={{ background: 'rgba(0,0,0,0.90)', backdropFilter: 'blur(14px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+            <p className="text-[#D4AF37] text-[8px] font-black tracking-[0.4em] uppercase mb-0.5">{t.selector.brand}</p>
+            <p className="text-white font-bold text-xs leading-tight mb-1.5">{t.selector.heading}</p>
             <div className="flex justify-center">
               <img src="/logoescaperoom.jpg" alt="Escape Room Araucanía"
-                className="h-10 w-auto rounded-xl"
+                className="h-9 w-auto rounded-xl"
                 style={{ animation: 'logoGlow 3s ease-in-out infinite' }} />
             </div>
           </div>
@@ -226,22 +226,22 @@ const CitySelector: React.FC<{ onSelect: (city: Dest) => void }> = ({ onSelect }
                 style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 60%, transparent 100%)' }} />
               <div className="absolute inset-0 pointer-events-none"
                 style={{ background: `linear-gradient(135deg, ${p.tint}, transparent 55%)` }} />
-              <div className={`absolute inset-0 flex items-end px-5 pb-5 transition-all duration-800 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+              <div className={`absolute inset-0 flex items-end px-4 pb-4 transition-all duration-800 ${visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
                 style={{ transitionDelay: `${200 + idx * 120}ms` }}>
                 <div className="flex items-end justify-between w-full">
-                  <div>
-                    <div className="flex items-center gap-2 mb-1.5">
-                      <div className="h-px w-5" style={{ background: p.accent }} />
-                      <span className="text-[9px] font-black tracking-[0.3em] uppercase" style={{ color: p.accent }}>{p.label}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <div className="h-px w-4 flex-shrink-0" style={{ background: p.accent }} />
+                      <span className="text-[8px] font-black tracking-[0.25em] uppercase truncate" style={{ color: p.accent }}>{p.label}</span>
                     </div>
-                    <div className="text-2xl leading-none mb-1" style={{ textShadow: `0 0 20px ${p.glow}` }}>
+                    <div className="text-xl leading-none mb-1" style={{ textShadow: `0 0 20px ${p.glow}` }}>
                       {p.titleEl}
                     </div>
-                    <p className="text-white/45 text-[11px] leading-relaxed max-w-[200px] mt-1">{p.desc}</p>
+                    <p className="text-white/40 text-[10px] leading-snug max-w-[190px] mt-0.5 line-clamp-2">{p.desc}</p>
                   </div>
-                  <div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center ml-3"
+                  <div className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center ml-2"
                     style={{ background: p.accent, boxShadow: `0 0 16px ${p.glow}` }}>
-                    <ArrowRight size={16} className="text-black" />
+                    <ArrowRight size={14} className="text-black" />
                   </div>
                 </div>
               </div>
@@ -1020,12 +1020,28 @@ function App() {
   const [lang, setLang] = useState<Lang>('es');
   const t = translations[lang];
 
+  // Browser back-button support
+  useEffect(() => {
+    const handlePop = () => setCity(null);
+    window.addEventListener('popstate', handlePop);
+    return () => window.removeEventListener('popstate', handlePop);
+  }, []);
+
+  const selectCity = (c: typeof city) => {
+    if (c) window.history.pushState({ city: c }, '', `#${c}`);
+    setCity(c);
+  };
+
+  const goBack = () => {
+    window.history.back();
+  };
+
   return (
     <LangContext.Provider value={{ lang, t, setLang }}>
-      {city === null && <CitySelector onSelect={setCity} />}
-      {city === 'temuco' && <TemucoPuconSite onChangeCity={() => setCity(null)} />}
-      {city === 'corporativo' && <CorporateSite onChangeCity={() => setCity(null)} />}
-      {city === 'pucon' && <PuconSite onChangeCity={() => setCity(null)} onSelectCity={(c) => setCity(c)} />}
+      {city === null && <CitySelector onSelect={selectCity} />}
+      {city === 'temuco' && <TemucoPuconSite onChangeCity={goBack} />}
+      {city === 'corporativo' && <CorporateSite onChangeCity={goBack} />}
+      {city === 'pucon' && <PuconSite onChangeCity={goBack} onSelectCity={(c) => selectCity(c)} />}
     </LangContext.Provider>
   );
 }
