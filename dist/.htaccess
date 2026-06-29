@@ -7,12 +7,18 @@
   RewriteRule . /index.html [L]
 </IfModule>
 
-# Habilitar compresión GZIP
+# ─── Bloquear acceso a archivos sensibles ────────────────────────────────────────
+<FilesMatch "(^\.env|\.git|package\.json|package-lock\.json|tsconfig.*\.json|vite\.config\.*|eslint\.config\.*|\.map)$">
+  Order allow,deny
+  Deny from all
+</FilesMatch>
+
+# ─── Compresión GZIP ─────────────────────────────────────────────────────────────
 <IfModule mod_deflate.c>
   AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
 </IfModule>
 
-# Cache para recursos estáticos
+# ─── Cache para recursos estáticos ───────────────────────────────────────────────
 <IfModule mod_expires.c>
   ExpiresActive On
   ExpiresByType image/jpeg "access plus 1 year"
@@ -21,4 +27,34 @@
   ExpiresByType text/css "access plus 1 month"
   ExpiresByType application/javascript "access plus 1 month"
   ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+# ─── Headers de seguridad HTTP ───────────────────────────────────────────────────
+<IfModule mod_headers.c>
+  # Previene clickjacking
+  Header always set X-Frame-Options "SAMEORIGIN"
+
+  # Previene MIME sniffing attacks
+  Header always set X-Content-Type-Options "nosniff"
+
+  # Proteccion XSS en navegadores legacy
+  Header always set X-XSS-Protection "1; mode=block"
+
+  # Controla informacion del referrer enviada a terceros
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # Deshabilita APIs del navegador que el sitio no usa
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()"
+
+  # Fuerza HTTPS para visitas futuras (1 anho)
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+
+  # Content Security Policy
+  # script-src: unsafe-inline requerido por React SPA compilado con Vite
+  # frame-src: YouTube (video hero) + Google Maps (mapa de contacto)
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https://losmisteriosdelacasona.cl; frame-src https://www.youtube.com https://www.google.com; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self';"
+
+  # Elimina cabeceras que revelan tecnologia del servidor
+  Header unset X-Powered-By
+  Header unset Server
 </IfModule>
