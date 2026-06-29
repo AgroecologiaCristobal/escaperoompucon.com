@@ -1020,18 +1020,21 @@ function App() {
   const [lang, setLang] = useState<Lang>('es');
   const t = translations[lang];
 
-  // Browser back-button support
+  // Browser back-button: restore city from history state, or show selector
   useEffect(() => {
-    const handlePop = () => setCity(null);
+    const handlePop = (e: PopStateEvent) => {
+      const c = e.state?.city as typeof city | undefined;
+      setCity(c === 'pucon' || c === 'temuco' || c === 'corporativo' ? c : null);
+    };
     window.addEventListener('popstate', handlePop);
     return () => window.removeEventListener('popstate', handlePop);
   }, []);
 
-  // Keyboard back: Escape or Backspace returns to selector (unless typing in an input)
+  // Keyboard back: Escape returns to selector (Backspace excluded to avoid nav conflicts)
   useEffect(() => {
     if (!city) return;
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key !== 'Escape' && e.key !== 'Backspace') return;
+      if (e.key !== 'Escape') return;
       const tag = (e.target as HTMLElement)?.tagName;
       if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
       goBack();
