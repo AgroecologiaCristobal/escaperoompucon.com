@@ -247,7 +247,7 @@ const translations = {
       location: {
         label: 'Ubicación',
         title: 'Encuéntranos en Temuco',
-        address: 'Temuco, Región de la Araucanía',
+        address: 'San Felipe 45, Temuco',
         hours: 'Horario',
         hoursVal: 'Lunes a Domingo: 10:00 – 22:00',
         getDirections: 'Cómo llegar',
@@ -455,7 +455,7 @@ const translations = {
       whyUs: { label: 'Why us?', title: 'The Araucanía difference', items: [{ title: 'Original puzzles', desc: 'We design our own puzzles. You won\'t find this anywhere else.' }, { title: 'For everyone', desc: 'Families, friends, couples or work teams. We have the perfect room for you.' }, { title: 'Easy to book', desc: 'Book online in minutes or message us on WhatsApp. No hassle.' }] },
       testimonials: { label: 'Reviews', title: 'What our brave ones say' },
       pricing: { label: 'Pricing', title: 'Simple and transparent', perPerson: 'per person', minPlayers: 'minimum 2 people', included: 'Includes:', features: ['60-minute experience', 'Group souvenir photo', 'Escape certificate (if you make it)'], cta: 'Book Now', whatsapp: 'Book via WhatsApp' },
-      location: { label: 'Location', title: 'Find us in Temuco', address: 'Temuco, Araucanía Region', hours: 'Hours', hoursVal: 'Monday to Sunday: 10:00 – 22:00', getDirections: 'Get directions' },
+      location: { label: 'Location', title: 'Find us in Temuco', address: 'San Felipe 45, Temuco', hours: 'Hours', hoursVal: 'Monday to Sunday: 10:00 – 22:00', getDirections: 'Get directions' },
       footer: { tagline: 'Escape Room Araucanía — Temuco. The thrill of escaping, in the heart of La Araucanía.', rights: 'All rights reserved.', nav: { rooms: 'Rooms', howItWorks: 'How It Works', pricing: 'Pricing', contact: 'Contact' }, changeSite: 'Go to Pucón' },
     },
     corporate: {
@@ -552,7 +552,7 @@ const translations = {
       whyUs: { label: 'Por que nós?', title: 'A diferença Araucanía', items: [{ title: 'Puzzles originais', desc: 'Criamos nossos próprios puzzles. Você não vai encontrar isso em outro lugar.' }, { title: 'Para todos', desc: 'Famílias, amigos, casais ou equipes de trabalho. Temos a sala perfeita para você.' }, { title: 'Fácil de reservar', desc: 'Reserve online em minutos ou nos escreva no WhatsApp. Sem complicações.' }] },
       testimonials: { label: 'Depoimentos', title: 'O que nossos corajosos dizem' },
       pricing: { label: 'Preços', title: 'Simples e transparente', perPerson: 'por pessoa', minPlayers: 'mínimo 2 pessoas', included: 'Inclui:', features: ['60 minutos de experiência', 'Foto em grupo de recordação', 'Certificado de escape (se conseguir sair)'], cta: 'Reservar Agora', whatsapp: 'Reservar pelo WhatsApp' },
-      location: { label: 'Localização', title: 'Nos encontre em Temuco', address: 'Temuco, Região da Araucanía', hours: 'Horário', hoursVal: 'Segunda a Domingo: 10:00 – 22:00', getDirections: 'Como chegar' },
+      location: { label: 'Localização', title: 'Nos encontre em Temuco', address: 'San Felipe 45, Temuco', hours: 'Horário', hoursVal: 'Segunda a Domingo: 10:00 – 22:00', getDirections: 'Como chegar' },
       footer: { tagline: 'Escape Room Araucanía — Temuco. A adrenalina de escapar, no coração da Araucanía.', rights: 'Todos os direitos reservados.', nav: { rooms: 'Salas', howItWorks: 'Como Funciona', pricing: 'Preços', contact: 'Contato' }, changeSite: 'Ir a Pucón' },
     },
     corporate: {

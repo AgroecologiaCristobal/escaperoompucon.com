@@ -764,7 +764,7 @@ const Location: React.FC = () => {
           <div className="rounded-2xl overflow-hidden border"
             style={{ borderColor: 'rgba(0,255,136,0.1)', boxShadow: `0 30px 60px rgba(0,0,0,0.6), 0 0 30px rgba(0,255,136,0.04)` }}>
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d99556!2d-72.59!3d-38.73!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sEscape+room+temuco!5e0!3m2!1ses!2scl!4v1700000000000!5m2!1ses!2scl"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3131!2d-72.6159!3d-38.7359!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x96780b9e7b7b7b7b%3A0x0!2sEscape+Room+Araucania+Temuco!5e0!3m2!1ses!2scl!4v1700000000000!5m2!1ses!2scl"
               width="100%" height="380"
               style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg) saturate(0.5)' }}
               allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"
