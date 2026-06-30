@@ -409,8 +409,7 @@ const RoomCard: React.FC<{
   title: string; description: string; difficulty: string;
   players: string; image: string; alt: string; delay: number; cardType: 'pirate' | 'zombie';
   difficultyLabel: string; playersLabel: string; reserveLabel: string; comingSoon?: boolean; comingSoonLabel?: string;
-  objectFit?: 'cover' | 'contain';
-}> = ({ title, description, difficulty, players, image, alt, delay, cardType, difficultyLabel, playersLabel, reserveLabel, comingSoon, comingSoonLabel, objectFit = 'cover' }) => {
+}> = ({ title, description, difficulty, players, image, alt, delay, cardType, difficultyLabel, playersLabel, reserveLabel, comingSoon, comingSoonLabel }) => {
   const [ref, isVisible] = useIntersectionObserver();
   const accent = cardType === 'pirate' ? '#D4AF37' : '#8B0000';
 
@@ -420,8 +419,8 @@ const RoomCard: React.FC<{
       style={{ transitionDelay: `${delay}ms`, background: '#0f0f0f', border: '1px solid rgba(255,255,255,0.05)' }}>
       <div className="relative overflow-hidden" style={{ height: '280px' }}>
         <img src={image} alt={alt}
-          className="w-full h-full transition-transform duration-800 group-hover:scale-110"
-          style={{ objectFit, objectPosition: 'center', filter: comingSoon ? 'brightness(0.3) grayscale(0.5)' : undefined }} />
+          className="w-full h-full object-cover transition-transform duration-800 group-hover:scale-110"
+          style={{ filter: comingSoon ? 'brightness(0.3) grayscale(0.5)' : undefined }} />
         <div className="absolute inset-0" style={{ background: 'linear-gradient(0deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.3) 50%, transparent 100%)' }} />
         <div className="absolute top-4 left-4">
           <span className="text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider"
@@ -486,7 +485,7 @@ const RoomsSection: React.FC = () => {
           <RoomCard title="Refugio 42"
             description="Un refugio secreto esconde oscuros secretos. Descifra los códigos, sigue las pistas y logra escapar antes de que sea demasiado tarde."
             difficulty="7/10" players="2-8" image="/refugio_42.png" alt="Sala Refugio 42" delay={400} cardType="pirate"
-            difficultyLabel={r.difficulty} playersLabel={r.players} reserveLabel={r.reserve} objectFit="contain" />
+            difficultyLabel={r.difficulty} playersLabel={r.players} reserveLabel={r.reserve} />
         </div>
       </div>
     </section>
